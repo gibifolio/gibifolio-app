@@ -58,30 +58,6 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
           ),
         ],
       ),
-      'containerOnPageLoadAnimation3': AnimationInfo(
-        trigger: AnimationTrigger.onPageLoad,
-        effectsBuilder: () => [
-          ShimmerEffect(
-            curve: Curves.easeInOut,
-            delay: 0.0.ms,
-            duration: 600.0.ms,
-            color: FlutterFlowTheme.of(context).primaryBackground,
-            angle: 0.524,
-          ),
-        ],
-      ),
-      'containerOnPageLoadAnimation4': AnimationInfo(
-        trigger: AnimationTrigger.onPageLoad,
-        effectsBuilder: () => [
-          ShimmerEffect(
-            curve: Curves.easeInOut,
-            delay: 0.0.ms,
-            duration: 600.0.ms,
-            color: FlutterFlowTheme.of(context).primaryBackground,
-            angle: 0.524,
-          ),
-        ],
-      ),
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -116,7 +92,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                     buttonSize: 60.0,
                     icon: Icon(
                       Icons.arrow_back,
-                      color: FlutterFlowTheme.of(context).primaryText,
+                      color: FlutterFlowTheme.of(context).secondaryText,
                       size: 30.0,
                     ),
                     onPressed: () async {
@@ -125,43 +101,20 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                   ),
                 ],
               ),
-              Stack(
-                alignment: AlignmentDirectional(0.0, 0.0),
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 16.0),
-                    child: ClipRRect(
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 56.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * 1.0,
+                    height: 200.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).alternate,
                       borderRadius: BorderRadius.circular(16.0),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 1.0,
-                        height: MediaQuery.sizeOf(context).height * 0.25,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                      ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation1']!),
+                    ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 16.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(2.0),
-                      child: Container(
-                        width: 200.0,
-                        height: 260.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          borderRadius: BorderRadius.circular(2.0),
-                        ),
-                      ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation2']!),
-                  ),
-                ],
+                ).animateOnPageLoad(
+                    animationsMap['containerOnPageLoadAnimation1']!),
               ),
               Expanded(
                 child: Padding(
@@ -178,24 +131,6 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                         child: TextSkeletonWidget(
                           width: 240.0,
                           height: 20.0,
-                        ),
-                      ),
-                      wrapWithModel(
-                        model: _model.textSkeletonModel2,
-                        updateCallback: () => safeSetState(() {}),
-                        child: TextSkeletonWidget(
-                          width: 160.0,
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                        child: wrapWithModel(
-                          model: _model.textSkeletonModel3,
-                          updateCallback: () => safeSetState(() {}),
-                          child: TextSkeletonWidget(
-                            width: 180.0,
-                          ),
                         ),
                       ),
                     ].divide(SizedBox(height: 4.0)),
@@ -224,7 +159,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                               ),
                             ),
                           ).animateOnPageLoad(
-                              animationsMap['containerOnPageLoadAnimation3']!),
+                              animationsMap['containerOnPageLoadAnimation2']!),
                         ),
                       ],
                     ),
@@ -233,11 +168,6 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
               Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Divider(
-                    height: 1.0,
-                    thickness: 1.0,
-                    color: FlutterFlowTheme.of(context).alternate,
-                  ),
                   Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(24.0, 20.0, 24.0, 20.0),
@@ -251,7 +181,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 12.0),
                             child: wrapWithModel(
-                              model: _model.textSkeletonModel4,
+                              model: _model.textSkeletonModel2,
                               updateCallback: () => safeSetState(() {}),
                               child: TextSkeletonWidget(
                                 width: 140.0,
@@ -263,7 +193,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                         Align(
                           alignment: AlignmentDirectional(-1.0, -1.0),
                           child: wrapWithModel(
-                            model: _model.textSkeletonModel5,
+                            model: _model.textSkeletonModel3,
                             updateCallback: () => safeSetState(() {}),
                             child: TextSkeletonWidget(
                               width: 100.0,
@@ -274,7 +204,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                         Align(
                           alignment: AlignmentDirectional(-1.0, -1.0),
                           child: wrapWithModel(
-                            model: _model.textSkeletonModel6,
+                            model: _model.textSkeletonModel4,
                             updateCallback: () => safeSetState(() {}),
                             child: TextSkeletonWidget(
                               width: 188.0,
@@ -285,7 +215,7 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                         Align(
                           alignment: AlignmentDirectional(-1.0, -1.0),
                           child: wrapWithModel(
-                            model: _model.textSkeletonModel7,
+                            model: _model.textSkeletonModel5,
                             updateCallback: () => safeSetState(() {}),
                             child: TextSkeletonWidget(
                               width: 120.0,
@@ -295,32 +225,6 @@ class _IssueSkeletonWidgetState extends State<IssueSkeletonWidget>
                         ),
                       ].divide(SizedBox(height: 4.0)),
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(64.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 48.0,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          borderRadius: BorderRadius.circular(64.0),
-                        ),
-                      ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation4']!),
-                  ),
-                  Divider(
-                    height: 1.0,
-                    thickness: 1.0,
-                    color: FlutterFlowTheme.of(context).alternate,
                   ),
                 ],
               ),

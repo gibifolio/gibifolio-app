@@ -39,18 +39,12 @@ class _GridItemSkeletonWidgetState extends State<GridItemSkeletonWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 200.0,
+      height: 302.21,
       decoration: BoxDecoration(),
-      child: GridView(
-        padding: EdgeInsets.zero,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 0.0,
-          mainAxisSpacing: 0.0,
-          childAspectRatio: 0.6,
-        ),
-        primary: false,
-        scrollDirection: Axis.vertical,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -90,7 +84,7 @@ class _GridItemSkeletonWidgetState extends State<GridItemSkeletonWidget> {
                   ),
                 ),
               ),
-            ],
+            ].divide(SizedBox(height: 4.0)),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -130,7 +124,7 @@ class _GridItemSkeletonWidgetState extends State<GridItemSkeletonWidget> {
                   ),
                 ),
               ),
-            ],
+            ].divide(SizedBox(height: 4.0)),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -170,7 +164,7 @@ class _GridItemSkeletonWidgetState extends State<GridItemSkeletonWidget> {
                   ),
                 ),
               ),
-            ],
+            ].divide(SizedBox(height: 4.0)),
           ),
         ],
       ),

@@ -16,10 +16,6 @@ class IssueSkeletonModel extends FlutterFlowModel<IssueSkeletonWidget> {
   late TextSkeletonModel textSkeletonModel4;
   // Model for TextSkeleton component.
   late TextSkeletonModel textSkeletonModel5;
-  // Model for TextSkeleton component.
-  late TextSkeletonModel textSkeletonModel6;
-  // Model for TextSkeleton component.
-  late TextSkeletonModel textSkeletonModel7;
 
   @override
   void initState(BuildContext context) {
@@ -28,8 +24,6 @@ class IssueSkeletonModel extends FlutterFlowModel<IssueSkeletonWidget> {
     textSkeletonModel3 = createModel(context, () => TextSkeletonModel());
     textSkeletonModel4 = createModel(context, () => TextSkeletonModel());
     textSkeletonModel5 = createModel(context, () => TextSkeletonModel());
-    textSkeletonModel6 = createModel(context, () => TextSkeletonModel());
-    textSkeletonModel7 = createModel(context, () => TextSkeletonModel());
   }
 
   @override
@@ -39,7 +33,5 @@ class IssueSkeletonModel extends FlutterFlowModel<IssueSkeletonWidget> {
     textSkeletonModel3.dispose();
     textSkeletonModel4.dispose();
     textSkeletonModel5.dispose();
-    textSkeletonModel6.dispose();
-    textSkeletonModel7.dispose();
   }
 }

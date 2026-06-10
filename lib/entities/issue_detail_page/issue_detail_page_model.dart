@@ -5,6 +5,7 @@ import '/components/story_card/story_card_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'issue_detail_page_widget.dart' show IssueDetailPageWidget;
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class IssueDetailPageModel extends FlutterFlowModel<IssueDetailPageWidget> {
@@ -26,6 +27,10 @@ class IssueDetailPageModel extends FlutterFlowModel<IssueDetailPageWidget> {
 
   // Stores action output result for [Custom Action - fetchTitleLicensors] action in IssueDetailPage widget.
   List<LicensorItemStruct>? titleLicensorsList;
+  // State field(s) for Carousel widget.
+  CarouselSliderController? carouselController;
+  int carouselCurrentIndex = 0;
+
   // Model for IssueStatusIndicator component.
   late IssueStatusIndicatorModel issueStatusIndicatorModel;
   // Stores action output result for [Custom Action - fetchLibraryTitles] action in IssueStatusIndicator widget.

@@ -135,35 +135,36 @@ class _ReleasesPageWidgetState extends State<ReleasesPageWidget> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  context.pushNamed(
-                                    PublisherReleasesPageWidget.routeName,
-                                    queryParameters: {
-                                      'publisherName': serializeParam(
-                                        listViewAppReleasesPublishersRow
-                                            .publisherName,
-                                        ParamType.String,
-                                      ),
-                                      'publisherId': serializeParam(
-                                        listViewAppReleasesPublishersRow
-                                            .publisherId,
-                                        ParamType.String,
-                                      ),
-                                    }.withoutNulls,
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
+                            InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                context.pushNamed(
+                                  PublisherReleasesPageWidget.routeName,
+                                  queryParameters: {
+                                    'publisherName': serializeParam(
+                                      listViewAppReleasesPublishersRow
+                                          .publisherName,
+                                      ParamType.String,
+                                    ),
+                                    'publisherId': serializeParam(
+                                      listViewAppReleasesPublishersRow
+                                          .publisherId,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
                                         valueOrDefault<String>(
                                           listViewAppReleasesPublishersRow
                                               .publisherName,
@@ -187,60 +188,67 @@ class _ReleasesPageWidgetState extends State<ReleasesPageWidget> {
                                                       .fontStyle,
                                             ),
                                       ),
-                                    ),
-                                    if (listViewAppReleasesPublishersRow
-                                            .issueCount >
-                                        5)
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Text(
-                                            valueOrDefault<String>(
-                                              listViewAppReleasesPublishersRow
-                                                  .issueCount
-                                                  .toString(),
-                                              '#',
+                                      if (listViewAppReleasesPublishersRow
+                                              .issueCount >
+                                          5)
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Text(
+                                              valueOrDefault<String>(
+                                                listViewAppReleasesPublishersRow
+                                                    .issueCount
+                                                    .toString(),
+                                                '#',
+                                              ),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
                                             ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryText,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                          Icon(
-                                            Icons.chevron_right,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            size: 24.0,
-                                          ),
-                                        ],
-                                      ),
-                                  ],
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 2.0, 0.0, 0.0),
+                                              child: Icon(
+                                                Icons.chevron_right,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                size: 20.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ].divide(SizedBox(width: 12.0)),
+                                  ),
                                 ),
                               ),
                             ),
