@@ -39,3 +39,5 @@ export 'fetch_all_brands.dart' show fetchAllBrands;
 export 'share_content.dart' show shareContent;
 export 'fetch_profile_items.dart' show fetchProfileItems;
 export 'fetch_more_profile_items.dart' show fetchMoreProfileItems;
+export 'cover_cache_manager.dart' show ensureCoverCache;
+export 'prefetch_covers.dart' show prefetchCovers;
