@@ -66,6 +66,8 @@ Future<bool> updateTitleOwnershipStatus(
       });
     }
 
+    await invalidateTitleCaches(user.id, titleId);
+
     return true;
   } catch (e) {
     print('updateTitleOwnershipStatus error: $e');

@@ -46,3 +46,6 @@ export 'get_cached_releases.dart' show getCachedReleases;
 export 'get_cached_library.dart' show getCachedLibrary;
 export 'get_cached_lists.dart' show getCachedLists;
 export 'connectivity_state.dart' show ensureConnectivityState;
+export 'invalidate_title_caches.dart' show invalidateTitleCaches;
+export 'clear_app_cache.dart' show clearAppCache;
+export 'get_cache_size_label.dart' show getCacheSizeLabel;

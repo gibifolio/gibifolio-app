@@ -61,5 +61,7 @@ Future<bool> upsertTitleStatus(
     });
   }
 
+  await invalidateTitleCaches(user.id, titleId);
+
   return true;
 }

@@ -140,31 +140,36 @@ ligada a um campo observável. Por isso, dois padrões:
 
 > Esta tabela **é** o checklist de round-trip (Spec CON-04 / AC-05).
 
-| # | Arquivo (git) | Conteúdo | Registrar no FF como | Atende |
-|---|---|---|---|---|
-| 1 | `actions/cover_cache_manager.dart` | singleton `coverCacheManager` + action trivial `ensureCoverCache()` | **Custom Action** | FR-IMG-01 |
-| 2 | `widgets/comic_cover.dart` *(editar)* | usa `CachedNetworkImage`/provider c/ `cacheManager:` | **Custom Widget** (já existe) | FR-IMG-02/03/04 |
-| 3 | `actions/prefetch_covers.dart` | `prefetchCovers(List<String>)` | **Custom Action** | FR-IMG-05 |
-| 4 | `actions/local_cache_service.dart` | classe `LocalCacheService` (Hive) + action `ensureLocalCache()` | **Custom Action** | FR-DATA-01, NFR-01/02 |
-| 5 | `actions/get_cached_releases.dart` | `getCachedReleases()` | **Custom Action** | FR-DATA-02 |
-| 6 | `actions/get_cached_library.dart` | `getCachedLibrary(userId)` | **Custom Action** | FR-DATA-03 |
-| 7 | `actions/get_cached_lists.dart` | `getCachedLists(userId)` | **Custom Action** | FR-DATA-04 |
-| 8 | `widgets/offline_banner.dart` | `OfflineBanner` | **Custom Widget** | FR-OFF-02 |
-| 9 | `actions/update_reading_status.dart` *(editar)* | hook de invalidação | **Custom Action** (já existe) | FR-INV-02 |
-| 10 | `actions/update_ownership_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 11 | `actions/upsert_issue_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 12 | `actions/upsert_title_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 13 | `actions/bulk_update_issue_reading_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 14 | `actions/bulk_update_issue_ownership_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 15 | `actions/update_title_reading_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 16 | `actions/update_title_ownership_status.dart` *(editar)* | idem | **Custom Action** (já existe) | FR-INV-02 |
-| 17 | `actions/clear_app_cache.dart` | `clearAppCache()` + `getCacheSizeLabel()` | **Custom Action(s)** | FR-INV-03/04 |
-| 18 | `widgets/cache_settings_tile.dart` | `CacheSettingsTile` | **Custom Widget** | FR-INV-05 |
-| — | `actions/index.dart` / `widgets/index.dart` *(re-export)* | gerado pelo FF ao registrar | (automático) | — |
+> **As-built** (o que foi de fato implementado). Use esta tabela ao registrar no FlutterFlow.
 
-Imports cruzados (regra §2.2): `comic_cover.dart`, `prefetch_covers.dart` importam direto
-`cover_cache_manager.dart`; as `get_cached_*` e as actions de status importam direto
-`local_cache_service.dart`.
+| # | Arquivo (git) | Registrar no FF como (função) | Frente | Atende |
+|---|---|---|---|---|
+| 1 | `actions/cover_cache_manager.dart` | **Custom Action** `ensureCoverCache` (+ singleton `coverCacheManager`) | 1 | FR-IMG-01 |
+| 2 | `widgets/comic_cover.dart` *(editar)* | **Custom Widget** (já existe) — repostar código | 1 | FR-IMG-02/03/04 |
+| 3 | `actions/prefetch_covers.dart` | **Custom Action** `prefetchCovers` | 1 | FR-IMG-05 |
+| 4 | `actions/local_cache_service.dart` | **Custom Action** `ensureLocalCache` (+ classe `LocalCacheService`) | 2 | FR-DATA-01, NFR-01/02 |
+| 5 | `actions/get_cached_releases.dart` | **Custom Action** `getCachedReleases` | 2/3 | FR-DATA-02, FR-OFF-01 |
+| 6 | `actions/get_cached_library.dart` | **Custom Action** `getCachedLibrary` | 2/3 | FR-DATA-03, FR-OFF-01 |
+| 7 | `actions/get_cached_lists.dart` | **Custom Action** `getCachedLists` | 2/3 | FR-DATA-04, FR-OFF-01 |
+| 8 | `actions/connectivity_state.dart` | **Custom Action** `ensureConnectivityState` (+ `isOfflineNotifier`/`markOffline`/`markOnline`/`isOfflineError`) | 3 | FR-OFF-01/03 |
+| 9 | `widgets/offline_banner.dart` | **Custom Widget** `OfflineBanner` | 3 | FR-OFF-02 |
+| 10 | `actions/invalidate_title_caches.dart` | **Custom Action** `invalidateTitleCaches` | 4 | FR-INV-02 |
+| 11 | `actions/clear_app_cache.dart` | **Custom Action** `clearAppCache` | 4 | FR-INV-03 |
+| 12 | `actions/get_cache_size_label.dart` | **Custom Action** `getCacheSizeLabel` | 4 | FR-INV-04 |
+| 13 | `widgets/cache_settings_tile.dart` | **Custom Widget** `CacheSettingsTile` | 4 | FR-INV-05 |
+| 14–21 | 8 actions de status *(editar)* — `update_reading_status`, `update_ownership_status`, `upsert_issue_status`, `upsert_title_status`, `update_title_reading_status`, `update_title_ownership_status`, `bulk_update_issue_reading_status`, `bulk_update_issue_ownership_status` | **Custom Action** (já existem) — repostar; só ganharam `await invalidateTitleCaches(user.id, titleId);` antes do `return true;` | 4 | FR-INV-02 |
+| — | `actions/index.dart` / `widgets/index.dart` | (automático ao registrar no FF) | — | — |
+
+Imports cruzados (regra §2.2): `comic_cover.dart` e `prefetch_covers.dart` importam direto
+`cover_cache_manager.dart`; as `get_cached_*` importam `local_cache_service.dart` +
+`connectivity_state.dart`; as 8 actions de status chamam `invalidateTitleCaches` via o
+`import 'index.dart'` que já existe (sem import novo); `cache_settings_tile.dart` importa
+`clear_app_cache.dart` + `get_cache_size_label.dart`.
+
+**Desvios vs. plano (registrados):**
+- Offline state via `ValueNotifier` em `connectivity_state.dart` (custom_code), **não** um App
+  State `isOffline` no FF — evita editar `app_state.dart` (gerado) e é auto-contido.
+- `clearAppCache` e `getCacheSizeLabel` em arquivos separados (1 arquivo = 1 action, idiomático FF).
 
 ## 7. Matriz de TTL e invalidação
 
@@ -194,7 +199,7 @@ seta `needsLibraryRefresh = true` para forçar revalidação na próxima leitura
 | LibraryPage | chamar `getCachedLibrary(uid)` no load; UI lê `FFAppState.libraryTitles` (Consumer) | FR-DATA-03 |
 | MyListsPage | chamar `getCachedLists(uid)` no load | FR-DATA-04 |
 | Listas/Biblioteca (scroll) | chamar `prefetchCovers([...próximas urls])` ao paginar | FR-IMG-05 |
-| Scaffold das telas principais | inserir `OfflineBanner` no topo; adicionar campo App State `isOffline` (bool) | FR-OFF-02 |
+| Scaffold das telas principais | inserir `OfflineBanner` no topo (auto-oculta quando online; estado vem do custom_code, **sem** App State) | FR-OFF-02 |
 | SettingsPage | inserir `CacheSettingsTile` na seção apropriada | FR-INV-05 |
 
 ## 9. Fluxos-chave
