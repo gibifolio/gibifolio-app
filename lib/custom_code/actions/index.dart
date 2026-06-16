@@ -41,3 +41,7 @@ export 'fetch_profile_items.dart' show fetchProfileItems;
 export 'fetch_more_profile_items.dart' show fetchMoreProfileItems;
 export 'cover_cache_manager.dart' show ensureCoverCache;
 export 'prefetch_covers.dart' show prefetchCovers;
+export 'local_cache_service.dart' show ensureLocalCache;
+export 'get_cached_releases.dart' show getCachedReleases;
+export 'get_cached_library.dart' show getCachedLibrary;
+export 'get_cached_lists.dart' show getCachedLists;
