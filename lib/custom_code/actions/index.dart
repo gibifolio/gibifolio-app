@@ -45,3 +45,4 @@ export 'local_cache_service.dart' show ensureLocalCache;
 export 'get_cached_releases.dart' show getCachedReleases;
 export 'get_cached_library.dart' show getCachedLibrary;
 export 'get_cached_lists.dart' show getCachedLists;
+export 'connectivity_state.dart' show ensureConnectivityState;

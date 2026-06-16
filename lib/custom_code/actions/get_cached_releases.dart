@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'local_cache_service.dart';
+import 'connectivity_state.dart';
 
 /// Releases recentes com stale-while-revalidate (Padrão B — FutureBuilder).
 ///
@@ -38,9 +39,11 @@ Future<List<RecentReleasesCacheRow>> getCachedReleases() async {
 
   try {
     final fresh = await _fetchReleases();
+    markOnline();
     await cache.writeEnvelope(key, fresh.map((r) => r.data).toList());
     return fresh;
-  } catch (_) {
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
     return cached ?? <RecentReleasesCacheRow>[];
   }
 }
@@ -48,9 +51,12 @@ Future<List<RecentReleasesCacheRow>> getCachedReleases() async {
 Future<void> _revalidateReleases(String key) async {
   try {
     final fresh = await _fetchReleases();
+    markOnline();
     await LocalCacheService.instance
         .writeEnvelope(key, fresh.map((r) => r.data).toList());
-  } catch (_) {}
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
+  }
 }
 
 Future<List<RecentReleasesCacheRow>> _fetchReleases() =>

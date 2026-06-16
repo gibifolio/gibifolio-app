@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'local_cache_service.dart';
+import 'connectivity_state.dart';
 
 /// Listas do usuário com stale-while-revalidate (Padrão B — FutureBuilder).
 ///
@@ -40,9 +41,11 @@ Future<List<AppUserCustomListsRow>> getCachedLists(String userId) async {
 
   try {
     final fresh = await _fetchLists();
+    markOnline();
     await cache.writeEnvelope(key, fresh.map((r) => r.data).toList());
     return fresh;
-  } catch (_) {
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
     return cached ?? <AppUserCustomListsRow>[];
   }
 }
@@ -50,9 +53,12 @@ Future<List<AppUserCustomListsRow>> getCachedLists(String userId) async {
 Future<void> _revalidateLists(String key) async {
   try {
     final fresh = await _fetchLists();
+    markOnline();
     await LocalCacheService.instance
         .writeEnvelope(key, fresh.map((r) => r.data).toList());
-  } catch (_) {}
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
+  }
 }
 
 Future<List<AppUserCustomListsRow>> _fetchLists() =>

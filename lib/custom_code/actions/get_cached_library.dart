@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'local_cache_service.dart';
+import 'connectivity_state.dart';
 
 /// Biblioteca do usuário com SWR vivo (Padrão A — app state).
 ///
@@ -40,11 +41,13 @@ Future<List<LibraryTitleItemStruct>> getCachedLibrary(String userId) async {
 
   try {
     final fresh = await fetchLibraryTitles(userId);
+    markOnline();
     await cache.writeEnvelope(
         key, fresh.map((e) => e.toSerializableMap()).toList());
     FFAppState().update(() => FFAppState().libraryTitles = fresh);
     return fresh;
-  } catch (_) {
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
     return cached ?? <LibraryTitleItemStruct>[];
   }
 }
@@ -52,8 +55,11 @@ Future<List<LibraryTitleItemStruct>> getCachedLibrary(String userId) async {
 Future<void> _revalidateLibrary(String key, String userId) async {
   try {
     final fresh = await fetchLibraryTitles(userId);
+    markOnline();
     await LocalCacheService.instance
         .writeEnvelope(key, fresh.map((e) => e.toSerializableMap()).toList());
     FFAppState().update(() => FFAppState().libraryTitles = fresh);
-  } catch (_) {}
+  } catch (e) {
+    if (isOfflineError(e)) markOffline();
+  }
 }
