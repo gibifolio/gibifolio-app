@@ -47,5 +47,7 @@ Future<bool> upsertIssueStatus(
     'p_title_id': titleId,
   });
 
+  await invalidateTitleCaches(user.id, titleId);
+
   return true;
 }

@@ -59,6 +59,8 @@ Future<bool> updateReadingStatus(
       'p_title_id': titleId,
     });
 
+    await invalidateTitleCaches(user.id, titleId);
+
     return true;
   } catch (e) {
     print('Error: $e');

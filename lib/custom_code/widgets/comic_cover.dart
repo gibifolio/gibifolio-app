@@ -17,6 +17,7 @@ import '/flutter_flow/custom_functions.dart';
 import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '/custom_code/actions/cover_cache_manager.dart';
 
 class ComicCover extends StatefulWidget {
   const ComicCover({
@@ -125,7 +126,9 @@ class _ComicCoverState extends State<ComicCover> {
     if (_isRestricted) return;
     final url = widget.imageUrl;
     if (url == null || url.trim().isEmpty) return;
-    final provider = NetworkImage(url);
+    // Usa o cache de disco dedicado (mesmo manager do render e do prefetch).
+    final provider =
+        CachedNetworkImageProvider(url, cacheManager: coverCacheManager);
     final stream = provider.resolve(const ImageConfiguration());
     stream.addListener(
       ImageStreamListener(
@@ -162,8 +165,9 @@ class _ComicCoverState extends State<ComicCover> {
                       child: InteractiveViewer(
                         minScale: 1.0,
                         maxScale: 4.0,
-                        child: Image.network(
-                          widget.imageUrl!,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.imageUrl!,
+                          cacheManager: coverCacheManager,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -404,11 +408,16 @@ class _ComicCoverState extends State<ComicCover> {
       children: [
         ClipRRect(
           borderRadius: _thumbRadius,
-          child: Image.network(
-            widget.imageUrl!,
+          child: CachedNetworkImage(
+            imageUrl: widget.imageUrl!,
+            cacheManager: coverCacheManager,
             width: w,
             fit: BoxFit.fitWidth,
-            errorBuilder: (context, error, stack) {
+            // Sem fade: a capa já foi cacheada no _preloadCheck, então
+            // aparece instantânea (preserva o comportamento do Image.network).
+            fadeInDuration: Duration.zero,
+            fadeOutDuration: Duration.zero,
+            errorWidget: (context, url, error) {
               if (widget.titleId != null && widget.titleId!.trim().isNotEmpty) {
                 return _buildPlaceholderBody(w);
               }
@@ -429,6 +438,7 @@ class _ComicCoverState extends State<ComicCover> {
         borderRadius: _thumbRadius,
         child: CachedNetworkImage(
           imageUrl: _glossUrl,
+          cacheManager: coverCacheManager,
           width: w,
           fit: BoxFit.fitWidth,
           alignment: Alignment.topCenter,
