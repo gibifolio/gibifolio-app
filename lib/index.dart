@@ -28,8 +28,6 @@ export '/main_nav/my_library/status_wanted_page/status_wanted_page_widget.dart'
     show StatusWantedPageWidget;
 export '/main_nav/my_library/status_owned_page/status_owned_page_widget.dart'
     show StatusOwnedPageWidget;
-export '/main_nav/discover_page/discover_page_widget.dart'
-    show DiscoverPageWidget;
 export '/listings/lists_page/lists_page_widget.dart' show ListsPageWidget;
 export '/main_nav/my_library/status_reading_page/status_reading_page_widget.dart'
     show StatusReadingPageWidget;
@@ -40,3 +38,9 @@ export '/listings/licensor_titles_page/licensor_titles_page_widget.dart'
 export '/listings/all_brands_page/all_brands_page_widget.dart'
     show AllBrandsPageWidget;
 export '/entities/creator_page/creator_page_widget.dart' show CreatorPageWidget;
+export '/main_nav/discover_page/discover_page_widget.dart'
+    show DiscoverPageWidget;
+export '/entities/list_reorder_page/list_reorder_page_widget.dart'
+    show ListReorderPageWidget;
+export '/main_nav/my_lists_reorder_page/my_lists_reorder_page_widget.dart'
+    show MyListsReorderPageWidget;

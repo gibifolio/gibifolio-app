@@ -63,7 +63,17 @@ class _SearchButtonCustomWidgetState extends State<SearchButtonCustomWidget> {
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Container(
-            width: double.infinity,
+            width: () {
+              if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                return double.infinity;
+              } else if (MediaQuery.sizeOf(context).width < kBreakpointMedium) {
+                return double.infinity;
+              } else if (MediaQuery.sizeOf(context).width < kBreakpointLarge) {
+                return 640.0;
+              } else {
+                return 640.0;
+              }
+            }(),
             height: 48.0,
             decoration: BoxDecoration(
               boxShadow: [

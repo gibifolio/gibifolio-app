@@ -316,6 +316,7 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                             )
                           ],
                         ),
+                        alignment: AlignmentDirectional(0.0, -1.0),
                         child: InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
@@ -348,138 +349,162 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                   builder: (context) {
                     return SafeArea(
                       top: false,
-                      child: FutureBuilder<List<AppReadingSuggestionsCountRow>>(
-                        future: FFAppState()
-                            .unreadCount(
-                          requestFn: () =>
-                              AppReadingSuggestionsCountTable().querySingleRow(
-                            queryFn: (q) => q,
-                          ),
-                        )
-                            .then((result) {
-                          _model.requestCompleted1 = true;
-                          return result;
-                        }),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return DiscoverPageSkeletonWidget();
-                          }
-                          List<AppReadingSuggestionsCountRow>
-                              columnAppReadingSuggestionsCountRowList =
-                              snapshot.data!;
+                      child: Align(
+                        alignment: AlignmentDirectional(0.0, -1.0),
+                        child: Container(
+                          width: () {
+                            if (MediaQuery.sizeOf(context).width <
+                                kBreakpointSmall) {
+                              return double.infinity;
+                            } else if (MediaQuery.sizeOf(context).width <
+                                kBreakpointMedium) {
+                              return double.infinity;
+                            } else if (MediaQuery.sizeOf(context).width <
+                                kBreakpointLarge) {
+                              return 640.0;
+                            } else {
+                              return 640.0;
+                            }
+                          }(),
+                          child: Stack(
+                            children: [
+                              FutureBuilder<
+                                  List<AppReadingSuggestionsCountRow>>(
+                                future: FFAppState()
+                                    .unreadCount(
+                                  requestFn: () =>
+                                      AppReadingSuggestionsCountTable()
+                                          .querySingleRow(
+                                    queryFn: (q) => q,
+                                  ),
+                                )
+                                    .then((result) {
+                                  _model.requestCompleted1 = true;
+                                  return result;
+                                }),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return DiscoverPageSkeletonWidget();
+                                  }
+                                  List<AppReadingSuggestionsCountRow>
+                                      columnAppReadingSuggestionsCountRowList =
+                                      snapshot.data!;
 
-                          final columnAppReadingSuggestionsCountRow =
-                              columnAppReadingSuggestionsCountRowList.isNotEmpty
-                                  ? columnAppReadingSuggestionsCountRowList
-                                      .first
-                                  : null;
+                                  final columnAppReadingSuggestionsCountRow =
+                                      columnAppReadingSuggestionsCountRowList
+                                              .isNotEmpty
+                                          ? columnAppReadingSuggestionsCountRowList
+                                              .first
+                                          : null;
 
-                          return RefreshIndicator(
-                            color: FlutterFlowTheme.of(context).primary,
-                            backgroundColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            onRefresh: () async {
-                              safeSetState(() {
-                                FFAppState().clearUnreadCountCache();
-                                _model.requestCompleted1 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearSuggestionsCacheCache();
-                                _model.requestCompleted5 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearRecentReleasesCache2Cache();
-                                _model.requestCompleted7 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearReadingIssuesCacheCache();
-                                _model.requestCompleted8 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearListsGenreCacheCache();
-                                _model.requestCompleted6 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearListAuthorsCacheCache();
-                                _model.requestCompleted2 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearListHeroesCacheCache();
-                                _model.requestCompleted3 = false;
-                              });
-                              safeSetState(() {
-                                FFAppState().clearListIntroCacheCache();
-                                _model.requestCompleted4 = false;
-                              });
-                            },
-                            child: SingleChildScrollView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  if (columnAppReadingSuggestionsCountRow!
-                                          .total! >
-                                      4)
-                                    Expanded(
-                                      child: Align(
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(),
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 300.0,
-                                              child: Stack(
+                                  return RefreshIndicator(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                    onRefresh: () async {
+                                      safeSetState(() {
+                                        FFAppState().clearUnreadCountCache();
+                                        _model.requestCompleted1 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearSuggestionsCacheCache();
+                                        _model.requestCompleted5 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearRecentReleasesCache2Cache();
+                                        _model.requestCompleted7 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearReadingIssuesCacheCache();
+                                        _model.requestCompleted8 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearListsGenreCacheCache();
+                                        _model.requestCompleted6 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearListAuthorsCacheCache();
+                                        _model.requestCompleted2 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState()
+                                            .clearListHeroesCacheCache();
+                                        _model.requestCompleted3 = false;
+                                      });
+                                      safeSetState(() {
+                                        FFAppState().clearListIntroCacheCache();
+                                        _model.requestCompleted4 = false;
+                                      });
+                                    },
+                                    child: SingleChildScrollView(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          if ((columnAppReadingSuggestionsCountRow !=
+                                                  null) &&
+                                              (columnAppReadingSuggestionsCountRow
+                                                      .total! >
+                                                  4))
+                                            Expanded(
+                                              child: Align(
                                                 alignment: AlignmentDirectional(
                                                     0.0, 0.0),
-                                                children: [
-                                                  Align(
+                                                child: Container(
+                                                  decoration: BoxDecoration(),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            -1.0, 0.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(16.0),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        height: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      16.0),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Align(
+                                                            0.0, 0.0),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      height: 300.0,
+                                                      child: Stack(
                                                         alignment:
                                                             AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      40.0,
-                                                                      40.0,
-                                                                      40.0,
-                                                                      0.0),
-                                                          child: Column(
+                                                                0.0, 0.0),
+                                                        children: [
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -1.0, 0.0),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          16.0),
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: double
+                                                                    .infinity,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryBackground,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16.0),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Column(
                                                             mainAxisSize:
                                                                 MainAxisSize
                                                                     .max,
@@ -487,116 +512,652 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                                               Align(
                                                                 alignment:
                                                                     AlignmentDirectional(
-                                                                        0.0,
+                                                                        -1.0,
                                                                         -1.0),
-                                                                child: Text(
-                                                                  'Sugestões de leitura',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: FlutterFlowTheme.of(
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          40.0,
+                                                                          40.0,
+                                                                          40.0,
+                                                                          0.0),
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    children: [
+                                                                      Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            0.0,
+                                                                            -1.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Sugestões de leitura',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .headlineSmall
+                                                                              .override(
+                                                                                font: GoogleFonts.fraunces(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).headlineSmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                ),
+                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).headlineSmall.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                      Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            0.0,
+                                                                            -1.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Itens não lidos em sua coleção',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .labelMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).labelMedium.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                                ),
+                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).labelMedium.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      Container(
+                                                                    height: double
+                                                                        .infinity,
+                                                                    constraints:
+                                                                        BoxConstraints(
+                                                                      maxWidth:
+                                                                          440.0,
+                                                                    ),
+                                                                    decoration:
+                                                                        BoxDecoration(),
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                      child: FutureBuilder<
+                                                                          List<
+                                                                              AppReadingSuggestionsRow>>(
+                                                                        future: FFAppState()
+                                                                            .suggestionsCache(
+                                                                          requestFn: () =>
+                                                                              AppReadingSuggestionsTable().queryRows(
+                                                                            queryFn: (q) =>
+                                                                                q,
+                                                                            limit:
+                                                                                3,
+                                                                          ),
+                                                                        )
+                                                                            .then((result) {
+                                                                          _model.requestCompleted5 =
+                                                                              true;
+                                                                          return result;
+                                                                        }),
+                                                                        builder:
+                                                                            (context,
+                                                                                snapshot) {
+                                                                          // Customize what your widget looks like when it's loading.
+                                                                          if (!snapshot
+                                                                              .hasData) {
+                                                                            return Padding(
+                                                                              padding: EdgeInsets.all(40.0),
+                                                                              child: Container(
+                                                                                width: double.infinity,
+                                                                                height: double.infinity,
+                                                                                child: SuggestionsSkeletonWidget(),
+                                                                              ),
+                                                                            );
+                                                                          }
+                                                                          List<AppReadingSuggestionsRow>
+                                                                              suggestionsAppReadingSuggestionsRowList =
+                                                                              snapshot.data!;
+
+                                                                          if (suggestionsAppReadingSuggestionsRowList
+                                                                              .isEmpty) {
+                                                                            return ListFeaturedEmptyBWidget(
+                                                                              textMessage: 'HQs não lidas aparecerão aqui.',
+                                                                            );
+                                                                          }
+
+                                                                          return Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.center,
+                                                                            children:
+                                                                                List.generate(suggestionsAppReadingSuggestionsRowList.length, (suggestionsIndex) {
+                                                                              final suggestionsAppReadingSuggestionsRow = suggestionsAppReadingSuggestionsRowList[suggestionsIndex];
+                                                                              return Align(
+                                                                                alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                                  child: InkWell(
+                                                                                    splashColor: Colors.transparent,
+                                                                                    focusColor: Colors.transparent,
+                                                                                    hoverColor: Colors.transparent,
+                                                                                    highlightColor: Colors.transparent,
+                                                                                    onTap: () async {
+                                                                                      context.pushNamed(
+                                                                                        IssueDetailPageWidget.routeName,
+                                                                                        queryParameters: {
+                                                                                          'issueId': serializeParam(
+                                                                                            suggestionsAppReadingSuggestionsRow.issueId,
+                                                                                            ParamType.String,
+                                                                                          ),
+                                                                                          'tittleId': serializeParam(
+                                                                                            suggestionsAppReadingSuggestionsRow.titleId,
+                                                                                            ParamType.String,
+                                                                                          ),
+                                                                                        }.withoutNulls,
+                                                                                      );
+                                                                                    },
+                                                                                    child: custom_widgets.ComicCover(
+                                                                                      width: () {
+                                                                                        if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                                                                                          return 92.0;
+                                                                                        } else if (MediaQuery.sizeOf(context).width < kBreakpointMedium) {
+                                                                                          return 96.0;
+                                                                                        } else if (MediaQuery.sizeOf(context).width < kBreakpointLarge) {
+                                                                                          return 96.0;
+                                                                                        } else {
+                                                                                          return 96.0;
+                                                                                        }
+                                                                                      }(),
+                                                                                      height: 112.0,
+                                                                                      imageUrl: 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${suggestionsAppReadingSuggestionsRow.thumbLocalPath}',
+                                                                                      titleName: suggestionsAppReadingSuggestionsRow.titleName,
+                                                                                      issueNumber: suggestionsAppReadingSuggestionsRow.issueNumber,
+                                                                                      titleId: suggestionsAppReadingSuggestionsRow.titleId,
+                                                                                      spineHeight: 4.0,
+                                                                                      alignBottom: false,
+                                                                                      enableLightbox: false,
+                                                                                      isAdult: suggestionsAppReadingSuggestionsRow.isAdult,
+                                                                                      canSeeAdult: functions.canSeeAdultContent(FFAppState().currentUserBirthDateString, FFAppState().adultContentEnabled),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            }).divide(SizedBox(width: 16.0)).addToStart(SizedBox(width: 36.0)).addToEnd(SizedBox(width: 36.0)),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          if (FFAppState().hasReadingIssues)
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                -1.0, -1.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      16.0,
+                                                                      16.0,
+                                                                      0.0),
+                                                          child: Text(
+                                                            'Você está lendo',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .labelLarge
+                                                                .override(
+                                                                  font:
+                                                                      GoogleFonts
+                                                                          .inter(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  fontSize:
+                                                                      18.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontStyle: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .headlineSmall
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .fraunces(
-                                                                          fontWeight: FlutterFlowTheme.of(context)
-                                                                              .headlineSmall
-                                                                              .fontWeight,
+                                                                      .labelLarge
+                                                                      .fontStyle,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: 192.0,
+                                                      child: Stack(
+                                                        children: [
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -1.0, 0.0),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          16.0),
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: double
+                                                                    .infinity,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryBackground,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16.0),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -1.0, 0.0),
+                                                            child: Container(
+                                                              height: double
+                                                                  .infinity,
+                                                              decoration:
+                                                                  BoxDecoration(),
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      0.0),
+                                                              child: Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        1.0),
+                                                                child: FutureBuilder<
+                                                                    List<
+                                                                        AppIssueWithUserStatusRow>>(
+                                                                  future: FFAppState()
+                                                                      .readingIssuesCache(
+                                                                    requestFn: () =>
+                                                                        AppIssueWithUserStatusTable()
+                                                                            .queryRows(
+                                                                      queryFn: (q) => q
+                                                                          .eqOrNull(
+                                                                            'status_reading',
+                                                                            'reading',
+                                                                          )
+                                                                          .eqOrNull(
+                                                                            'user_id',
+                                                                            currentUserUid,
+                                                                          )
+                                                                          .order('status_updated_at'),
+                                                                    ),
+                                                                  )
+                                                                      .then((result) {
+                                                                    _model.requestCompleted8 =
+                                                                        true;
+                                                                    return result;
+                                                                  }),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    // Customize what your widget looks like when it's loading.
+                                                                    if (!snapshot
+                                                                        .hasData) {
+                                                                      return Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(40.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          height:
+                                                                              double.infinity,
+                                                                          child:
+                                                                              GridItemSkeletonBWidget(),
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                    List<AppIssueWithUserStatusRow>
+                                                                        readingAppIssueWithUserStatusRowList =
+                                                                        snapshot
+                                                                            .data!;
+
+                                                                    return SingleChildScrollView(
+                                                                      scrollDirection:
+                                                                          Axis.horizontal,
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: List.generate(
+                                                                            readingAppIssueWithUserStatusRowList.length,
+                                                                            (readingIndex) {
+                                                                          final readingAppIssueWithUserStatusRow =
+                                                                              readingAppIssueWithUserStatusRowList[readingIndex];
+                                                                          return Align(
+                                                                            alignment:
+                                                                                AlignmentDirectional(-1.0, 0.0),
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
+                                                                              child: InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
+                                                                                onTap: () async {
+                                                                                  context.pushNamed(
+                                                                                    IssueDetailPageWidget.routeName,
+                                                                                    queryParameters: {
+                                                                                      'issueId': serializeParam(
+                                                                                        readingAppIssueWithUserStatusRow.issueId,
+                                                                                        ParamType.String,
+                                                                                      ),
+                                                                                      'tittleId': serializeParam(
+                                                                                        readingAppIssueWithUserStatusRow.titleId,
+                                                                                        ParamType.String,
+                                                                                      ),
+                                                                                    }.withoutNulls,
+                                                                                  );
+                                                                                },
+                                                                                child: custom_widgets.ComicCover(
+                                                                                  width: 80.0,
+                                                                                  height: 120.0,
+                                                                                  imageUrl: 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${readingAppIssueWithUserStatusRow.primaryThumb}',
+                                                                                  titleName: '',
+                                                                                  issueNumber: readingAppIssueWithUserStatusRow.issueNumber,
+                                                                                  titleId: readingAppIssueWithUserStatusRow.titleId,
+                                                                                  spineHeight: 4.0,
+                                                                                  alignBottom: false,
+                                                                                  enableLightbox: false,
+                                                                                  isAdult: readingAppIssueWithUserStatusRow.isAdult,
+                                                                                  canSeeAdult: functions.canSeeAdultContent(FFAppState().currentUserBirthDateString, FFAppState().adultContentEnabled),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          );
+                                                                        }).divide(SizedBox(width: 16.0)).addToStart(SizedBox(width: 36.0)).addToEnd(SizedBox(
+                                                                            width:
+                                                                                36.0)),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  InkWell(
+                                                    splashColor:
+                                                        Colors.transparent,
+                                                    focusColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () async {
+                                                      context.pushNamed(
+                                                          ReleasesPageWidget
+                                                              .routeName);
+                                                    },
+                                                    child: Container(
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, -1.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      16.0,
+                                                                      16.0,
+                                                                      0.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          -1.0,
+                                                                          -1.0),
+                                                                  child: Text(
+                                                                    'Lançamentos',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          fontSize:
+                                                                              18.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
                                                                           fontStyle: FlutterFlowTheme.of(context)
-                                                                              .headlineSmall
+                                                                              .labelLarge
                                                                               .fontStyle,
                                                                         ),
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .primaryText,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight: FlutterFlowTheme.of(context)
-                                                                            .headlineSmall
-                                                                            .fontWeight,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .headlineSmall
-                                                                            .fontStyle,
-                                                                      ),
+                                                                  ),
                                                                 ),
                                                               ),
                                                               Align(
                                                                 alignment:
                                                                     AlignmentDirectional(
-                                                                        0.0,
+                                                                        -1.0,
                                                                         -1.0),
-                                                                child: Text(
-                                                                  'Itens não lidos em sua coleção',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelMedium
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .inter(
-                                                                          fontWeight: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .fontWeight,
-                                                                          fontStyle: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .fontStyle,
-                                                                        ),
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .primaryText,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight: FlutterFlowTheme.of(context)
-                                                                            .labelMedium
-                                                                            .fontWeight,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .labelMedium
-                                                                            .fontStyle,
-                                                                      ),
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Mais',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelLarge
+                                                                          .override(
+                                                                            font:
+                                                                                GoogleFonts.inter(
+                                                                              fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                              fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                            ),
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                    ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryText,
+                                                                      size:
+                                                                          20.0,
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
                                                         ),
                                                       ),
-                                                      Expanded(
-                                                        child: Align(
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 192.0,
+                                                    child: Stack(
+                                                      children: [
+                                                        Align(
                                                           alignment:
                                                               AlignmentDirectional(
-                                                                  0.0, 0.0),
+                                                                  -1.0, 0.0),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        16.0,
+                                                                        16.0,
+                                                                        16.0,
+                                                                        16.0),
+                                                            child: Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: double
+                                                                  .infinity,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondaryBackground,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  -1.0, 0.0),
                                                           child: Container(
                                                             height:
                                                                 double.infinity,
-                                                            constraints:
-                                                                BoxConstraints(
-                                                              maxWidth: 440.0,
-                                                            ),
                                                             decoration:
                                                                 BoxDecoration(),
                                                             alignment:
                                                                 AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                                    -1.0, 0.0),
                                                             child: Align(
                                                               alignment:
                                                                   AlignmentDirectional(
-                                                                      0.0, 0.0),
+                                                                      -1.0,
+                                                                      1.0),
                                                               child: FutureBuilder<
                                                                   List<
-                                                                      AppReadingSuggestionsRow>>(
+                                                                      RecentReleasesCacheRow>>(
                                                                 future: FFAppState()
-                                                                    .suggestionsCache(
+                                                                    .recentReleasesCache2(
+                                                                  overrideCache:
+                                                                      FFAppState()
+                                                                          .needsLibraryRefresh,
                                                                   requestFn: () =>
-                                                                      AppReadingSuggestionsTable()
+                                                                      RecentReleasesCacheTable()
                                                                           .queryRows(
-                                                                    queryFn:
-                                                                        (q) =>
-                                                                            q,
-                                                                    limit: 3,
+                                                                    queryFn: (q) => q
+                                                                        .order(
+                                                                            'date')
+                                                                        .order(
+                                                                            'issue_number'),
                                                                   ),
                                                                 )
                                                                     .then((result) {
-                                                                  _model.requestCompleted5 =
+                                                                  _model.requestCompleted7 =
                                                                       true;
                                                                   return result;
                                                                 }),
@@ -616,306 +1177,283 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                                                         height:
                                                                             double.infinity,
                                                                         child:
-                                                                            SuggestionsSkeletonWidget(),
+                                                                            GridItemSkeletonBWidget(),
                                                                       ),
                                                                     );
                                                                   }
-                                                                  List<AppReadingSuggestionsRow>
-                                                                      suggestionsAppReadingSuggestionsRowList =
+                                                                  List<RecentReleasesCacheRow>
+                                                                      releasesRecentReleasesCacheRowList =
                                                                       snapshot
                                                                           .data!;
 
-                                                                  if (suggestionsAppReadingSuggestionsRowList
-                                                                      .isEmpty) {
-                                                                    return ListFeaturedEmptyBWidget(
-                                                                      textMessage:
-                                                                          'HQs não lidas aparecerão aqui.',
-                                                                    );
-                                                                  }
-
-                                                                  return Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    children: List.generate(
-                                                                            suggestionsAppReadingSuggestionsRowList.length,
-                                                                            (suggestionsIndex) {
-                                                                      final suggestionsAppReadingSuggestionsRow =
-                                                                          suggestionsAppReadingSuggestionsRowList[
-                                                                              suggestionsIndex];
-                                                                      return Align(
-                                                                        alignment: AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0),
-                                                                        child:
-                                                                            Padding(
-                                                                          padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              0.0,
-                                                                              16.0,
-                                                                              0.0,
-                                                                              16.0),
+                                                                  return SingleChildScrollView(
+                                                                    scrollDirection:
+                                                                        Axis.horizontal,
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: List.generate(
+                                                                          releasesRecentReleasesCacheRowList
+                                                                              .length,
+                                                                          (releasesIndex) {
+                                                                        final releasesRecentReleasesCacheRow =
+                                                                            releasesRecentReleasesCacheRowList[releasesIndex];
+                                                                        return Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
                                                                           child:
-                                                                              InkWell(
-                                                                            splashColor:
-                                                                                Colors.transparent,
-                                                                            focusColor:
-                                                                                Colors.transparent,
-                                                                            hoverColor:
-                                                                                Colors.transparent,
-                                                                            highlightColor:
-                                                                                Colors.transparent,
-                                                                            onTap:
-                                                                                () async {
-                                                                              context.pushNamed(
-                                                                                IssueDetailPageWidget.routeName,
-                                                                                queryParameters: {
-                                                                                  'issueId': serializeParam(
-                                                                                    suggestionsAppReadingSuggestionsRow.issueId,
-                                                                                    ParamType.String,
-                                                                                  ),
-                                                                                  'tittleId': serializeParam(
-                                                                                    suggestionsAppReadingSuggestionsRow.titleId,
-                                                                                    ParamType.String,
-                                                                                  ),
-                                                                                }.withoutNulls,
-                                                                              );
-                                                                            },
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                16.0,
+                                                                                0.0,
+                                                                                16.0),
                                                                             child:
-                                                                                custom_widgets.ComicCover(
-                                                                              width: () {
-                                                                                if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
-                                                                                  return 92.0;
-                                                                                } else if (MediaQuery.sizeOf(context).width < kBreakpointMedium) {
-                                                                                  return 96.0;
-                                                                                } else if (MediaQuery.sizeOf(context).width < kBreakpointLarge) {
-                                                                                  return 96.0;
-                                                                                } else {
-                                                                                  return 96.0;
-                                                                                }
-                                                                              }(),
-                                                                              height: 112.0,
-                                                                              imageUrl: 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${suggestionsAppReadingSuggestionsRow.thumbLocalPath}',
-                                                                              titleName: suggestionsAppReadingSuggestionsRow.titleName,
-                                                                              issueNumber: suggestionsAppReadingSuggestionsRow.issueNumber,
-                                                                              titleId: suggestionsAppReadingSuggestionsRow.titleId,
-                                                                              spineHeight: 4.0,
-                                                                              alignBottom: false,
-                                                                              enableLightbox: false,
-                                                                              isAdult: suggestionsAppReadingSuggestionsRow.isAdult,
-                                                                              canSeeAdult: functions.canSeeAdultContent(FFAppState().currentUserBirthDateString, FFAppState().adultContentEnabled),
+                                                                                InkWell(
+                                                                              splashColor: Colors.transparent,
+                                                                              focusColor: Colors.transparent,
+                                                                              hoverColor: Colors.transparent,
+                                                                              highlightColor: Colors.transparent,
+                                                                              onTap: () async {
+                                                                                context.pushNamed(
+                                                                                  IssueDetailPageWidget.routeName,
+                                                                                  queryParameters: {
+                                                                                    'issueId': serializeParam(
+                                                                                      releasesRecentReleasesCacheRow.issueId,
+                                                                                      ParamType.String,
+                                                                                    ),
+                                                                                    'tittleId': serializeParam(
+                                                                                      releasesRecentReleasesCacheRow.titleId,
+                                                                                      ParamType.String,
+                                                                                    ),
+                                                                                  }.withoutNulls,
+                                                                                );
+                                                                              },
+                                                                              child: custom_widgets.ComicCover(
+                                                                                width: 80.0,
+                                                                                height: 120.0,
+                                                                                imageUrl: 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${releasesRecentReleasesCacheRow.primaryThumb}',
+                                                                                titleName: '',
+                                                                                issueNumber: releasesRecentReleasesCacheRow.issueNumber,
+                                                                                titleId: releasesRecentReleasesCacheRow.titleId,
+                                                                                spineHeight: 4.0,
+                                                                                alignBottom: false,
+                                                                                enableLightbox: false,
+                                                                                isAdult: releasesRecentReleasesCacheRow.isAdult,
+                                                                                canSeeAdult: functions.canSeeAdultContent(FFAppState().currentUserBirthDateString, FFAppState().adultContentEnabled),
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                      );
-                                                                    })
-                                                                        .divide(SizedBox(
-                                                                            width:
-                                                                                16.0))
-                                                                        .addToStart(SizedBox(
-                                                                            width:
-                                                                                36.0))
-                                                                        .addToEnd(SizedBox(
-                                                                            width:
-                                                                                36.0)),
+                                                                        );
+                                                                      }).divide(SizedBox(width: 16.0)).addToStart(SizedBox(width: 36.0)).addToEnd(SizedBox(
+                                                                          width:
+                                                                              36.0)),
+                                                                    ),
                                                                   );
                                                                 },
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  if (FFAppState().hasReadingIssues)
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 12.0, 0.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(),
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, 0.0),
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    -1.0, -1.0),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16.0, 16.0,
-                                                          16.0, 0.0),
-                                                  child: Text(
-                                                    'Você está lendo',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .labelLarge
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                          ),
-                                                          fontSize: 18.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelLarge
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: double.infinity,
-                                              height: 192.0,
-                                              child: Stack(
-                                                children: [
-                                                  Align(
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 12.0, 0.0, 0.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  focusColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    context.pushNamed(
+                                                        AllBrandsPageWidget
+                                                            .routeName);
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(),
                                                     alignment:
                                                         AlignmentDirectional(
                                                             -1.0, 0.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(16.0),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        height: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      16.0),
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, -1.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0,
+                                                                    0.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: Text(
+                                                                  'Editoras em destaque',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLarge
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .labelLarge
+                                                                            .fontStyle,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      -1.0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Text(
+                                                                    'Mais',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    size: 20.0,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Align(
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 136.0,
+                                                  decoration: BoxDecoration(),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -1.0, 0.0),
+                                                  child: Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            -1.0, 0.0),
-                                                    child: Container(
-                                                      height: double.infinity,
-                                                      decoration:
-                                                          BoxDecoration(),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, 0.0),
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, 1.0),
-                                                        child: FutureBuilder<
-                                                            List<
-                                                                AppIssueWithUserStatusRow>>(
-                                                          future: FFAppState()
-                                                              .readingIssuesCache(
-                                                            requestFn: () =>
-                                                                AppIssueWithUserStatusTable()
-                                                                    .queryRows(
-                                                              queryFn: (q) => q
-                                                                  .eqOrNull(
-                                                                    'status_reading',
-                                                                    'reading',
-                                                                  )
-                                                                  .eqOrNull(
-                                                                    'user_id',
-                                                                    currentUserUid,
-                                                                  )
-                                                                  .order(
-                                                                      'status_updated_at'),
-                                                            ),
-                                                          )
-                                                              .then((result) {
-                                                            _model.requestCompleted8 =
-                                                                true;
-                                                            return result;
-                                                          }),
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            // Customize what your widget looks like when it's loading.
-                                                            if (!snapshot
-                                                                .hasData) {
-                                                              return Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(
-                                                                            40.0),
-                                                                child:
-                                                                    Container(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  height: double
-                                                                      .infinity,
-                                                                  child:
-                                                                      GridItemSkeletonBWidget(),
-                                                                ),
-                                                              );
-                                                            }
-                                                            List<AppIssueWithUserStatusRow>
-                                                                readingAppIssueWithUserStatusRowList =
-                                                                snapshot.data!;
+                                                            -1.0, -1.0),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  16.0,
+                                                                  0.0,
+                                                                  16.0),
+                                                      child: Builder(
+                                                        builder: (context) {
+                                                          final brands =
+                                                              FFAppState()
+                                                                  .discoverBrands
+                                                                  .toList();
 
-                                                            return SingleChildScrollView(
-                                                              scrollDirection:
-                                                                  Axis.horizontal,
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: List.generate(
-                                                                        readingAppIssueWithUserStatusRowList
-                                                                            .length,
-                                                                        (readingIndex) {
-                                                                  final readingAppIssueWithUserStatusRow =
-                                                                      readingAppIssueWithUserStatusRowList[
-                                                                          readingIndex];
-                                                                  return Align(
-                                                                    alignment:
-                                                                        AlignmentDirectional(
-                                                                            -1.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                                                          0.0,
-                                                                          16.0,
-                                                                          0.0,
-                                                                          16.0),
-                                                                      child:
-                                                                          InkWell(
+                                                          return SingleChildScrollView(
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: List.generate(
+                                                                      brands
+                                                                          .length,
+                                                                      (brandsIndex) {
+                                                                final brandsItem =
+                                                                    brands[
+                                                                        brandsIndex];
+                                                                return Container(
+                                                                  width: 72.0,
+                                                                  decoration:
+                                                                      BoxDecoration(),
+                                                                  child: Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    children: [
+                                                                      InkWell(
                                                                         splashColor:
                                                                             Colors.transparent,
                                                                         focusColor:
@@ -926,241 +1464,173 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                                                             Colors.transparent,
                                                                         onTap:
                                                                             () async {
-                                                                          context
-                                                                              .pushNamed(
-                                                                            IssueDetailPageWidget.routeName,
-                                                                            queryParameters:
-                                                                                {
-                                                                              'issueId': serializeParam(
-                                                                                readingAppIssueWithUserStatusRow.issueId,
-                                                                                ParamType.String,
-                                                                              ),
-                                                                              'tittleId': serializeParam(
-                                                                                readingAppIssueWithUserStatusRow.titleId,
-                                                                                ParamType.String,
-                                                                              ),
-                                                                            }.withoutNulls,
-                                                                          );
+                                                                          if (functions.getBrandType(brandsItem) ==
+                                                                              'publisher') {
+                                                                            context.pushNamed(
+                                                                              PublisherTitlesPageWidget.routeName,
+                                                                              queryParameters: {
+                                                                                'publisherId': serializeParam(
+                                                                                  getJsonField(
+                                                                                    brandsItem,
+                                                                                    r'''$.id''',
+                                                                                  ).toString(),
+                                                                                  ParamType.String,
+                                                                                ),
+                                                                                'publisherName': serializeParam(
+                                                                                  getJsonField(
+                                                                                    brandsItem,
+                                                                                    r'''$.name''',
+                                                                                  ).toString(),
+                                                                                  ParamType.String,
+                                                                                ),
+                                                                              }.withoutNulls,
+                                                                            );
+                                                                          } else {
+                                                                            context.pushNamed(
+                                                                              LicensorTitlesPageWidget.routeName,
+                                                                              queryParameters: {
+                                                                                'licensorId': serializeParam(
+                                                                                  getJsonField(
+                                                                                    brandsItem,
+                                                                                    r'''$.id''',
+                                                                                  ),
+                                                                                  ParamType.int,
+                                                                                ),
+                                                                                'licensorName': serializeParam(
+                                                                                  getJsonField(
+                                                                                    brandsItem,
+                                                                                    r'''$.name''',
+                                                                                  ).toString(),
+                                                                                  ParamType.String,
+                                                                                ),
+                                                                              }.withoutNulls,
+                                                                            );
+                                                                          }
                                                                         },
-                                                                        child: custom_widgets
-                                                                            .ComicCover(
-                                                                          width:
-                                                                              80.0,
-                                                                          height:
-                                                                              120.0,
-                                                                          imageUrl:
-                                                                              'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${readingAppIssueWithUserStatusRow.primaryThumb}',
-                                                                          titleName:
-                                                                              '',
-                                                                          issueNumber:
-                                                                              readingAppIssueWithUserStatusRow.issueNumber,
-                                                                          titleId:
-                                                                              readingAppIssueWithUserStatusRow.titleId,
-                                                                          spineHeight:
-                                                                              4.0,
-                                                                          alignBottom:
-                                                                              false,
-                                                                          enableLightbox:
-                                                                              false,
-                                                                          isAdult:
-                                                                              readingAppIssueWithUserStatusRow.isAdult,
-                                                                          canSeeAdult: functions.canSeeAdultContent(
-                                                                              FFAppState().currentUserBirthDateString,
-                                                                              FFAppState().adultContentEnabled),
+                                                                        child:
+                                                                            ClipOval(
+                                                                          child:
+                                                                              Container(
+                                                                            width:
+                                                                                64.0,
+                                                                            height:
+                                                                                64.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              shape: BoxShape.circle,
+                                                                              border: Border.all(
+                                                                                color: FlutterFlowTheme.of(context).alternate,
+                                                                                width: 1.0,
+                                                                              ),
+                                                                            ),
+                                                                            child:
+                                                                                Hero(
+                                                                              tag: 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
+                                                                                brandsItem,
+                                                                                r'''$.logo_path''',
+                                                                              ).toString()}',
+                                                                              transitionOnUserGestures: true,
+                                                                              child: ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(1000.0),
+                                                                                child: Image.network(
+                                                                                  'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
+                                                                                    brandsItem,
+                                                                                    r'''$.logo_path''',
+                                                                                  ).toString()}',
+                                                                                  width: double.infinity,
+                                                                                  height: double.infinity,
+                                                                                  fit: BoxFit.contain,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  );
-                                                                })
-                                                                    .divide(SizedBox(
-                                                                        width:
-                                                                            16.0))
-                                                                    .addToStart(
-                                                                        SizedBox(
-                                                                            width:
-                                                                                36.0))
-                                                                    .addToEnd(
-                                                                        SizedBox(
-                                                                            width:
-                                                                                36.0)),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                                      Text(
+                                                                        getJsonField(
+                                                                          brandsItem,
+                                                                          r'''$.name''',
+                                                                        ).toString(),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        maxLines:
+                                                                            2,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              font: GoogleFonts.inter(
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                              fontSize: 12.0,
+                                                                              letterSpacing: 0.0,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                            ),
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ].divide(SizedBox(
+                                                                        height:
+                                                                            8.0)),
+                                                                  ),
+                                                                );
+                                                              })
+                                                                  .divide(SizedBox(
+                                                                      width:
+                                                                          8.0))
+                                                                  .addToStart(
+                                                                      SizedBox(
+                                                                          width:
+                                                                              16.0))
+                                                                  .addToEnd(
+                                                                      SizedBox(
+                                                                          width:
+                                                                              16.0)),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 8.0, 0.0, 0.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                  ReleasesPageWidget.routeName);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(),
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, 0.0),
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16.0, 16.0,
-                                                          16.0, 0.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1.0, -1.0),
-                                                          child: Text(
-                                                            'Lançamentos',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  fontSize:
-                                                                      18.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              'Mais',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelLarge
-                                                                  .override(
-                                                                    font: GoogleFonts
-                                                                        .inter(
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelLarge
-                                                                          .fontWeight,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelLarge
-                                                                          .fontStyle,
-                                                                    ),
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .chevron_right_rounded,
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryText,
-                                                              size: 20.0,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 192.0,
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                16.0,
-                                                                16.0,
-                                                                16.0,
-                                                                16.0),
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1.0, 0.0),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 24.0, 0.0, 0.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  focusColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    context.pushNamed(
+                                                      ListsPageWidget.routeName,
+                                                      queryParameters: {
+                                                        'filter':
+                                                            serializeParam(
+                                                          'gênero',
+                                                          ParamType.String,
+                                                        ),
+                                                        'title': serializeParam(
+                                                          'Descubra',
+                                                          ParamType.String,
+                                                        ),
+                                                      }.withoutNulls,
+                                                    );
+                                                  },
                                                   child: Container(
-                                                    height: double.infinity,
                                                     decoration: BoxDecoration(),
                                                     alignment:
                                                         AlignmentDirectional(
@@ -1168,83 +1638,1007 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              -1.0, 1.0),
-                                                      child: FutureBuilder<
-                                                          List<
-                                                              RecentReleasesCacheRow>>(
-                                                        future: FFAppState()
-                                                            .recentReleasesCache2(
-                                                          overrideCache:
-                                                              FFAppState()
-                                                                  .needsLibraryRefresh,
-                                                          requestFn: () =>
-                                                              RecentReleasesCacheTable()
-                                                                  .queryRows(
-                                                            queryFn: (q) => q,
-                                                          ),
-                                                        )
-                                                            .then((result) {
-                                                          _model.requestCompleted7 =
-                                                              true;
-                                                          return result;
-                                                        }),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          // Customize what your widget looks like when it's loading.
-                                                          if (!snapshot
-                                                              .hasData) {
-                                                            return Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(
-                                                                          40.0),
-                                                              child: Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: double
-                                                                    .infinity,
-                                                                child:
-                                                                    GridItemSkeletonBWidget(),
+                                                              0.0, -1.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: Text(
+                                                                  'Descubra',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLarge
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .labelLarge
+                                                                            .fontStyle,
+                                                                      ),
+                                                                ),
                                                               ),
-                                                            );
-                                                          }
-                                                          List<RecentReleasesCacheRow>
-                                                              releasesRecentReleasesCacheRowList =
-                                                              snapshot.data!;
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      -1.0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Text(
+                                                                    'Mais',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    size: 20.0,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 220.0,
+                                                  decoration: BoxDecoration(),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -1.0, -1.0),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, -1.0),
+                                                    child: FutureBuilder<
+                                                        List<
+                                                            AppDiscoverFeedRow>>(
+                                                      future: FFAppState()
+                                                          .listsGenreCache(
+                                                        requestFn: () =>
+                                                            AppDiscoverFeedTable()
+                                                                .queryRows(
+                                                          queryFn: (q) =>
+                                                              q.eqOrNull(
+                                                            'labels',
+                                                            'gênero',
+                                                          ),
+                                                          limit: 5,
+                                                        ),
+                                                      )
+                                                          .then((result) {
+                                                        _model.requestCompleted6 =
+                                                            true;
+                                                        return result;
+                                                      }),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        // Customize what your widget looks like when it's loading.
+                                                        if (!snapshot.hasData) {
+                                                          return FeaturedListColorSkeletonWidget();
+                                                        }
+                                                        List<AppDiscoverFeedRow>
+                                                            rowAppDiscoverFeedRowList =
+                                                            snapshot.data!;
 
-                                                          return SingleChildScrollView(
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: List.generate(
-                                                                      releasesRecentReleasesCacheRowList
-                                                                          .length,
-                                                                      (releasesIndex) {
-                                                                final releasesRecentReleasesCacheRow =
-                                                                    releasesRecentReleasesCacheRowList[
-                                                                        releasesIndex];
-                                                                return Align(
+                                                        return SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: List.generate(
+                                                                rowAppDiscoverFeedRowList
+                                                                    .length,
+                                                                (rowIndex) {
+                                                              final rowAppDiscoverFeedRow =
+                                                                  rowAppDiscoverFeedRowList[
+                                                                      rowIndex];
+                                                              return Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    context
+                                                                        .pushNamed(
+                                                                      ListDetailPageWidget
+                                                                          .routeName,
+                                                                      queryParameters:
+                                                                          {
+                                                                        'listId':
+                                                                            serializeParam(
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listId,
+                                                                          ParamType
+                                                                              .String,
+                                                                        ),
+                                                                      }.withoutNulls,
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                      wrapWithModel(
+                                                                    model: _model
+                                                                        .cardFeaturedListColorModels1
+                                                                        .getModel(
+                                                                      rowAppDiscoverFeedRow
+                                                                          .listId!,
+                                                                      rowIndex,
+                                                                    ),
+                                                                    updateCallback: () =>
+                                                                        safeSetState(
+                                                                            () {}),
+                                                                    child:
+                                                                        CardFeaturedListColorWidget(
+                                                                      key: Key(
+                                                                        'Key06m_${rowAppDiscoverFeedRow.listId!}',
+                                                                      ),
+                                                                      listName:
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listName!,
+                                                                      thumb1: rowAppDiscoverFeedRow
+                                                                          .thumb1!,
+                                                                      thumb2: rowAppDiscoverFeedRow
+                                                                          .thumb2!,
+                                                                      thumb3: rowAppDiscoverFeedRow
+                                                                          .thumb3!,
+                                                                      bgColor: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .accent1,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }).addToEnd(
+                                                                SizedBox(
+                                                                    width:
+                                                                        16.0)),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 24.0, 0.0, 0.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  focusColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    context.pushNamed(
+                                                      ListsPageWidget.routeName,
+                                                      queryParameters: {
+                                                        'filter':
+                                                            serializeParam(
+                                                          'autor',
+                                                          ParamType.String,
+                                                        ),
+                                                        'title': serializeParam(
+                                                          'Autores em destaque',
+                                                          ParamType.String,
+                                                        ),
+                                                      }.withoutNulls,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(),
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, 0.0),
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, -1.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: Text(
+                                                                  'Autores em destaque',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLarge
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .labelLarge
+                                                                            .fontStyle,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      -1.0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Text(
+                                                                    'Mais',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    size: 20.0,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 220.0,
+                                                  decoration: BoxDecoration(),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, -1.0),
+                                                    child: FutureBuilder<
+                                                        List<
+                                                            AppDiscoverFeedRow>>(
+                                                      future: FFAppState()
+                                                          .listAuthorsCache(
+                                                        requestFn: () =>
+                                                            AppDiscoverFeedTable()
+                                                                .queryRows(
+                                                          queryFn: (q) =>
+                                                              q.eqOrNull(
+                                                            'labels',
+                                                            'autor',
+                                                          ),
+                                                          limit: 5,
+                                                        ),
+                                                      )
+                                                          .then((result) {
+                                                        _model.requestCompleted2 =
+                                                            true;
+                                                        return result;
+                                                      }),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        // Customize what your widget looks like when it's loading.
+                                                        if (!snapshot.hasData) {
+                                                          return FeaturedListColorSkeletonWidget();
+                                                        }
+                                                        List<AppDiscoverFeedRow>
+                                                            rowAppDiscoverFeedRowList =
+                                                            snapshot.data!;
+
+                                                        return SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: List.generate(
+                                                                rowAppDiscoverFeedRowList
+                                                                    .length,
+                                                                (rowIndex) {
+                                                              final rowAppDiscoverFeedRow =
+                                                                  rowAppDiscoverFeedRowList[
+                                                                      rowIndex];
+                                                              return Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    context
+                                                                        .pushNamed(
+                                                                      ListDetailPageWidget
+                                                                          .routeName,
+                                                                      queryParameters:
+                                                                          {
+                                                                        'listId':
+                                                                            serializeParam(
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listId,
+                                                                          ParamType
+                                                                              .String,
+                                                                        ),
+                                                                      }.withoutNulls,
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                      wrapWithModel(
+                                                                    model: _model
+                                                                        .cardFeaturedListColorModels2
+                                                                        .getModel(
+                                                                      rowAppDiscoverFeedRow
+                                                                          .listId!,
+                                                                      rowIndex,
+                                                                    ),
+                                                                    updateCallback: () =>
+                                                                        safeSetState(
+                                                                            () {}),
+                                                                    child:
+                                                                        CardFeaturedListColorWidget(
+                                                                      key: Key(
+                                                                        'Key1p0_${rowAppDiscoverFeedRow.listId!}',
+                                                                      ),
+                                                                      listName:
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listName!,
+                                                                      thumb1: rowAppDiscoverFeedRow
+                                                                          .thumb1!,
+                                                                      thumb2: rowAppDiscoverFeedRow
+                                                                          .thumb2!,
+                                                                      thumb3: rowAppDiscoverFeedRow
+                                                                          .thumb3!,
+                                                                      bgColor: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .accent2,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }).addToEnd(
+                                                                SizedBox(
+                                                                    width:
+                                                                        16.0)),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 24.0, 0.0, 0.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  focusColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    context.pushNamed(
+                                                      ListsPageWidget.routeName,
+                                                      queryParameters: {
+                                                        'filter':
+                                                            serializeParam(
+                                                          'super-heróis',
+                                                          ParamType.String,
+                                                        ),
+                                                        'title': serializeParam(
+                                                          'Super-Heróis',
+                                                          ParamType.String,
+                                                        ),
+                                                      }.withoutNulls,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(),
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, 0.0),
+                                                    child: Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, -1.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0,
+                                                                    16.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: Text(
+                                                                  'Coletâneas de super-heróis',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLarge
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        fontSize:
+                                                                            18.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .labelLarge
+                                                                            .fontStyle,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      -1.0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Text(
+                                                                    'Mais',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryText,
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    size: 20.0,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 220.0,
+                                                  decoration: BoxDecoration(),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, -1.0),
+                                                    child: FutureBuilder<
+                                                        List<
+                                                            AppDiscoverFeedRow>>(
+                                                      future: FFAppState()
+                                                          .listHeroesCache(
+                                                        requestFn: () =>
+                                                            AppDiscoverFeedTable()
+                                                                .queryRows(
+                                                          queryFn: (q) =>
+                                                              q.eqOrNull(
+                                                            'labels',
+                                                            'super-heróis',
+                                                          ),
+                                                          limit: 5,
+                                                        ),
+                                                      )
+                                                          .then((result) {
+                                                        _model.requestCompleted3 =
+                                                            true;
+                                                        return result;
+                                                      }),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        // Customize what your widget looks like when it's loading.
+                                                        if (!snapshot.hasData) {
+                                                          return FeaturedListColorSkeletonWidget();
+                                                        }
+                                                        List<AppDiscoverFeedRow>
+                                                            rowAppDiscoverFeedRowList =
+                                                            snapshot.data!;
+
+                                                        return SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: List.generate(
+                                                                rowAppDiscoverFeedRowList
+                                                                    .length,
+                                                                (rowIndex) {
+                                                              final rowAppDiscoverFeedRow =
+                                                                  rowAppDiscoverFeedRowList[
+                                                                      rowIndex];
+                                                              return Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    context
+                                                                        .pushNamed(
+                                                                      ListDetailPageWidget
+                                                                          .routeName,
+                                                                      queryParameters:
+                                                                          {
+                                                                        'listId':
+                                                                            serializeParam(
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listId,
+                                                                          ParamType
+                                                                              .String,
+                                                                        ),
+                                                                      }.withoutNulls,
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                      wrapWithModel(
+                                                                    model: _model
+                                                                        .cardFeaturedListColorModels3
+                                                                        .getModel(
+                                                                      rowAppDiscoverFeedRow
+                                                                          .listId!,
+                                                                      rowIndex,
+                                                                    ),
+                                                                    updateCallback: () =>
+                                                                        safeSetState(
+                                                                            () {}),
+                                                                    child:
+                                                                        CardFeaturedListColorWidget(
+                                                                      key: Key(
+                                                                        'Keypmx_${rowAppDiscoverFeedRow.listId!}',
+                                                                      ),
+                                                                      listName:
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listName!,
+                                                                      thumb1: rowAppDiscoverFeedRow
+                                                                          .thumb1!,
+                                                                      thumb2: rowAppDiscoverFeedRow
+                                                                          .thumb2!,
+                                                                      thumb3: rowAppDiscoverFeedRow
+                                                                          .thumb3!,
+                                                                      bgColor: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .accent3,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }).addToEnd(
+                                                                SizedBox(
+                                                                    width:
+                                                                        16.0)),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 48.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 24.0, 0.0, 0.0),
+                                                  child: InkWell(
+                                                    splashColor:
+                                                        Colors.transparent,
+                                                    focusColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () async {
+                                                      context.pushNamed(
+                                                        ListsPageWidget
+                                                            .routeName,
+                                                        queryParameters: {
+                                                          'filter':
+                                                              serializeParam(
+                                                            'intro',
+                                                            ParamType.String,
+                                                          ),
+                                                          'title':
+                                                              serializeParam(
+                                                            'Para conhecer personagens',
+                                                            ParamType.String,
+                                                          ),
+                                                        }.withoutNulls,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, -1.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      16.0,
+                                                                      16.0,
+                                                                      16.0,
+                                                                      16.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Align(
                                                                   alignment:
                                                                       AlignmentDirectional(
                                                                           -1.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            16.0,
-                                                                            0.0,
-                                                                            16.0),
+                                                                          -1.0),
+                                                                  child: Text(
+                                                                    'Para conhecer personagens',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.inter(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                          fontSize:
+                                                                              18.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        -1.0),
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Mais',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelLarge
+                                                                          .override(
+                                                                            font:
+                                                                                GoogleFonts.inter(
+                                                                              fontWeight: FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                              fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                            ),
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                          ),
+                                                                    ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .chevron_right_rounded,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryText,
+                                                                      size:
+                                                                          20.0,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            -1.0, -1.0),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      height: 220.0,
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                -1.0, -1.0),
+                                                        child: FutureBuilder<
+                                                            List<
+                                                                AppDiscoverFeedRow>>(
+                                                          future: FFAppState()
+                                                              .listIntroCache(
+                                                            requestFn: () =>
+                                                                AppDiscoverFeedTable()
+                                                                    .queryRows(
+                                                              queryFn: (q) =>
+                                                                  q.eqOrNull(
+                                                                'labels',
+                                                                'intro',
+                                                              ),
+                                                              limit: 5,
+                                                            ),
+                                                          )
+                                                              .then((result) {
+                                                            _model.requestCompleted4 =
+                                                                true;
+                                                            return result;
+                                                          }),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            // Customize what your widget looks like when it's loading.
+                                                            if (!snapshot
+                                                                .hasData) {
+                                                              return FeaturedListColorSkeletonWidget();
+                                                            }
+                                                            List<AppDiscoverFeedRow>
+                                                                rowAppDiscoverFeedRowList =
+                                                                snapshot.data!;
+
+                                                            return SingleChildScrollView(
+                                                              scrollDirection:
+                                                                  Axis.horizontal,
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: List.generate(
+                                                                    rowAppDiscoverFeedRowList
+                                                                        .length,
+                                                                    (rowIndex) {
+                                                                  final rowAppDiscoverFeedRow =
+                                                                      rowAppDiscoverFeedRowList[
+                                                                          rowIndex];
+                                                                  return Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            -1.0,
+                                                                            -1.0),
                                                                     child:
                                                                         InkWell(
                                                                       splashColor:
@@ -1263,67 +2657,58 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                                                           () async {
                                                                         context
                                                                             .pushNamed(
-                                                                          IssueDetailPageWidget
+                                                                          ListDetailPageWidget
                                                                               .routeName,
                                                                           queryParameters:
                                                                               {
-                                                                            'issueId':
+                                                                            'listId':
                                                                                 serializeParam(
-                                                                              releasesRecentReleasesCacheRow.issueId,
-                                                                              ParamType.String,
-                                                                            ),
-                                                                            'tittleId':
-                                                                                serializeParam(
-                                                                              releasesRecentReleasesCacheRow.titleId,
+                                                                              rowAppDiscoverFeedRow.listId,
                                                                               ParamType.String,
                                                                             ),
                                                                           }.withoutNulls,
                                                                         );
                                                                       },
-                                                                      child: custom_widgets
-                                                                          .ComicCover(
-                                                                        width:
-                                                                            80.0,
-                                                                        height:
-                                                                            120.0,
-                                                                        imageUrl:
-                                                                            'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${releasesRecentReleasesCacheRow.primaryThumb}',
-                                                                        titleName:
-                                                                            '',
-                                                                        issueNumber:
-                                                                            releasesRecentReleasesCacheRow.issueNumber,
-                                                                        titleId:
-                                                                            releasesRecentReleasesCacheRow.titleId,
-                                                                        spineHeight:
-                                                                            4.0,
-                                                                        alignBottom:
-                                                                            false,
-                                                                        enableLightbox:
-                                                                            false,
-                                                                        isAdult:
-                                                                            releasesRecentReleasesCacheRow.isAdult,
-                                                                        canSeeAdult: functions.canSeeAdultContent(
-                                                                            FFAppState().currentUserBirthDateString,
-                                                                            FFAppState().adultContentEnabled),
+                                                                      child:
+                                                                          wrapWithModel(
+                                                                        model: _model
+                                                                            .cardFeaturedListColorModels4
+                                                                            .getModel(
+                                                                          rowAppDiscoverFeedRow
+                                                                              .listId!,
+                                                                          rowIndex,
+                                                                        ),
+                                                                        updateCallback:
+                                                                            () =>
+                                                                                safeSetState(() {}),
+                                                                        child:
+                                                                            CardFeaturedListColorWidget(
+                                                                          key:
+                                                                              Key(
+                                                                            'Key7hl_${rowAppDiscoverFeedRow.listId!}',
+                                                                          ),
+                                                                          listName:
+                                                                              rowAppDiscoverFeedRow.listName!,
+                                                                          thumb1:
+                                                                              rowAppDiscoverFeedRow.thumb1!,
+                                                                          thumb2:
+                                                                              rowAppDiscoverFeedRow.thumb2!,
+                                                                          thumb3:
+                                                                              rowAppDiscoverFeedRow.thumb3!,
+                                                                          bgColor:
+                                                                              FlutterFlowTheme.of(context).accent1,
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                );
-                                                              })
-                                                                  .divide(SizedBox(
-                                                                      width:
-                                                                          16.0))
-                                                                  .addToStart(
-                                                                      SizedBox(
-                                                                          width:
-                                                                              36.0))
-                                                                  .addToEnd(
-                                                                      SizedBox(
-                                                                          width:
-                                                                              36.0)),
-                                                            ),
-                                                          );
-                                                        },
+                                                                  );
+                                                                }).addToEnd(
+                                                                    SizedBox(
+                                                                        width:
+                                                                            16.0)),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -1334,1425 +2719,23 @@ class _DiscoverPageWidgetState extends State<DiscoverPageWidget> {
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 12.0, 0.0, 0.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                                AllBrandsPageWidget.routeName);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(),
-                                            alignment:
-                                                AlignmentDirectional(-1.0, 0.0),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        16.0, 16.0, 16.0, 0.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Text(
-                                                          'Editoras em destaque',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .labelLarge
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                                fontSize: 18.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, -1.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            'Mais',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryText,
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .chevron_right_rounded,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryText,
-                                                            size: 20.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 136.0,
-                                          decoration: BoxDecoration(),
-                                          alignment:
-                                              AlignmentDirectional(-1.0, 0.0),
-                                          child: Align(
-                                            alignment: AlignmentDirectional(
-                                                -1.0, -1.0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 16.0, 0.0, 16.0),
-                                              child: Builder(
-                                                builder: (context) {
-                                                  final brands = FFAppState()
-                                                      .discoverBrands
-                                                      .toList();
-
-                                                  return SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: List.generate(
-                                                              brands.length,
-                                                              (brandsIndex) {
-                                                        final brandsItem =
-                                                            brands[brandsIndex];
-                                                        return Container(
-                                                          width: 72.0,
-                                                          decoration:
-                                                              BoxDecoration(),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                onTap:
-                                                                    () async {
-                                                                  if (functions
-                                                                          .getBrandType(
-                                                                              brandsItem) ==
-                                                                      'publisher') {
-                                                                    context
-                                                                        .pushNamed(
-                                                                      PublisherTitlesPageWidget
-                                                                          .routeName,
-                                                                      queryParameters:
-                                                                          {
-                                                                        'publisherId':
-                                                                            serializeParam(
-                                                                          getJsonField(
-                                                                            brandsItem,
-                                                                            r'''$.id''',
-                                                                          ).toString(),
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
-                                                                        'publisherName':
-                                                                            serializeParam(
-                                                                          getJsonField(
-                                                                            brandsItem,
-                                                                            r'''$.name''',
-                                                                          ).toString(),
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
-                                                                      }.withoutNulls,
-                                                                    );
-                                                                  } else {
-                                                                    context
-                                                                        .pushNamed(
-                                                                      LicensorTitlesPageWidget
-                                                                          .routeName,
-                                                                      queryParameters:
-                                                                          {
-                                                                        'licensorId':
-                                                                            serializeParam(
-                                                                          getJsonField(
-                                                                            brandsItem,
-                                                                            r'''$.id''',
-                                                                          ),
-                                                                          ParamType
-                                                                              .int,
-                                                                        ),
-                                                                        'licensorName':
-                                                                            serializeParam(
-                                                                          getJsonField(
-                                                                            brandsItem,
-                                                                            r'''$.name''',
-                                                                          ).toString(),
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
-                                                                      }.withoutNulls,
-                                                                    );
-                                                                  }
-                                                                },
-                                                                child: ClipOval(
-                                                                  child:
-                                                                      Container(
-                                                                    width: 64.0,
-                                                                    height:
-                                                                        64.0,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      shape: BoxShape
-                                                                          .circle,
-                                                                      border:
-                                                                          Border
-                                                                              .all(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .alternate,
-                                                                        width:
-                                                                            1.0,
-                                                                      ),
-                                                                    ),
-                                                                    child: Hero(
-                                                                      tag:
-                                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
-                                                                        brandsItem,
-                                                                        r'''$.logo_path''',
-                                                                      ).toString()}',
-                                                                      transitionOnUserGestures:
-                                                                          true,
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(1000.0),
-                                                                        child: Image
-                                                                            .network(
-                                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
-                                                                            brandsItem,
-                                                                            r'''$.logo_path''',
-                                                                          ).toString()}',
-                                                                          width:
-                                                                              double.infinity,
-                                                                          height:
-                                                                              double.infinity,
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                getJsonField(
-                                                                  brandsItem,
-                                                                  r'''$.name''',
-                                                                ).toString(),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                maxLines: 2,
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      font: GoogleFonts
-                                                                          .inter(
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontStyle,
-                                                                      ),
-                                                                      fontSize:
-                                                                          12.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .fontStyle,
-                                                                    ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                height: 8.0)),
-                                                          ),
-                                                        );
-                                                      })
-                                                          .divide(SizedBox(
-                                                              width: 8.0))
-                                                          .addToStart(SizedBox(
-                                                              width: 16.0))
-                                                          .addToEnd(SizedBox(
-                                                              width: 16.0)),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 24.0, 0.0, 0.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              ListsPageWidget.routeName,
-                                              queryParameters: {
-                                                'filter': serializeParam(
-                                                  'gênero',
-                                                  ParamType.String,
-                                                ),
-                                                'title': serializeParam(
-                                                  'Descubra',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(),
-                                            alignment:
-                                                AlignmentDirectional(-1.0, 0.0),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        16.0, 16.0, 16.0, 16.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Text(
-                                                          'Descubra',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .labelLarge
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                                fontSize: 18.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, -1.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            'Mais',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryText,
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .chevron_right_rounded,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryText,
-                                                            size: 20.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 220.0,
-                                          decoration: BoxDecoration(),
-                                          alignment:
-                                              AlignmentDirectional(-1.0, -1.0),
-                                          child: Align(
-                                            alignment: AlignmentDirectional(
-                                                -1.0, -1.0),
-                                            child: FutureBuilder<
-                                                List<AppDiscoverFeedRow>>(
-                                              future: FFAppState()
-                                                  .listsGenreCache(
-                                                requestFn: () =>
-                                                    AppDiscoverFeedTable()
-                                                        .queryRows(
-                                                  queryFn: (q) => q.eqOrNull(
-                                                    'labels',
-                                                    'gênero',
-                                                  ),
-                                                  limit: 5,
-                                                ),
-                                              )
-                                                  .then((result) {
-                                                _model.requestCompleted6 = true;
-                                                return result;
-                                              }),
-                                              builder: (context, snapshot) {
-                                                // Customize what your widget looks like when it's loading.
-                                                if (!snapshot.hasData) {
-                                                  return FeaturedListColorSkeletonWidget();
-                                                }
-                                                List<AppDiscoverFeedRow>
-                                                    rowAppDiscoverFeedRowList =
-                                                    snapshot.data!;
-
-                                                return SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: List.generate(
-                                                        rowAppDiscoverFeedRowList
-                                                            .length,
-                                                        (rowIndex) {
-                                                      final rowAppDiscoverFeedRow =
-                                                          rowAppDiscoverFeedRowList[
-                                                              rowIndex];
-                                                      return Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          focusColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          onTap: () async {
-                                                            context.pushNamed(
-                                                              ListDetailPageWidget
-                                                                  .routeName,
-                                                              queryParameters: {
-                                                                'listId':
-                                                                    serializeParam(
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listId,
-                                                                  ParamType
-                                                                      .String,
-                                                                ),
-                                                              }.withoutNulls,
-                                                            );
-                                                          },
-                                                          child: wrapWithModel(
-                                                            model: _model
-                                                                .cardFeaturedListColorModels1
-                                                                .getModel(
-                                                              rowAppDiscoverFeedRow
-                                                                  .listId!,
-                                                              rowIndex,
-                                                            ),
-                                                            updateCallback: () =>
-                                                                safeSetState(
-                                                                    () {}),
-                                                            child:
-                                                                CardFeaturedListColorWidget(
-                                                              key: Key(
-                                                                'Key06m_${rowAppDiscoverFeedRow.listId!}',
-                                                              ),
-                                                              listName:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listName!,
-                                                              thumb1:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb1!,
-                                                              thumb2:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb2!,
-                                                              thumb3:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb3!,
-                                                              bgColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .accent1,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).addToEnd(
-                                                        SizedBox(width: 16.0)),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 24.0, 0.0, 0.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              ListsPageWidget.routeName,
-                                              queryParameters: {
-                                                'filter': serializeParam(
-                                                  'autor',
-                                                  ParamType.String,
-                                                ),
-                                                'title': serializeParam(
-                                                  'Autores em destaque',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(),
-                                            alignment:
-                                                AlignmentDirectional(-1.0, 0.0),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        16.0, 16.0, 16.0, 16.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Text(
-                                                          'Autores em destaque',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .labelLarge
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                                fontSize: 18.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, -1.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            'Mais',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryText,
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .chevron_right_rounded,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryText,
-                                                            size: 20.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 220.0,
-                                          decoration: BoxDecoration(),
-                                          child: Align(
-                                            alignment: AlignmentDirectional(
-                                                -1.0, -1.0),
-                                            child: FutureBuilder<
-                                                List<AppDiscoverFeedRow>>(
-                                              future: FFAppState()
-                                                  .listAuthorsCache(
-                                                requestFn: () =>
-                                                    AppDiscoverFeedTable()
-                                                        .queryRows(
-                                                  queryFn: (q) => q.eqOrNull(
-                                                    'labels',
-                                                    'autor',
-                                                  ),
-                                                  limit: 5,
-                                                ),
-                                              )
-                                                  .then((result) {
-                                                _model.requestCompleted2 = true;
-                                                return result;
-                                              }),
-                                              builder: (context, snapshot) {
-                                                // Customize what your widget looks like when it's loading.
-                                                if (!snapshot.hasData) {
-                                                  return FeaturedListColorSkeletonWidget();
-                                                }
-                                                List<AppDiscoverFeedRow>
-                                                    rowAppDiscoverFeedRowList =
-                                                    snapshot.data!;
-
-                                                return SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: List.generate(
-                                                        rowAppDiscoverFeedRowList
-                                                            .length,
-                                                        (rowIndex) {
-                                                      final rowAppDiscoverFeedRow =
-                                                          rowAppDiscoverFeedRowList[
-                                                              rowIndex];
-                                                      return Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          focusColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          onTap: () async {
-                                                            context.pushNamed(
-                                                              ListDetailPageWidget
-                                                                  .routeName,
-                                                              queryParameters: {
-                                                                'listId':
-                                                                    serializeParam(
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listId,
-                                                                  ParamType
-                                                                      .String,
-                                                                ),
-                                                              }.withoutNulls,
-                                                            );
-                                                          },
-                                                          child: wrapWithModel(
-                                                            model: _model
-                                                                .cardFeaturedListColorModels2
-                                                                .getModel(
-                                                              rowAppDiscoverFeedRow
-                                                                  .listId!,
-                                                              rowIndex,
-                                                            ),
-                                                            updateCallback: () =>
-                                                                safeSetState(
-                                                                    () {}),
-                                                            child:
-                                                                CardFeaturedListColorWidget(
-                                                              key: Key(
-                                                                'Key1p0_${rowAppDiscoverFeedRow.listId!}',
-                                                              ),
-                                                              listName:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listName!,
-                                                              thumb1:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb1!,
-                                                              thumb2:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb2!,
-                                                              thumb3:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb3!,
-                                                              bgColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .accent2,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).addToEnd(
-                                                        SizedBox(width: 16.0)),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 24.0, 0.0, 0.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              ListsPageWidget.routeName,
-                                              queryParameters: {
-                                                'filter': serializeParam(
-                                                  'super-heróis',
-                                                  ParamType.String,
-                                                ),
-                                                'title': serializeParam(
-                                                  'Super-Heróis',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(),
-                                            alignment:
-                                                AlignmentDirectional(-1.0, 0.0),
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.0, -1.0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        16.0, 16.0, 16.0, 16.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Text(
-                                                          'Coletâneas de super-heróis',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .labelLarge
-                                                              .override(
-                                                                font:
-                                                                    GoogleFonts
-                                                                        .inter(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                                fontSize: 18.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, -1.0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            'Mais',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .secondaryText,
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .chevron_right_rounded,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryText,
-                                                            size: 20.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 220.0,
-                                          decoration: BoxDecoration(),
-                                          child: Align(
-                                            alignment: AlignmentDirectional(
-                                                -1.0, -1.0),
-                                            child: FutureBuilder<
-                                                List<AppDiscoverFeedRow>>(
-                                              future: FFAppState()
-                                                  .listHeroesCache(
-                                                requestFn: () =>
-                                                    AppDiscoverFeedTable()
-                                                        .queryRows(
-                                                  queryFn: (q) => q.eqOrNull(
-                                                    'labels',
-                                                    'super-heróis',
-                                                  ),
-                                                  limit: 5,
-                                                ),
-                                              )
-                                                  .then((result) {
-                                                _model.requestCompleted3 = true;
-                                                return result;
-                                              }),
-                                              builder: (context, snapshot) {
-                                                // Customize what your widget looks like when it's loading.
-                                                if (!snapshot.hasData) {
-                                                  return FeaturedListColorSkeletonWidget();
-                                                }
-                                                List<AppDiscoverFeedRow>
-                                                    rowAppDiscoverFeedRowList =
-                                                    snapshot.data!;
-
-                                                return SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: List.generate(
-                                                        rowAppDiscoverFeedRowList
-                                                            .length,
-                                                        (rowIndex) {
-                                                      final rowAppDiscoverFeedRow =
-                                                          rowAppDiscoverFeedRowList[
-                                                              rowIndex];
-                                                      return Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          focusColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          onTap: () async {
-                                                            context.pushNamed(
-                                                              ListDetailPageWidget
-                                                                  .routeName,
-                                                              queryParameters: {
-                                                                'listId':
-                                                                    serializeParam(
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listId,
-                                                                  ParamType
-                                                                      .String,
-                                                                ),
-                                                              }.withoutNulls,
-                                                            );
-                                                          },
-                                                          child: wrapWithModel(
-                                                            model: _model
-                                                                .cardFeaturedListColorModels3
-                                                                .getModel(
-                                                              rowAppDiscoverFeedRow
-                                                                  .listId!,
-                                                              rowIndex,
-                                                            ),
-                                                            updateCallback: () =>
-                                                                safeSetState(
-                                                                    () {}),
-                                                            child:
-                                                                CardFeaturedListColorWidget(
-                                                              key: Key(
-                                                                'Keypmx_${rowAppDiscoverFeedRow.listId!}',
-                                                              ),
-                                                              listName:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listName!,
-                                                              thumb1:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb1!,
-                                                              thumb2:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb2!,
-                                                              thumb3:
-                                                                  rowAppDiscoverFeedRow
-                                                                      .thumb3!,
-                                                              bgColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .accent3,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).addToEnd(
-                                                        SizedBox(width: 16.0)),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 48.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 24.0, 0.0, 0.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                ListsPageWidget.routeName,
-                                                queryParameters: {
-                                                  'filter': serializeParam(
-                                                    'intro',
-                                                    ParamType.String,
-                                                  ),
-                                                  'title': serializeParam(
-                                                    'Para conhecer personagens',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(),
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, 0.0),
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16.0, 16.0,
-                                                          16.0, 16.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1.0, -1.0),
-                                                          child: Text(
-                                                            'Para conhecer personagens',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .labelLarge
-                                                                .override(
-                                                                  font:
-                                                                      GoogleFonts
-                                                                          .inter(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                                  fontSize:
-                                                                      18.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .fontStyle,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1.0, -1.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              'Mais',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelLarge
-                                                                  .override(
-                                                                    font: GoogleFonts
-                                                                        .inter(
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelLarge
-                                                                          .fontWeight,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelLarge
-                                                                          .fontStyle,
-                                                                    ),
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelLarge
-                                                                        .fontStyle,
-                                                                  ),
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .chevron_right_rounded,
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryText,
-                                                              size: 20.0,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: AlignmentDirectional(
-                                                -1.0, -1.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 220.0,
-                                              decoration: BoxDecoration(),
-                                              child: Align(
-                                                alignment: AlignmentDirectional(
-                                                    -1.0, -1.0),
-                                                child: FutureBuilder<
-                                                    List<AppDiscoverFeedRow>>(
-                                                  future: FFAppState()
-                                                      .listIntroCache(
-                                                    requestFn: () =>
-                                                        AppDiscoverFeedTable()
-                                                            .queryRows(
-                                                      queryFn: (q) =>
-                                                          q.eqOrNull(
-                                                        'labels',
-                                                        'intro',
-                                                      ),
-                                                      limit: 5,
-                                                    ),
-                                                  )
-                                                      .then((result) {
-                                                    _model.requestCompleted4 =
-                                                        true;
-                                                    return result;
-                                                  }),
-                                                  builder: (context, snapshot) {
-                                                    // Customize what your widget looks like when it's loading.
-                                                    if (!snapshot.hasData) {
-                                                      return FeaturedListColorSkeletonWidget();
-                                                    }
-                                                    List<AppDiscoverFeedRow>
-                                                        rowAppDiscoverFeedRowList =
-                                                        snapshot.data!;
-
-                                                    return SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: List.generate(
-                                                            rowAppDiscoverFeedRowList
-                                                                .length,
-                                                            (rowIndex) {
-                                                          final rowAppDiscoverFeedRow =
-                                                              rowAppDiscoverFeedRowList[
-                                                                  rowIndex];
-                                                          return Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1.0, -1.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                context
-                                                                    .pushNamed(
-                                                                  ListDetailPageWidget
-                                                                      .routeName,
-                                                                  queryParameters:
-                                                                      {
-                                                                    'listId':
-                                                                        serializeParam(
-                                                                      rowAppDiscoverFeedRow
-                                                                          .listId,
-                                                                      ParamType
-                                                                          .String,
-                                                                    ),
-                                                                  }.withoutNulls,
-                                                                );
-                                                              },
-                                                              child:
-                                                                  wrapWithModel(
-                                                                model: _model
-                                                                    .cardFeaturedListColorModels4
-                                                                    .getModel(
-                                                                  rowAppDiscoverFeedRow
-                                                                      .listId!,
-                                                                  rowIndex,
-                                                                ),
-                                                                updateCallback: () =>
-                                                                    safeSetState(
-                                                                        () {}),
-                                                                child:
-                                                                    CardFeaturedListColorWidget(
-                                                                  key: Key(
-                                                                    'Key7hl_${rowAppDiscoverFeedRow.listId!}',
-                                                                  ),
-                                                                  listName:
-                                                                      rowAppDiscoverFeedRow
-                                                                          .listName!,
-                                                                  thumb1:
-                                                                      rowAppDiscoverFeedRow
-                                                                          .thumb1!,
-                                                                  thumb2:
-                                                                      rowAppDiscoverFeedRow
-                                                                          .thumb2!,
-                                                                  thumb3:
-                                                                      rowAppDiscoverFeedRow
-                                                                          .thumb3!,
-                                                                  bgColor: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .accent1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }).addToEnd(SizedBox(
-                                                            width: 16.0)),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            ),
-                          );
-                        },
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 1.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 48.0,
+                                  child: custom_widgets.OfflineBanner(
+                                    width: double.infinity,
+                                    height: 48.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },

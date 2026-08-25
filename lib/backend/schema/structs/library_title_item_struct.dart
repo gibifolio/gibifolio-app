@@ -45,6 +45,8 @@ class LibraryTitleItemStruct extends BaseStruct {
     String? wantedFirstIssueId,
     String? readingFirstIssueId,
     String? readFirstIssueId,
+    String? preTitle,
+    String? formatLabel,
   })  : _titleId = titleId,
         _titleName = titleName,
         _titleSubtitle = titleSubtitle,
@@ -82,7 +84,9 @@ class LibraryTitleItemStruct extends BaseStruct {
         _ownedFirstIssueId = ownedFirstIssueId,
         _wantedFirstIssueId = wantedFirstIssueId,
         _readingFirstIssueId = readingFirstIssueId,
-        _readFirstIssueId = readFirstIssueId;
+        _readFirstIssueId = readFirstIssueId,
+        _preTitle = preTitle,
+        _formatLabel = formatLabel;
 
   // "titleId" field.
   String? _titleId;
@@ -364,6 +368,20 @@ class LibraryTitleItemStruct extends BaseStruct {
 
   bool hasReadFirstIssueId() => _readFirstIssueId != null;
 
+  // "preTitle" field.
+  String? _preTitle;
+  String get preTitle => _preTitle ?? '';
+  set preTitle(String? val) => _preTitle = val;
+
+  bool hasPreTitle() => _preTitle != null;
+
+  // "formatLabel" field.
+  String? _formatLabel;
+  String get formatLabel => _formatLabel ?? '';
+  set formatLabel(String? val) => _formatLabel = val;
+
+  bool hasFormatLabel() => _formatLabel != null;
+
   static LibraryTitleItemStruct fromMap(Map<String, dynamic> data) =>
       LibraryTitleItemStruct(
         titleId: data['titleId'] as String?,
@@ -404,6 +422,8 @@ class LibraryTitleItemStruct extends BaseStruct {
         wantedFirstIssueId: data['wantedFirstIssueId'] as String?,
         readingFirstIssueId: data['readingFirstIssueId'] as String?,
         readFirstIssueId: data['readFirstIssueId'] as String?,
+        preTitle: data['preTitle'] as String?,
+        formatLabel: data['formatLabel'] as String?,
       );
 
   static LibraryTitleItemStruct? maybeFromMap(dynamic data) => data is Map
@@ -449,6 +469,8 @@ class LibraryTitleItemStruct extends BaseStruct {
         'wantedFirstIssueId': _wantedFirstIssueId,
         'readingFirstIssueId': _readingFirstIssueId,
         'readFirstIssueId': _readFirstIssueId,
+        'preTitle': _preTitle,
+        'formatLabel': _formatLabel,
       }.withoutNulls;
 
   @override
@@ -603,6 +625,14 @@ class LibraryTitleItemStruct extends BaseStruct {
         ),
         'readFirstIssueId': serializeParam(
           _readFirstIssueId,
+          ParamType.String,
+        ),
+        'preTitle': serializeParam(
+          _preTitle,
+          ParamType.String,
+        ),
+        'formatLabel': serializeParam(
+          _formatLabel,
           ParamType.String,
         ),
       }.withoutNulls;
@@ -800,6 +830,16 @@ class LibraryTitleItemStruct extends BaseStruct {
           ParamType.String,
           false,
         ),
+        preTitle: deserializeParam(
+          data['preTitle'],
+          ParamType.String,
+          false,
+        ),
+        formatLabel: deserializeParam(
+          data['formatLabel'],
+          ParamType.String,
+          false,
+        ),
       );
 
   @override
@@ -845,7 +885,9 @@ class LibraryTitleItemStruct extends BaseStruct {
         ownedFirstIssueId == other.ownedFirstIssueId &&
         wantedFirstIssueId == other.wantedFirstIssueId &&
         readingFirstIssueId == other.readingFirstIssueId &&
-        readFirstIssueId == other.readFirstIssueId;
+        readFirstIssueId == other.readFirstIssueId &&
+        preTitle == other.preTitle &&
+        formatLabel == other.formatLabel;
   }
 
   @override
@@ -887,7 +929,9 @@ class LibraryTitleItemStruct extends BaseStruct {
         ownedFirstIssueId,
         wantedFirstIssueId,
         readingFirstIssueId,
-        readFirstIssueId
+        readFirstIssueId,
+        preTitle,
+        formatLabel
       ]);
 }
 
@@ -930,6 +974,8 @@ LibraryTitleItemStruct createLibraryTitleItemStruct({
   String? wantedFirstIssueId,
   String? readingFirstIssueId,
   String? readFirstIssueId,
+  String? preTitle,
+  String? formatLabel,
 }) =>
     LibraryTitleItemStruct(
       titleId: titleId,
@@ -970,4 +1016,6 @@ LibraryTitleItemStruct createLibraryTitleItemStruct({
       wantedFirstIssueId: wantedFirstIssueId,
       readingFirstIssueId: readingFirstIssueId,
       readFirstIssueId: readFirstIssueId,
+      preTitle: preTitle,
+      formatLabel: formatLabel,
     );

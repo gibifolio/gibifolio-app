@@ -192,6 +192,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'publisherId',
               ParamType.String,
             ),
+            isUpcoming: params.getParam(
+              'isUpcoming',
+              ParamType.bool,
+            ),
           ),
         ),
         FFRoute(
@@ -237,16 +241,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: StatusOwnedPageWidget.routeName,
           path: StatusOwnedPageWidget.routePath,
           builder: (context, params) => StatusOwnedPageWidget(),
-        ),
-        FFRoute(
-          name: DiscoverPageWidget.routeName,
-          path: DiscoverPageWidget.routePath,
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(
-                  initialPage: 'DiscoverPage',
-                  disableResizeToAvoidBottomInset: true,
-                )
-              : DiscoverPageWidget(),
         ),
         FFRoute(
           name: ListsPageWidget.routeName,
@@ -313,6 +307,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ParamType.String,
             ),
           ),
+        ),
+        FFRoute(
+          name: DiscoverPageWidget.routeName,
+          path: DiscoverPageWidget.routePath,
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(
+                  initialPage: 'DiscoverPage',
+                  disableResizeToAvoidBottomInset: true,
+                )
+              : DiscoverPageWidget(),
+        ),
+        FFRoute(
+          name: ListReorderPageWidget.routeName,
+          path: ListReorderPageWidget.routePath,
+          builder: (context, params) => ListReorderPageWidget(
+            listId: params.getParam(
+              'listId',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: MyListsReorderPageWidget.routeName,
+          path: MyListsReorderPageWidget.routePath,
+          builder: (context, params) => MyListsReorderPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

@@ -17,10 +17,12 @@ class PublisherReleasesPageWidget extends StatefulWidget {
     super.key,
     this.publisherName,
     this.publisherId,
-  });
+    bool? isUpcoming,
+  }) : this.isUpcoming = isUpcoming ?? false;
 
   final String? publisherName;
   final String? publisherId;
+  final bool isUpcoming;
 
   static String routeName = 'PublisherReleasesPage';
   static String routePath = '/publisherReleasesPage';
@@ -135,102 +137,136 @@ class _PublisherReleasesPageWidgetState
             ),
             body: SafeArea(
               top: true,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: FutureBuilder<List<AppReleasesFullRow>>(
-                        future: AppReleasesFullTable().queryRows(
-                          queryFn: (q) => q
-                              .eqOrNull(
-                                'publisher_id',
-                                widget.publisherId,
-                              )
-                              .order('canonical_key', ascending: true),
-                        ),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return GridItemSkeletonWidget();
-                          }
-                          List<AppReleasesFullRow>
-                              gridViewAppReleasesFullRowList = snapshot.data!;
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  decoration: BoxDecoration(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(24.0),
+                          child: FutureBuilder<List<AppReleasesAllRow>>(
+                            future: AppReleasesAllTable().queryRows(
+                              queryFn: (q) => q
+                                  .eqOrNull(
+                                    'publisher_id',
+                                    widget.publisherId,
+                                  )
+                                  .eqOrNull(
+                                    'is_upcoming',
+                                    widget.isUpcoming,
+                                  )
+                                  .order('date')
+                                  .order('title_id')
+                                  .order('issue_number'),
+                            ),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return GridItemSkeletonWidget();
+                              }
+                              List<AppReleasesAllRow>
+                                  gridViewAppReleasesAllRowList =
+                                  snapshot.data!;
 
-                          return GridView.builder(
-                            padding: EdgeInsets.fromLTRB(
-                              0,
-                              16.0,
-                              0,
-                              16.0,
-                            ),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 24.0,
-                              mainAxisSpacing: 40.0,
-                              childAspectRatio: 0.65,
-                            ),
-                            primary: false,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: gridViewAppReleasesFullRowList.length,
-                            itemBuilder: (context, gridViewIndex) {
-                              final gridViewAppReleasesFullRow =
-                                  gridViewAppReleasesFullRowList[gridViewIndex];
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  context.pushNamed(
-                                    IssueDetailPageWidget.routeName,
-                                    queryParameters: {
-                                      'issueId': serializeParam(
-                                        gridViewAppReleasesFullRow.issueId,
-                                        ParamType.String,
+                              return GridView.builder(
+                                padding: EdgeInsets.fromLTRB(
+                                  0,
+                                  16.0,
+                                  0,
+                                  16.0,
+                                ),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 24.0,
+                                  mainAxisSpacing: 40.0,
+                                  childAspectRatio: 0.65,
+                                ),
+                                primary: false,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: gridViewAppReleasesAllRowList.length,
+                                itemBuilder: (context, gridViewIndex) {
+                                  final gridViewAppReleasesAllRow =
+                                      gridViewAppReleasesAllRowList[
+                                          gridViewIndex];
+                                  return InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        IssueDetailPageWidget.routeName,
+                                        queryParameters: {
+                                          'issueId': serializeParam(
+                                            gridViewAppReleasesAllRow.issueId,
+                                            ParamType.String,
+                                          ),
+                                          'tittleId': serializeParam(
+                                            gridViewAppReleasesAllRow.titleId,
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    },
+                                    child: wrapWithModel(
+                                      model:
+                                          _model.gridItemIssueModels.getModel(
+                                        gridViewAppReleasesAllRow.issueId!,
+                                        gridViewIndex,
                                       ),
-                                      'tittleId': serializeParam(
-                                        gridViewAppReleasesFullRow.titleId,
-                                        ParamType.String,
+                                      updateCallback: () => safeSetState(() {}),
+                                      child: GridItemIssueWidget(
+                                        key: Key(
+                                          'Keyo1x_${gridViewAppReleasesAllRow.issueId!}',
+                                        ),
+                                        issueId:
+                                            gridViewAppReleasesAllRow.issueId,
+                                        showTitleInfo: true,
+                                        issueNumber: gridViewAppReleasesAllRow
+                                            .issueNumber,
+                                        titleName:
+                                            gridViewAppReleasesAllRow.titleName,
+                                        titleId:
+                                            gridViewAppReleasesAllRow.titleId,
+                                        thumb:
+                                            'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${gridViewAppReleasesAllRow.primaryThumb}',
+                                        isAdult:
+                                            gridViewAppReleasesAllRow.isAdult,
+                                        canSeeAdult:
+                                            functions.canSeeAdultContent(
+                                                FFAppState()
+                                                    .currentUserBirthDateString,
+                                                FFAppState()
+                                                    .adultContentEnabled),
                                       ),
-                                    }.withoutNulls,
+                                    ),
                                   );
                                 },
-                                child: wrapWithModel(
-                                  model: _model.gridItemIssueModels.getModel(
-                                    gridViewAppReleasesFullRow.issueId!,
-                                    gridViewIndex,
-                                  ),
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: GridItemIssueWidget(
-                                    key: Key(
-                                      'Keyo1x_${gridViewAppReleasesFullRow.issueId!}',
-                                    ),
-                                    issueId: gridViewAppReleasesFullRow.issueId,
-                                    showTitleInfo: true,
-                                    issueNumber:
-                                        gridViewAppReleasesFullRow.issueNumber,
-                                    titleName:
-                                        gridViewAppReleasesFullRow.titleName,
-                                    titleId: gridViewAppReleasesFullRow.titleId,
-                                    thumb:
-                                        'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${gridViewAppReleasesFullRow.primaryThumb}',
-                                    isAdult: gridViewAppReleasesFullRow.isAdult,
-                                    canSeeAdult: functions.canSeeAdultContent(
-                                        FFAppState().currentUserBirthDateString,
-                                        FFAppState().adultContentEnabled),
-                                  ),
-                                ),
                               );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

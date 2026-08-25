@@ -37,10 +37,10 @@ class IssueDetailPageModel extends FlutterFlowModel<IssueDetailPageWidget> {
   List<LibraryTitleItemStruct>? refreshIssue;
   // Models for StoryCard dynamic component.
   late FlutterFlowDynamicModels<StoryCardModel> storyCardModels;
-  // Stores action output result for [Custom Action - queueScrape] action in scrape widget.
-  String? scrapeResult;
   // Model for ListItem component.
   late ListItemModel listItemModel;
+  // Stores action output result for [Custom Action - queueReview] action in scrape widget.
+  String? queueIssueResult;
 
   @override
   void initState(BuildContext context) {

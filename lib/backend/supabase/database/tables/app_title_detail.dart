@@ -93,4 +93,10 @@ class AppTitleDetailRow extends SupabaseDataRow {
   int? get singleIssuePages => getField<int>('single_issue_pages');
   set singleIssuePages(int? value) =>
       setField<int>('single_issue_pages', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

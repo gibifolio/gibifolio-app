@@ -71,4 +71,7 @@ class ListsRow extends SupabaseDataRow {
 
   String? get slug => getField<String>('slug');
   set slug(String? value) => setField<String>('slug', value);
+
+  int? get sortPosition => getField<int>('sort_position');
+  set sortPosition(int? value) => setField<int>('sort_position', value);
 }

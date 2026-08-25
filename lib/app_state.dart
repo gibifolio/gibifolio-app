@@ -27,6 +27,10 @@ class FFAppState extends ChangeNotifier {
       _MyListsGridView =
           prefs.getBool('ff_MyListsGridView') ?? _MyListsGridView;
     });
+    _safeInit(() {
+      _listSortCriterion =
+          prefs.getString('ff_listSortCriterion') ?? _listSortCriterion;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -478,21 +482,70 @@ class FFAppState extends ChangeNotifier {
     _searchSequence = value;
   }
 
-  final _myListsCacheManager =
-      FutureRequestManager<List<AppUserCustomListsRow>>();
-  Future<List<AppUserCustomListsRow>> myListsCache({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Future<List<AppUserCustomListsRow>> Function() requestFn,
-  }) =>
-      _myListsCacheManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearMyListsCacheCache() => _myListsCacheManager.clear();
-  void clearMyListsCacheCacheKey(String? uniqueKey) =>
-      _myListsCacheManager.clearRequest(uniqueKey);
+  List<ListEditItemStruct> _listEditBuffer = [];
+  List<ListEditItemStruct> get listEditBuffer => _listEditBuffer;
+  set listEditBuffer(List<ListEditItemStruct> value) {
+    _listEditBuffer = value;
+  }
+
+  void addToListEditBuffer(ListEditItemStruct value) {
+    listEditBuffer.add(value);
+  }
+
+  void removeFromListEditBuffer(ListEditItemStruct value) {
+    listEditBuffer.remove(value);
+  }
+
+  void removeAtIndexFromListEditBuffer(int index) {
+    listEditBuffer.removeAt(index);
+  }
+
+  void updateListEditBufferAtIndex(
+    int index,
+    ListEditItemStruct Function(ListEditItemStruct) updateFn,
+  ) {
+    listEditBuffer[index] = updateFn(_listEditBuffer[index]);
+  }
+
+  void insertAtIndexInListEditBuffer(int index, ListEditItemStruct value) {
+    listEditBuffer.insert(index, value);
+  }
+
+  List<UserListItemStruct> _userListsBuffer = [];
+  List<UserListItemStruct> get userListsBuffer => _userListsBuffer;
+  set userListsBuffer(List<UserListItemStruct> value) {
+    _userListsBuffer = value;
+  }
+
+  void addToUserListsBuffer(UserListItemStruct value) {
+    userListsBuffer.add(value);
+  }
+
+  void removeFromUserListsBuffer(UserListItemStruct value) {
+    userListsBuffer.remove(value);
+  }
+
+  void removeAtIndexFromUserListsBuffer(int index) {
+    userListsBuffer.removeAt(index);
+  }
+
+  void updateUserListsBufferAtIndex(
+    int index,
+    UserListItemStruct Function(UserListItemStruct) updateFn,
+  ) {
+    userListsBuffer[index] = updateFn(_userListsBuffer[index]);
+  }
+
+  void insertAtIndexInUserListsBuffer(int index, UserListItemStruct value) {
+    userListsBuffer.insert(index, value);
+  }
+
+  String _listSortCriterion = 'recents';
+  String get listSortCriterion => _listSortCriterion;
+  set listSortCriterion(String value) {
+    _listSortCriterion = value;
+    prefs.setString('ff_listSortCriterion', value);
+  }
 
   final _libraryOwnedManager = FutureRequestManager<List<AppLibraryOwnedRow>>();
   Future<List<AppLibraryOwnedRow>> libraryOwned({
@@ -619,6 +672,24 @@ class FFAppState extends ChangeNotifier {
   void clearCacheStatusUnreadCache() => _cacheStatusUnreadManager.clear();
   void clearCacheStatusUnreadCacheKey(String? uniqueKey) =>
       _cacheStatusUnreadManager.clearRequest(uniqueKey);
+
+  final _releasesPublishersUpcomingManager =
+      FutureRequestManager<List<AppReleasesPublishersUpcomingRow>>();
+  Future<List<AppReleasesPublishersUpcomingRow>> releasesPublishersUpcoming({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<List<AppReleasesPublishersUpcomingRow>> Function()
+        requestFn,
+  }) =>
+      _releasesPublishersUpcomingManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearReleasesPublishersUpcomingCache() =>
+      _releasesPublishersUpcomingManager.clear();
+  void clearReleasesPublishersUpcomingCacheKey(String? uniqueKey) =>
+      _releasesPublishersUpcomingManager.clearRequest(uniqueKey);
 
   final _cacheWantedReadManager =
       FutureRequestManager<List<AppLibraryWantedRow>>();

@@ -3,7 +3,7 @@ import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -11,24 +11,19 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
-import 'local_cache_service.dart';
-import 'connectivity_state.dart';
+import '/custom_code/actions/ensure_local_cache.dart';
+import '/custom_code/actions/ensure_connectivity_state.dart';
 
-/// Listas do usuário com stale-while-revalidate (Padrão B — FutureBuilder).
-///
-/// - Cache fresco (< 1 h): serve sem rede.
-/// - Cache stale: serve na hora e revalida em background.
-/// - Sem cache: busca fresco e grava.
-/// - Offline/erro: retorna o cache disponível ou lista vazia.
-///
-/// Chave por usuário (`lists:<userId>`); a query é escopada por RLS.
-Future<List<AppUserCustomListsRow>> getCachedLists(String userId) async {
-  final key = 'lists:$userId';
+/// Listas do usuário (PRÓPRIAS + SEGUIDAS) com stale-while-revalidate.
+/// Fonte: view app_user_lists_unified (RLS por auth.uid()).
+/// Chave v2 (o shape mudou vs a antiga app_user_custom_lists).
+Future<List<AppUserListsUnifiedRow>> getCachedLists(String userId) async {
+  final key = 'lists_v2:$userId';
   const ttl = Duration(hours: 1);
   final cache = LocalCacheService.instance;
 
   final env = await cache.readEnvelope(key);
-  final cached = env?.data.map((m) => AppUserCustomListsRow(m)).toList();
+  final cached = env?.data.map((m) => AppUserListsUnifiedRow(m)).toList();
 
   if (env != null && cache.isFresh(env, ttl) && cached != null) {
     return cached;
@@ -46,7 +41,7 @@ Future<List<AppUserCustomListsRow>> getCachedLists(String userId) async {
     return fresh;
   } catch (e) {
     if (isOfflineError(e)) markOffline();
-    return cached ?? <AppUserCustomListsRow>[];
+    return cached ?? <AppUserListsUnifiedRow>[];
   }
 }
 
@@ -61,5 +56,7 @@ Future<void> _revalidateLists(String key) async {
   }
 }
 
-Future<List<AppUserCustomListsRow>> _fetchLists() =>
-    AppUserCustomListsTable().queryRows(queryFn: (q) => q.order('updated_at'));
+Future<List<AppUserListsUnifiedRow>> _fetchLists() =>
+    AppUserListsUnifiedTable().queryRows(
+      queryFn: (q) => q.order('position', ascending: true),
+    );

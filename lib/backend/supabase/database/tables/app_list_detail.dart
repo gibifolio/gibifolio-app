@@ -56,4 +56,35 @@ class AppListDetailRow extends SupabaseDataRow {
 
   bool? get isAdult3 => getField<bool>('is_adult_3');
   set isAdult3(bool? value) => setField<bool>('is_adult_3', value);
+
+  bool? get isPublic => getField<bool>('is_public');
+  set isPublic(bool? value) => setField<bool>('is_public', value);
+
+  bool? get isGhost => getField<bool>('is_ghost');
+  set isGhost(bool? value) => setField<bool>('is_ghost', value);
+
+  bool? get isFollowed => getField<bool>('is_followed');
+  set isFollowed(bool? value) => setField<bool>('is_followed', value);
+
+  String? get authorSlug => getField<String>('author_slug');
+  set authorSlug(String? value) => setField<String>('author_slug', value);
+
+  String? get authorName => getField<String>('author_name');
+  set authorName(String? value) => setField<String>('author_name', value);
+
+  String? get authorAvatar => getField<String>('author_avatar');
+  set authorAvatar(String? value) => setField<String>('author_avatar', value);
+
+  bool? get authorIsVerified => getField<bool>('author_is_verified');
+  set authorIsVerified(bool? value) =>
+      setField<bool>('author_is_verified', value);
+
+  String? get cover1 => getField<String>('cover1');
+  set cover1(String? value) => setField<String>('cover1', value);
+
+  String? get cover2 => getField<String>('cover2');
+  set cover2(String? value) => setField<String>('cover2', value);
+
+  String? get cover3 => getField<String>('cover3');
+  set cover3(String? value) => setField<String>('cover3', value);
 }

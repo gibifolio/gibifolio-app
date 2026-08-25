@@ -84,70 +84,644 @@ class _IssueStatusIndicatorWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: AlignmentDirectional(1.0, 0.0),
-      child: FutureBuilder<List<UserIssueStatusRow>>(
-        future: UserIssueStatusTable().querySingleRow(
-          queryFn: (q) => q
-              .eqOrNull(
-                'issue_id',
-                widget.issueId,
-              )
-              .eqOrNull(
-                'user_id',
-                currentUserUid,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        if (currentUserUid != '')
+          Align(
+            alignment: AlignmentDirectional(1.0, 0.0),
+            child: FutureBuilder<List<UserIssueStatusRow>>(
+              future: UserIssueStatusTable().querySingleRow(
+                queryFn: (q) => q
+                    .eqOrNull(
+                      'issue_id',
+                      widget.issueId,
+                    )
+                    .eqOrNull(
+                      'user_id',
+                      currentUserUid,
+                    ),
               ),
-        ),
-        builder: (context, snapshot) {
-          // Customize what your widget looks like when it's loading.
-          if (!snapshot.hasData) {
-            return Container(
-              width: widget.isLarge == true ? double.infinity : 24.0,
-              height: widget.isLarge == true ? 48.0 : 24.0,
-              child: StatusIndicatorSkeletonWidget(),
-            );
-          }
-          List<UserIssueStatusRow> containerUserIssueStatusRowList =
-              snapshot.data!;
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Container(
+                    width: widget.isLarge == true ? double.infinity : 24.0,
+                    height: widget.isLarge == true ? 48.0 : 24.0,
+                    child: StatusIndicatorSkeletonWidget(),
+                  );
+                }
+                List<UserIssueStatusRow> authTrueUserIssueStatusRowList =
+                    snapshot.data!;
 
-          final containerUserIssueStatusRow =
-              containerUserIssueStatusRowList.isNotEmpty
-                  ? containerUserIssueStatusRowList.first
-                  : null;
+                final authTrueUserIssueStatusRow =
+                    authTrueUserIssueStatusRowList.isNotEmpty
+                        ? authTrueUserIssueStatusRowList.first
+                        : null;
 
-          return InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () async {
-              if (currentUserUid != '') {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  enableDrag: false,
-                  useSafeArea: true,
-                  context: context,
-                  builder: (context) {
-                    return Padding(
-                      padding: MediaQuery.viewInsetsOf(context),
-                      child: StatusBottomSheetWidget(
-                        issueId: widget.issueId,
-                        initialOwnership:
-                            containerUserIssueStatusRow?.statusOwnership,
-                        initialReading:
-                            containerUserIssueStatusRow?.statusReading,
-                        titleId: widget.titleId,
-                        entityType: widget.entityType,
-                        isSingleIssue: widget.isSingleIssue,
-                        onSaved: () async {},
-                      ),
-                    );
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      useSafeArea: true,
+                      context: context,
+                      builder: (context) {
+                        return Padding(
+                          padding: MediaQuery.viewInsetsOf(context),
+                          child: StatusBottomSheetWidget(
+                            issueId: widget.issueId,
+                            initialOwnership:
+                                authTrueUserIssueStatusRow?.statusOwnership,
+                            initialReading:
+                                authTrueUserIssueStatusRow?.statusReading,
+                            titleId: widget.titleId,
+                            entityType: widget.entityType,
+                            isSingleIssue: widget.isSingleIssue,
+                            onSaved: () async {},
+                          ),
+                        );
+                      },
+                    ).then((value) => safeSetState(() {}));
+
+                    await widget.onSaved?.call();
                   },
-                ).then((value) => safeSetState(() {}));
-
-                await widget.onSaved?.call();
-              } else {
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(valueOrDefault<double>(
+                      widget.isLarge ? 64.0 : 0.0,
+                      64.0,
+                    )),
+                    child: Container(
+                      height: 48.0,
+                      constraints: BoxConstraints(
+                        minWidth: 32.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _model.bgColor,
+                        borderRadius:
+                            BorderRadius.circular(valueOrDefault<double>(
+                          widget.isLarge ? 64.0 : 0.0,
+                          64.0,
+                        )),
+                        shape: BoxShape.rectangle,
+                        border: Border.all(
+                          color: valueOrDefault<Color>(
+                            widget.isLarge
+                                ? FlutterFlowTheme.of(context).alternate
+                                : Color(0x00000000),
+                            FlutterFlowTheme.of(context).alternate,
+                          ),
+                          width: valueOrDefault<double>(
+                            widget.isLarge ? 1.0 : 0.0,
+                            1.0,
+                          ),
+                        ),
+                      ),
+                      alignment: AlignmentDirectional(1.0, 0.0),
+                      child: Align(
+                        alignment: AlignmentDirectional(1.0, 0.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (!widget.isLarge &&
+                                ((authTrueUserIssueStatusRow?.statusReading !=
+                                        'want_to_read') &&
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusReading !=
+                                        'reading') &&
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusReading !=
+                                        'read')) &&
+                                ((authTrueUserIssueStatusRow?.statusOwnership !=
+                                        'wanted') &&
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusOwnership !=
+                                        'ordered') &&
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusOwnership !=
+                                        'owned')))
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Container(
+                                  width: valueOrDefault<double>(
+                                    _model.maxWidth,
+                                    48.0,
+                                  ),
+                                  height: valueOrDefault<double>(
+                                    _model.maxWidth,
+                                    48.0,
+                                  ),
+                                  decoration: BoxDecoration(),
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(),
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(
+                                            valueOrDefault<double>(
+                                          _model.padding?.toDouble(),
+                                          0.0,
+                                        )),
+                                        child: Icon(
+                                          Icons.add_circle_outline,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (widget.isLarge &&
+                                ((authTrueUserIssueStatusRow?.statusReading !=
+                                        'reading') &&
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusReading !=
+                                        'read')))
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: valueOrDefault<double>(
+                                      _model.maxWidth,
+                                      48.0,
+                                    ),
+                                    decoration: BoxDecoration(),
+                                    alignment: AlignmentDirectional(-1.0, 0.0),
+                                    child: Align(
+                                      alignment:
+                                          AlignmentDirectional(-1.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(),
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Icon(
+                                                Icons.add_circle_outline,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                                size: 20.0,
+                                              ),
+                                            ),
+                                          ),
+                                          if ((authTrueUserIssueStatusRow
+                                                      ?.statusOwnership !=
+                                                  'wanted') &&
+                                              (authTrueUserIssueStatusRow
+                                                      ?.statusOwnership !=
+                                                  'owned'))
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -1.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        8.0, 0.0, 0.0, 0.0),
+                                                child: Text(
+                                                  'Adicionar',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyLarge
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontStyle,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                          if ((authTrueUserIssueStatusRow
+                                                      ?.statusOwnership ==
+                                                  'wanted') ||
+                                              (authTrueUserIssueStatusRow
+                                                      ?.statusOwnership ==
+                                                  'owned'))
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -1.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        8.0, 0.0, 0.0, 0.0),
+                                                child: Text(
+                                                  'Adicionar leitura',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyLarge
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .fontStyle,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                        ]
+                                            .addToStart(SizedBox(width: 4.0))
+                                            .addToEnd(SizedBox(width: 12.0)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if ((authTrueUserIssueStatusRow?.statusReading ==
+                                    'want_to_read') ||
+                                (authTrueUserIssueStatusRow?.statusReading ==
+                                    'reading') ||
+                                (authTrueUserIssueStatusRow?.statusReading ==
+                                    'read'))
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(1.0, 0.0),
+                                  child: Container(
+                                    width: widget.isLarge
+                                        ? double.infinity
+                                        : _model.maxWidth,
+                                    height: valueOrDefault<double>(
+                                      _model.maxWidth,
+                                      48.0,
+                                    ),
+                                    decoration: BoxDecoration(),
+                                    alignment: AlignmentDirectional(1.0, 0.0),
+                                    child: Align(
+                                      alignment:
+                                          AlignmentDirectional(-1.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(1.0, 0.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(),
+                                              alignment: AlignmentDirectional(
+                                                  -1.0, 0.0),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    1.0, 0.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    if (authTrueUserIssueStatusRow
+                                                            ?.statusReading ==
+                                                        'reading')
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: FaIcon(
+                                                          FontAwesomeIcons
+                                                              .glasses,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          size: 14.0,
+                                                        ),
+                                                      ),
+                                                    if (authTrueUserIssueStatusRow
+                                                            ?.statusReading ==
+                                                        'read')
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Icon(
+                                                          Icons.done_all,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          if (widget.isLarge)
+                                            Expanded(
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    -1.0, 0.0),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 0.0, 0.0),
+                                                  child: Text(
+                                                    valueOrDefault<String>(
+                                                      () {
+                                                        if (authTrueUserIssueStatusRow
+                                                                ?.statusReading ==
+                                                            'want_to_read') {
+                                                          return 'Quero ler';
+                                                        } else if (authTrueUserIssueStatusRow
+                                                                ?.statusReading ==
+                                                            'reading') {
+                                                          return 'Lendo';
+                                                        } else if (authTrueUserIssueStatusRow
+                                                                ?.statusReading ==
+                                                            'read') {
+                                                          return 'Lido';
+                                                        } else {
+                                                          return '';
+                                                        }
+                                                      }(),
+                                                      'Leitura',
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyLarge
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyLarge
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ]
+                                            .addToStart(SizedBox(width: 4.0))
+                                            .addToEnd(SizedBox(width: 12.0)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if ((authTrueUserIssueStatusRow?.statusOwnership ==
+                                    'wanted') ||
+                                (authTrueUserIssueStatusRow?.statusOwnership ==
+                                    'ordered') ||
+                                (authTrueUserIssueStatusRow?.statusOwnership ==
+                                    'owned'))
+                              Align(
+                                alignment: AlignmentDirectional(1.0, 0.0),
+                                child: Container(
+                                  width: valueOrDefault<double>(
+                                    _model.maxWidth,
+                                    48.0,
+                                  ),
+                                  height: valueOrDefault<double>(
+                                    _model.maxWidth,
+                                    48.0,
+                                  ),
+                                  decoration: BoxDecoration(),
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.all(valueOrDefault<double>(
+                                        _model.padding?.toDouble(),
+                                        0.0,
+                                      )),
+                                      child: Container(
+                                        decoration: BoxDecoration(),
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            if (authTrueUserIssueStatusRow
+                                                    ?.statusOwnership ==
+                                                'wanted')
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Icon(
+                                                  Icons.auto_awesome,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                  size: 16.0,
+                                                ),
+                                              ),
+                                            if (authTrueUserIssueStatusRow
+                                                    ?.statusOwnership ==
+                                                'owned')
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Icon(
+                                                  Icons.shelves,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                  size: 16.0,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (false)
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Container(
+                                  width: 40.0,
+                                  height: 40.0,
+                                  constraints: BoxConstraints(
+                                    maxWidth: 40.0,
+                                  ),
+                                  decoration: BoxDecoration(),
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(2.0),
+                                        border: Border.all(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 1.0, 0.0, 0.0),
+                                        child: Text(
+                                          '0',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodySmall
+                                              .override(
+                                                font: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodySmall
+                                                          .fontStyle,
+                                                ),
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodySmall
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (((authTrueUserIssueStatusRow?.statusReading ==
+                                        'want_to_read') ||
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusReading ==
+                                        'reading') ||
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusReading ==
+                                        'read')) ||
+                                ((authTrueUserIssueStatusRow?.statusOwnership ==
+                                        'wanted') ||
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusOwnership ==
+                                        'ordered') ||
+                                    (authTrueUserIssueStatusRow
+                                            ?.statusOwnership ==
+                                        'owned')))
+                              Align(
+                                alignment: AlignmentDirectional(1.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 4.0, 0.0),
+                                  child: Container(
+                                    height: valueOrDefault<double>(
+                                      _model.maxWidth,
+                                      48.0,
+                                    ),
+                                    decoration: BoxDecoration(),
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(),
+                                      child: Icon(
+                                        Icons.keyboard_control_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ]
+                              .divide(SizedBox(width: 0.0))
+                              .addToStart(SizedBox(
+                                  width: valueOrDefault<double>(
+                                widget.isLarge ? 12.0 : 0.0,
+                                12.0,
+                              )))
+                              .addToEnd(SizedBox(
+                                  width: valueOrDefault<double>(
+                                widget.isLarge ? 12.0 : 0.0,
+                                12.0,
+                              ))),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        if (currentUserUid == '')
+          Align(
+            alignment: AlignmentDirectional(1.0, 0.0),
+            child: InkWell(
+              splashColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () async {
                 context.pushNamed(
                   LoginPageWidget.routeName,
                   extra: <String, dynamic>{
@@ -157,130 +731,114 @@ class _IssueStatusIndicatorWidgetState
                     ),
                   },
                 );
-              }
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(valueOrDefault<double>(
-                widget.isLarge ? 64.0 : 0.0,
-                64.0,
-              )),
-              child: Container(
-                height: 48.0,
-                constraints: BoxConstraints(
-                  minWidth: 32.0,
-                ),
-                decoration: BoxDecoration(
-                  color: _model.bgColor,
-                  borderRadius: BorderRadius.circular(valueOrDefault<double>(
-                    widget.isLarge ? 64.0 : 0.0,
-                    64.0,
-                  )),
-                  shape: BoxShape.rectangle,
-                  border: Border.all(
-                    color: FlutterFlowTheme.of(context).alternate,
-                    width: valueOrDefault<double>(
-                      widget.isLarge ? 1.0 : 0.0,
-                      1.0,
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(valueOrDefault<double>(
+                  widget.isLarge ? 64.0 : 0.0,
+                  64.0,
+                )),
+                child: Container(
+                  height: 48.0,
+                  constraints: BoxConstraints(
+                    minWidth: 32.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _model.bgColor,
+                    borderRadius: BorderRadius.circular(valueOrDefault<double>(
+                      widget.isLarge ? 64.0 : 0.0,
+                      64.0,
+                    )),
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                      color: valueOrDefault<Color>(
+                        widget.isLarge
+                            ? FlutterFlowTheme.of(context).alternate
+                            : Color(0x00000000),
+                        FlutterFlowTheme.of(context).alternate,
+                      ),
+                      width: valueOrDefault<double>(
+                        widget.isLarge ? 1.0 : 0.0,
+                        1.0,
+                      ),
                     ),
                   ),
-                ),
-                alignment: AlignmentDirectional(1.0, 0.0),
-                child: Align(
                   alignment: AlignmentDirectional(1.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (!widget.isLarge &&
-                          ((containerUserIssueStatusRow?.statusReading != 'want_to_read') &&
-                              (containerUserIssueStatusRow?.statusReading !=
-                                  'reading') &&
-                              (containerUserIssueStatusRow?.statusReading !=
-                                  'read')) &&
-                          ((containerUserIssueStatusRow?.statusOwnership !=
-                                  'wanted') &&
-                              (containerUserIssueStatusRow?.statusOwnership !=
-                                  'ordered') &&
-                              (containerUserIssueStatusRow?.statusOwnership !=
-                                  'owned')))
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Container(
-                            width: valueOrDefault<double>(
-                              _model.maxWidth,
-                              48.0,
-                            ),
-                            height: valueOrDefault<double>(
-                              _model.maxWidth,
-                              48.0,
-                            ),
-                            decoration: BoxDecoration(),
+                  child: Align(
+                    alignment: AlignmentDirectional(1.0, 0.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (!widget.isLarge)
+                          Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Container(
-                                decoration: BoxDecoration(),
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.all(valueOrDefault<double>(
-                                    _model.padding?.toDouble(),
-                                    0.0,
-                                  )),
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    size: 20.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (widget.isLarge &&
-                          ((containerUserIssueStatusRow?.statusReading !=
-                                  'reading') &&
-                              (containerUserIssueStatusRow?.statusReading !=
-                                  'read')))
-                        Expanded(
-                          child: Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Container(
-                              width: double.infinity,
+                              width: valueOrDefault<double>(
+                                _model.maxWidth,
+                                48.0,
+                              ),
                               height: valueOrDefault<double>(
                                 _model.maxWidth,
                                 48.0,
                               ),
                               decoration: BoxDecoration(),
-                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              alignment: AlignmentDirectional(0.0, 0.0),
                               child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Container(
+                                  decoration: BoxDecoration(),
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.all(valueOrDefault<double>(
+                                      _model.padding?.toDouble(),
+                                      0.0,
+                                    )),
+                                    child: Icon(
+                                      Icons.add_circle_outline,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 20.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (widget.isLarge)
+                          Expanded(
+                            child: Align(
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Container(
+                                width: double.infinity,
+                                height: valueOrDefault<double>(
+                                  _model.maxWidth,
+                                  48.0,
+                                ),
+                                decoration: BoxDecoration(),
                                 alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(),
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Align(
                                         alignment:
                                             AlignmentDirectional(0.0, 0.0),
-                                        child: Icon(
-                                          Icons.add_circle_outline,
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          size: 20.0,
+                                        child: Container(
+                                          decoration: BoxDecoration(),
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: Icon(
+                                            Icons.add_circle_outline,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 20.0,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    if ((containerUserIssueStatusRow
-                                                ?.statusOwnership !=
-                                            'wanted') &&
-                                        (containerUserIssueStatusRow
-                                                ?.statusOwnership !=
-                                            'owned'))
                                       Align(
                                         alignment:
                                             AlignmentDirectional(-1.0, 0.0),
@@ -315,368 +873,33 @@ class _IssueStatusIndicatorWidgetState
                                           ),
                                         ),
                                       ),
-                                    if ((containerUserIssueStatusRow
-                                                ?.statusOwnership ==
-                                            'wanted') ||
-                                        (containerUserIssueStatusRow
-                                                ?.statusOwnership ==
-                                            'owned'))
-                                      Align(
-                                        alignment:
-                                            AlignmentDirectional(-1.0, 0.0),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  8.0, 0.0, 0.0, 0.0),
-                                          child: Text(
-                                            'Adicionar leitura',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyLarge
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                  ]
-                                      .addToStart(SizedBox(width: 4.0))
-                                      .addToEnd(SizedBox(width: 12.0)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if ((containerUserIssueStatusRow?.statusReading ==
-                              'want_to_read') ||
-                          (containerUserIssueStatusRow?.statusReading ==
-                              'reading') ||
-                          (containerUserIssueStatusRow?.statusReading ==
-                              'read'))
-                        Expanded(
-                          child: Align(
-                            alignment: AlignmentDirectional(1.0, 0.0),
-                            child: Container(
-                              width: widget.isLarge
-                                  ? double.infinity
-                                  : _model.maxWidth,
-                              height: valueOrDefault<double>(
-                                _model.maxWidth,
-                                48.0,
-                              ),
-                              decoration: BoxDecoration(),
-                              alignment: AlignmentDirectional(1.0, 0.0),
-                              child: Align(
-                                alignment: AlignmentDirectional(-1.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(1.0, 0.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(),
-                                        alignment:
-                                            AlignmentDirectional(-1.0, 0.0),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(1.0, 0.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              if (containerUserIssueStatusRow
-                                                      ?.statusReading ==
-                                                  'reading')
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: FaIcon(
-                                                    FontAwesomeIcons.glasses,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    size: 14.0,
-                                                  ),
-                                                ),
-                                              if (containerUserIssueStatusRow
-                                                      ?.statusReading ==
-                                                  'read')
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  child: Icon(
-                                                    Icons.done_all,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    size: 16.0,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    if (widget.isLarge)
-                                      Expanded(
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(-1.0, 0.0),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    8.0, 0.0, 0.0, 0.0),
-                                            child: Text(
-                                              valueOrDefault<String>(
-                                                () {
-                                                  if (containerUserIssueStatusRow
-                                                          ?.statusReading ==
-                                                      'want_to_read') {
-                                                    return 'Quero ler';
-                                                  } else if (containerUserIssueStatusRow
-                                                          ?.statusReading ==
-                                                      'reading') {
-                                                    return 'Lendo';
-                                                  } else if (containerUserIssueStatusRow
-                                                          ?.statusReading ==
-                                                      'read') {
-                                                    return 'Lido';
-                                                  } else {
-                                                    return '';
-                                                  }
-                                                }(),
-                                                'Leitura',
-                                              ),
-                                              textAlign: TextAlign.start,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyLarge
-                                                  .override(
-                                                    font: GoogleFonts.inter(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyLarge
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyLarge
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ]
-                                      .addToStart(SizedBox(width: 4.0))
-                                      .addToEnd(SizedBox(width: 12.0)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if ((containerUserIssueStatusRow?.statusOwnership ==
-                              'wanted') ||
-                          (containerUserIssueStatusRow?.statusOwnership ==
-                              'ordered') ||
-                          (containerUserIssueStatusRow?.statusOwnership ==
-                              'owned'))
-                        Align(
-                          alignment: AlignmentDirectional(1.0, 0.0),
-                          child: Container(
-                            width: valueOrDefault<double>(
-                              _model.maxWidth,
-                              48.0,
-                            ),
-                            height: valueOrDefault<double>(
-                              _model.maxWidth,
-                              48.0,
-                            ),
-                            decoration: BoxDecoration(),
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Padding(
-                                padding: EdgeInsets.all(valueOrDefault<double>(
-                                  _model.padding?.toDouble(),
-                                  0.0,
-                                )),
-                                child: Container(
-                                  decoration: BoxDecoration(),
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (containerUserIssueStatusRow
-                                              ?.statusOwnership ==
-                                          'wanted')
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Icon(
-                                            Icons.auto_awesome,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            size: 16.0,
-                                          ),
-                                        ),
-                                      if (containerUserIssueStatusRow
-                                              ?.statusOwnership ==
-                                          'owned')
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Icon(
-                                            Icons.shelves,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            size: 16.0,
-                                          ),
-                                        ),
-                                    ],
+                                    ]
+                                        .addToStart(SizedBox(width: 4.0))
+                                        .addToEnd(SizedBox(width: 12.0)),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      if (false)
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Container(
-                            width: 40.0,
-                            height: 40.0,
-                            constraints: BoxConstraints(
-                              maxWidth: 40.0,
-                            ),
-                            decoration: BoxDecoration(),
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2.0),
-                                  border: Border.all(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 1.0, 0.0, 0.0),
-                                  child: Text(
-                                    '0',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodySmall
-                                        .override(
-                                          font: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodySmall
-                                                    .fontStyle,
-                                          ),
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmall
-                                                  .fontStyle,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (((containerUserIssueStatusRow?.statusReading == 'want_to_read') ||
-                              (containerUserIssueStatusRow?.statusReading ==
-                                  'reading') ||
-                              (containerUserIssueStatusRow?.statusReading ==
-                                  'read')) ||
-                          ((containerUserIssueStatusRow?.statusOwnership ==
-                                  'wanted') ||
-                              (containerUserIssueStatusRow?.statusOwnership ==
-                                  'ordered') ||
-                              (containerUserIssueStatusRow?.statusOwnership ==
-                                  'owned')))
-                        Align(
-                          alignment: AlignmentDirectional(1.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 4.0, 0.0),
-                            child: Container(
-                              height: valueOrDefault<double>(
-                                _model.maxWidth,
-                                48.0,
-                              ),
-                              decoration: BoxDecoration(),
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Container(
-                                decoration: BoxDecoration(),
-                                child: Icon(
-                                  Icons.keyboard_control_rounded,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 16.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ]
-                        .divide(SizedBox(width: 0.0))
-                        .addToStart(SizedBox(
-                            width: valueOrDefault<double>(
-                          widget.isLarge ? 12.0 : 0.0,
-                          12.0,
-                        )))
-                        .addToEnd(SizedBox(
-                            width: valueOrDefault<double>(
-                          widget.isLarge ? 12.0 : 0.0,
-                          12.0,
-                        ))),
+                      ]
+                          .divide(SizedBox(width: 0.0))
+                          .addToStart(SizedBox(
+                              width: valueOrDefault<double>(
+                            widget.isLarge ? 12.0 : 0.0,
+                            12.0,
+                          )))
+                          .addToEnd(SizedBox(
+                              width: valueOrDefault<double>(
+                            widget.isLarge ? 12.0 : 0.0,
+                            12.0,
+                          ))),
+                    ),
                   ),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+      ],
     );
   }
 }

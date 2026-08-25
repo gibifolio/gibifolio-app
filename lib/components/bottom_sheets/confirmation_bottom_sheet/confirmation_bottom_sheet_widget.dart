@@ -86,111 +86,129 @@ class _ConfirmationBottomSheetWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(24.0),
-        topRight: Radius.circular(24.0),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryBackground,
+    return Align(
+      alignment: AlignmentDirectional(0.0, 1.0),
+      child: SafeArea(
+        child: ClipRRect(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24.0),
             topRight: Radius.circular(24.0),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(8.0, 16.0, 8.0, 16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        if (widget.dialogTitle != null &&
-                            widget.dialogTitle != '')
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Text(
-                              valueOrDefault<String>(
-                                widget.dialogTitle,
-                                'Título do diálogo',
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .labelLarge
-                                  .override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelLarge
-                                          .fontStyle,
-                                    ),
-                                    fontSize: 20.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                        if (widget.dialogMessage != null &&
-                            widget.dialogMessage != '')
-                          Align(
-                            alignment: AlignmentDirectional(-1.0, -1.0),
-                            child: Text(
-                              valueOrDefault<String>(
-                                widget.dialogMessage,
-                                'Mensagem',
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          ),
-                      ].divide(SizedBox(height: 8.0)),
-                    ),
-                  ),
-                  if (widget.showPrimary)
-                    FFButtonWidget(
-                      onPressed: () async {
-                        await widget.clickPrimary?.call();
-                        Navigator.pop(context);
-                      },
-                      text: widget.labelActionPrimary!,
-                      icon: widget.iconPrimary,
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 56.0,
+          child: Container(
+            width: () {
+              if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                return double.infinity;
+              } else if (MediaQuery.sizeOf(context).width < kBreakpointMedium) {
+                return double.infinity;
+              } else if (MediaQuery.sizeOf(context).width < kBreakpointLarge) {
+                return 640.0;
+              } else {
+                return 640.0;
+              }
+            }(),
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).primaryBackground,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24.0),
+                topRight: Radius.circular(24.0),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        iconPadding: EdgeInsets.all(0.0),
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        textStyle:
-                            FlutterFlowTheme.of(context).labelLarge.override(
+                            8.0, 16.0, 8.0, 16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            if (widget.dialogTitle != null &&
+                                widget.dialogTitle != '')
+                              Align(
+                                alignment: AlignmentDirectional(-1.0, -1.0),
+                                child: Text(
+                                  valueOrDefault<String>(
+                                    widget.dialogTitle,
+                                    'Título do diálogo',
+                                  ),
+                                  style: FlutterFlowTheme.of(context)
+                                      .labelLarge
+                                      .override(
+                                        font: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w600,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelLarge
+                                                  .fontStyle,
+                                        ),
+                                        fontSize: 20.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelLarge
+                                            .fontStyle,
+                                      ),
+                                ),
+                              ),
+                            if (widget.dialogMessage != null &&
+                                widget.dialogMessage != '')
+                              Align(
+                                alignment: AlignmentDirectional(-1.0, -1.0),
+                                child: Text(
+                                  valueOrDefault<String>(
+                                    widget.dialogMessage,
+                                    'Mensagem',
+                                  ),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.inter(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                ),
+                              ),
+                          ].divide(SizedBox(height: 8.0)),
+                        ),
+                      ),
+                      if (widget.showPrimary)
+                        FFButtonWidget(
+                          onPressed: () async {
+                            await widget.clickPrimary?.call();
+                            Navigator.pop(context);
+                          },
+                          text: widget.labelActionPrimary!,
+                          icon: widget.iconPrimary,
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 56.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: EdgeInsets.all(0.0),
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .labelLarge
+                                .override(
                                   font: GoogleFonts.inter(
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -205,105 +223,110 @@ class _ConfirmationBottomSheetWidgetState
                                       .labelLarge
                                       .fontStyle,
                                 ),
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(56.0),
-                      ),
-                    ),
-                  if (widget.showSecondary1)
-                    FFButtonWidget(
-                      onPressed: () async {
-                        await widget.clickSecondary1?.call();
-                        Navigator.pop(context);
-                      },
-                      text: widget.labelActionSecondary1!,
-                      icon: widget.iconSecondary1,
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 56.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        iconPadding: EdgeInsets.all(0.0),
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .labelLarge
-                            .override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelLarge
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelLarge
-                                  .fontStyle,
-                            ),
-                        elevation: 0.0,
-                        borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          width: 1.0,
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(56.0),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(56.0),
-                      ),
-                    ),
-                  if (widget.showSecondary2)
-                    FFButtonWidget(
-                      onPressed: () async {
-                        await widget.clickSecondary2?.call();
-                        Navigator.pop(context);
-                      },
-                      text: widget.labelActionSecondary2!,
-                      icon: widget.iconSecondary2,
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 56.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        iconPadding: EdgeInsets.all(0.0),
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .labelLarge
-                            .override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelLarge
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelLarge
-                                  .fontStyle,
+                      if (widget.showSecondary1)
+                        FFButtonWidget(
+                          onPressed: () async {
+                            await widget.clickSecondary1?.call();
+                            Navigator.pop(context);
+                          },
+                          text: widget.labelActionSecondary1!,
+                          icon: widget.iconSecondary1,
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 56.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: EdgeInsets.all(0.0),
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .labelLarge
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelLarge
+                                        .fontStyle,
+                                  ),
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .labelLarge
+                                      .fontStyle,
+                                ),
+                            elevation: 0.0,
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).alternate,
+                              width: 1.0,
                             ),
-                        elevation: 0.0,
-                        borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).alternate,
-                          width: 1.0,
+                            borderRadius: BorderRadius.circular(56.0),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(56.0),
-                      ),
-                    ),
-                  if (widget.showDestructive)
-                    FFButtonWidget(
-                      onPressed: () async {
-                        await widget.clickDestructive?.call();
-                        Navigator.pop(context);
-                      },
-                      text: widget.labelActionDestructive!,
-                      icon: widget.iconDestructive,
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 56.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        iconPadding: EdgeInsets.all(0.0),
-                        color: Color(0x1AF32929),
-                        textStyle:
-                            FlutterFlowTheme.of(context).labelLarge.override(
+                      if (widget.showSecondary2)
+                        FFButtonWidget(
+                          onPressed: () async {
+                            await widget.clickSecondary2?.call();
+                            Navigator.pop(context);
+                          },
+                          text: widget.labelActionSecondary2!,
+                          icon: widget.iconSecondary2,
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 56.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: EdgeInsets.all(0.0),
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .labelLarge
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelLarge
+                                        .fontStyle,
+                                  ),
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .labelLarge
+                                      .fontStyle,
+                                ),
+                            elevation: 0.0,
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).alternate,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(56.0),
+                          ),
+                        ),
+                      if (widget.showDestructive)
+                        FFButtonWidget(
+                          onPressed: () async {
+                            await widget.clickDestructive?.call();
+                            Navigator.pop(context);
+                          },
+                          text: widget.labelActionDestructive!,
+                          icon: widget.iconDestructive,
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 56.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: EdgeInsets.all(0.0),
+                            color: Color(0x1AF32929),
+                            textStyle: FlutterFlowTheme.of(context)
+                                .labelLarge
+                                .override(
                                   font: GoogleFonts.inter(
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -317,68 +340,72 @@ class _ConfirmationBottomSheetWidgetState
                                       .labelLarge
                                       .fontStyle,
                                 ),
-                        elevation: 0.0,
-                        borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).error,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                ].divide(SizedBox(height: 16.0)),
-              ),
-            ),
-            Container(
-              height: 80.0,
-              decoration: BoxDecoration(),
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Divider(
-                    height: 1.0,
-                    thickness: 1.0,
-                    color: FlutterFlowTheme.of(context).alternate,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                      text: widget.labelDismiss,
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        height: 48.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 0.0, 20.0, 0.0),
-                        iconPadding: EdgeInsets.all(16.0),
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .labelLarge
-                            .override(
-                              font: GoogleFonts.inter(
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .labelLarge
-                                    .fontStyle,
-                              ),
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .labelLarge
-                                  .fontStyle,
+                            elevation: 0.0,
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context).error,
+                              width: 1.0,
                             ),
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(24.0),
-                      ),
-                    ),
+                            borderRadius: BorderRadius.circular(32.0),
+                          ),
+                        ),
+                    ].divide(SizedBox(height: 16.0)),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  height: 80.0,
+                  decoration: BoxDecoration(),
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Divider(
+                        height: 1.0,
+                        thickness: 1.0,
+                        color: FlutterFlowTheme.of(context).alternate,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          text: widget.labelDismiss,
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 48.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: EdgeInsets.all(16.0),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .labelLarge
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelLarge
+                                        .fontStyle,
+                                  ),
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .labelLarge
+                                      .fontStyle,
+                                ),
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

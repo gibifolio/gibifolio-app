@@ -108,4 +108,10 @@ class AppTitleCardRow extends SupabaseDataRow {
   String? get thirdIssueCover => getField<String>('third_issue_cover');
   set thirdIssueCover(String? value) =>
       setField<String>('third_issue_cover', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

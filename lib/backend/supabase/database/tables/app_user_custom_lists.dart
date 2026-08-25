@@ -44,4 +44,7 @@ class AppUserCustomListsRow extends SupabaseDataRow {
 
   String? get userId => getField<String>('user_id');
   set userId(String? value) => setField<String>('user_id', value);
+
+  int? get sortPosition => getField<int>('sort_position');
+  set sortPosition(int? value) => setField<int>('sort_position', value);
 }

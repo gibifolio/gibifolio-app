@@ -213,106 +213,178 @@ class _StatusUnreadPageWidgetState extends State<StatusUnreadPageWidget> {
             ),
             body: SafeArea(
               top: true,
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.sizeOf(context).height * 1.0,
-                decoration: BoxDecoration(),
-                child: RefreshIndicator(
-                  color: FlutterFlowTheme.of(context).primary,
-                  backgroundColor:
-                      FlutterFlowTheme.of(context).secondaryBackground,
-                  onRefresh: () async {
-                    safeSetState(() {
-                      FFAppState().clearCacheStatusUnreadCache();
-                      _model.requestCompleted = false;
-                    });
-                  },
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: FutureBuilder<List<AppLibraryUnreadRow>>(
-                            future: FFAppState()
-                                .cacheStatusUnread(
-                              overrideCache: FFAppState().needsLibraryRefresh,
-                              requestFn: () =>
-                                  AppLibraryUnreadTable().queryRows(
-                                queryFn: (q) => q
-                                    .like(
-                                      'search_combined',
-                                      '%${_model.searchQuery}%',
-                                    )
-                                    .order('canonical_key', ascending: true)
-                                    .order('publisher_name', ascending: true)
-                                    .order('series', ascending: true),
-                              ),
-                            )
-                                .then((result) {
-                              _model.requestCompleted = true;
-                              return result;
-                            }),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return ListItemSkeletonLWidget();
-                              }
-                              List<AppLibraryUnreadRow>
-                                  titlesListAppLibraryUnreadRowList =
-                                  snapshot.data!;
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  height: MediaQuery.sizeOf(context).height * 1.0,
+                  decoration: BoxDecoration(),
+                  child: RefreshIndicator(
+                    color: FlutterFlowTheme.of(context).primary,
+                    backgroundColor:
+                        FlutterFlowTheme.of(context).secondaryBackground,
+                    onRefresh: () async {
+                      safeSetState(() {
+                        FFAppState().clearCacheStatusUnreadCache();
+                        _model.requestCompleted = false;
+                      });
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: FutureBuilder<List<AppLibraryUnreadRow>>(
+                              future: FFAppState()
+                                  .cacheStatusUnread(
+                                overrideCache: FFAppState().needsLibraryRefresh,
+                                requestFn: () =>
+                                    AppLibraryUnreadTable().queryRows(
+                                  queryFn: (q) => q
+                                      .like(
+                                        'search_combined',
+                                        '%${_model.searchQuery}%',
+                                      )
+                                      .order('canonical_key', ascending: true)
+                                      .order('publisher_name', ascending: true)
+                                      .order('series', ascending: true),
+                                ),
+                              )
+                                  .then((result) {
+                                _model.requestCompleted = true;
+                                return result;
+                              }),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return ListItemSkeletonLWidget();
+                                }
+                                List<AppLibraryUnreadRow>
+                                    titlesListAppLibraryUnreadRowList =
+                                    snapshot.data!;
 
-                              if (titlesListAppLibraryUnreadRowList.isEmpty) {
-                                return ListFeaturedEmptyBWidget(
-                                  textMessage:
-                                      'Itens marcados como \"tenho\" e sem status de leitura aparecerão aqui.',
-                                );
-                              }
+                                if (titlesListAppLibraryUnreadRowList.isEmpty) {
+                                  return ListFeaturedEmptyBWidget(
+                                    textMessage:
+                                        'Itens marcados como \"tenho\" e sem status de leitura aparecerão aqui.',
+                                  );
+                                }
 
-                              return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount:
-                                    titlesListAppLibraryUnreadRowList.length,
-                                itemBuilder: (context, titlesListIndex) {
-                                  final titlesListAppLibraryUnreadRow =
-                                      titlesListAppLibraryUnreadRowList[
-                                          titlesListIndex];
-                                  return wrapWithModel(
-                                    model: _model.listItemModels.getModel(
-                                      titlesListAppLibraryUnreadRow.titleId!,
-                                      titlesListIndex,
-                                    ),
-                                    updateCallback: () => safeSetState(() {}),
-                                    child: ListItemWidget(
-                                      key: Key(
-                                        'Keyx63_${titlesListAppLibraryUnreadRow.titleId!}',
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      titlesListAppLibraryUnreadRowList.length,
+                                  itemBuilder: (context, titlesListIndex) {
+                                    final titlesListAppLibraryUnreadRow =
+                                        titlesListAppLibraryUnreadRowList[
+                                            titlesListIndex];
+                                    return wrapWithModel(
+                                      model: _model.listItemModels.getModel(
+                                        titlesListAppLibraryUnreadRow.titleId!,
+                                        titlesListIndex,
                                       ),
-                                      showTitleInfo: true,
-                                      titleName: titlesListAppLibraryUnreadRow
-                                          .titleName,
-                                      titleSubtitle:
-                                          titlesListAppLibraryUnreadRow
-                                              .titleSubtitle,
-                                      publisherName:
-                                          titlesListAppLibraryUnreadRow
-                                              .publisherName,
-                                      licensors: titlesListAppLibraryUnreadRow
-                                          .licensors,
-                                      entityType: 'title',
-                                      entityId:
-                                          titlesListAppLibraryUnreadRow.titleId,
-                                      series:
-                                          titlesListAppLibraryUnreadRow.series,
-                                      publicationStatus:
-                                          titlesListAppLibraryUnreadRow
-                                              .publicationStatus,
-                                      issueCount: titlesListAppLibraryUnreadRow
-                                          .unreadCount,
-                                      isSingleIssue:
-                                          (titlesListAppLibraryUnreadRow
+                                      updateCallback: () => safeSetState(() {}),
+                                      child: ListItemWidget(
+                                        key: Key(
+                                          'Keyx63_${titlesListAppLibraryUnreadRow.titleId!}',
+                                        ),
+                                        showTitleInfo: true,
+                                        titleName: titlesListAppLibraryUnreadRow
+                                            .titleName,
+                                        titleSubtitle:
+                                            titlesListAppLibraryUnreadRow
+                                                .titleSubtitle,
+                                        publisherName:
+                                            titlesListAppLibraryUnreadRow
+                                                .publisherName,
+                                        licensors: titlesListAppLibraryUnreadRow
+                                            .licensors,
+                                        entityType: 'title',
+                                        entityId: titlesListAppLibraryUnreadRow
+                                            .titleId,
+                                        series: titlesListAppLibraryUnreadRow
+                                            .series,
+                                        publicationStatus:
+                                            titlesListAppLibraryUnreadRow
+                                                .publicationStatus,
+                                        issueCount:
+                                            titlesListAppLibraryUnreadRow
+                                                .unreadCount,
+                                        isSingleIssue:
+                                            (titlesListAppLibraryUnreadRow
+                                                            .singleIssueId !=
+                                                        null &&
+                                                    titlesListAppLibraryUnreadRow
+                                                            .singleIssueId !=
+                                                        '') &&
+                                                (titlesListAppLibraryUnreadRow
+                                                        .issueCount !=
+                                                    null),
+                                        singleIssueId:
+                                            titlesListAppLibraryUnreadRow
+                                                .singleIssueId,
+                                        singleIssuePages:
+                                            titlesListAppLibraryUnreadRow
+                                                .singleIssuePages,
+                                        thumb: titlesListAppLibraryUnreadRow
+                                                        .unreadT1 !=
+                                                    null &&
+                                                titlesListAppLibraryUnreadRow
+                                                        .unreadT1 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT1}'
+                                            : null,
+                                        thumb2: titlesListAppLibraryUnreadRow
+                                                        .unreadT2 !=
+                                                    null &&
+                                                titlesListAppLibraryUnreadRow
+                                                        .unreadT2 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT2}'
+                                            : null,
+                                        thumb3: titlesListAppLibraryUnreadRow
+                                                        .unreadT3 !=
+                                                    null &&
+                                                titlesListAppLibraryUnreadRow
+                                                        .unreadT3 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT3}'
+                                            : null,
+                                        showDivider: true,
+                                        selectionEnabled: false,
+                                        showStatus: true,
+                                        isAdult: titlesListAppLibraryUnreadRow
+                                            .isAdult,
+                                        canSeeAdult:
+                                            functions.canSeeAdultContent(
+                                                FFAppState()
+                                                    .currentUserBirthDateString,
+                                                FFAppState()
+                                                    .adultContentEnabled),
+                                        showIndex: false,
+                                        preTitle: titlesListAppLibraryUnreadRow
+                                            .preTitle,
+                                        formatLabel:
+                                            titlesListAppLibraryUnreadRow
+                                                .formatLabel,
+                                        onTap: () async {
+                                          if ((titlesListAppLibraryUnreadRow
                                                           .singleIssueId !=
                                                       null &&
                                                   titlesListAppLibraryUnreadRow
@@ -320,92 +392,13 @@ class _StatusUnreadPageWidgetState extends State<StatusUnreadPageWidget> {
                                                       '') &&
                                               (titlesListAppLibraryUnreadRow
                                                       .issueCount !=
-                                                  null),
-                                      singleIssueId:
-                                          titlesListAppLibraryUnreadRow
-                                              .singleIssueId,
-                                      singleIssuePages:
-                                          titlesListAppLibraryUnreadRow
-                                              .singleIssuePages,
-                                      thumb: titlesListAppLibraryUnreadRow
-                                                      .unreadT1 !=
-                                                  null &&
-                                              titlesListAppLibraryUnreadRow
-                                                      .unreadT1 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT1}'
-                                          : null,
-                                      thumb2: titlesListAppLibraryUnreadRow
-                                                      .unreadT2 !=
-                                                  null &&
-                                              titlesListAppLibraryUnreadRow
-                                                      .unreadT2 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT2}'
-                                          : null,
-                                      thumb3: titlesListAppLibraryUnreadRow
-                                                      .unreadT3 !=
-                                                  null &&
-                                              titlesListAppLibraryUnreadRow
-                                                      .unreadT3 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryUnreadRow.unreadT3}'
-                                          : null,
-                                      showDivider: true,
-                                      selectionEnabled: false,
-                                      showStatus: true,
-                                      isAdult:
-                                          titlesListAppLibraryUnreadRow.isAdult,
-                                      canSeeAdult: functions.canSeeAdultContent(
-                                          FFAppState()
-                                              .currentUserBirthDateString,
-                                          FFAppState().adultContentEnabled),
-                                      showIndex: false,
-                                      onTap: () async {
-                                        if ((titlesListAppLibraryUnreadRow
-                                                        .singleIssueId !=
-                                                    null &&
-                                                titlesListAppLibraryUnreadRow
-                                                        .singleIssueId !=
-                                                    '') &&
-                                            (titlesListAppLibraryUnreadRow
-                                                    .issueCount !=
-                                                null)) {
-                                          context.pushNamed(
-                                            IssueDetailPageWidget.routeName,
-                                            queryParameters: {
-                                              'issueId': serializeParam(
-                                                titlesListAppLibraryUnreadRow
-                                                    .singleIssueId,
-                                                ParamType.String,
-                                              ),
-                                              'tittleId': serializeParam(
-                                                titlesListAppLibraryUnreadRow
-                                                    .titleId,
-                                                ParamType.String,
-                                              ),
-                                              'navOriginTitle': serializeParam(
-                                                false,
-                                                ParamType.bool,
-                                              ),
-                                            }.withoutNulls,
-                                          );
-                                        } else {
-                                          if ((titlesListAppLibraryUnreadRow
-                                                          .firstStatusIssueId !=
-                                                      null &&
-                                                  titlesListAppLibraryUnreadRow
-                                                          .firstStatusIssueId !=
-                                                      '') &&
-                                              (titlesListAppLibraryUnreadRow
-                                                      .unreadCount ==
-                                                  1)) {
+                                                  null)) {
                                             context.pushNamed(
                                               IssueDetailPageWidget.routeName,
                                               queryParameters: {
                                                 'issueId': serializeParam(
                                                   titlesListAppLibraryUnreadRow
-                                                      .firstStatusIssueId,
+                                                      .singleIssueId,
                                                   ParamType.String,
                                                 ),
                                                 'tittleId': serializeParam(
@@ -421,45 +414,77 @@ class _StatusUnreadPageWidgetState extends State<StatusUnreadPageWidget> {
                                               }.withoutNulls,
                                             );
                                           } else {
-                                            context.pushNamed(
-                                              TitleDetailPageWidget.routeName,
-                                              queryParameters: {
-                                                'titleId': serializeParam(
-                                                  titlesListAppLibraryUnreadRow
-                                                      .titleId,
-                                                  ParamType.String,
-                                                ),
-                                                'fromLibrary': serializeParam(
-                                                  true,
-                                                  ParamType.bool,
-                                                ),
-                                                'readingStatus': serializeParam(
-                                                  'unread',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
+                                            if ((titlesListAppLibraryUnreadRow
+                                                            .firstStatusIssueId !=
+                                                        null &&
+                                                    titlesListAppLibraryUnreadRow
+                                                            .firstStatusIssueId !=
+                                                        '') &&
+                                                (titlesListAppLibraryUnreadRow
+                                                        .unreadCount ==
+                                                    1)) {
+                                              context.pushNamed(
+                                                IssueDetailPageWidget.routeName,
+                                                queryParameters: {
+                                                  'issueId': serializeParam(
+                                                    titlesListAppLibraryUnreadRow
+                                                        .firstStatusIssueId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'tittleId': serializeParam(
+                                                    titlesListAppLibraryUnreadRow
+                                                        .titleId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'navOriginTitle':
+                                                      serializeParam(
+                                                    false,
+                                                    ParamType.bool,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            } else {
+                                              context.pushNamed(
+                                                TitleDetailPageWidget.routeName,
+                                                queryParameters: {
+                                                  'titleId': serializeParam(
+                                                    titlesListAppLibraryUnreadRow
+                                                        .titleId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'fromLibrary': serializeParam(
+                                                    true,
+                                                    ParamType.bool,
+                                                  ),
+                                                  'readingStatus':
+                                                      serializeParam(
+                                                    'unread',
+                                                    ParamType.String,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            }
                                           }
-                                        }
-                                      },
-                                      onSaved: () async {
-                                        safeSetState(() {
-                                          FFAppState()
-                                              .clearCacheStatusUnreadCache();
-                                          _model.requestCompleted = false;
-                                        });
-                                        FFAppState().needsLibraryRefresh =
-                                            false;
-                                        FFAppState().update(() {});
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                                        },
+                                        onSaved: () async {
+                                          safeSetState(() {
+                                            FFAppState()
+                                                .clearCacheStatusUnreadCache();
+                                            _model.requestCompleted = false;
+                                          });
+                                          FFAppState().needsLibraryRefresh =
+                                              false;
+                                          FFAppState().update(() {});
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -70,4 +70,7 @@ class UsersRow extends SupabaseDataRow {
 
   String? get bio => getField<String>('bio');
   set bio(String? value) => setField<String>('bio', value);
+
+  bool? get isVerified => getField<bool>('is_verified');
+  set isVerified(bool? value) => setField<bool>('is_verified', value);
 }

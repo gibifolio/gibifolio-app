@@ -213,185 +213,180 @@ class _StatusReadPageWidgetState extends State<StatusReadPageWidget> {
             ),
             body: SafeArea(
               top: true,
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.sizeOf(context).height * 1.0,
-                decoration: BoxDecoration(),
-                child: RefreshIndicator(
-                  color: FlutterFlowTheme.of(context).primary,
-                  backgroundColor:
-                      FlutterFlowTheme.of(context).secondaryBackground,
-                  onRefresh: () async {
-                    safeSetState(() {
-                      FFAppState().clearCacheStatusReadCache();
-                      _model.requestCompleted = false;
-                    });
-                  },
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: FutureBuilder<List<AppLibraryReadRow>>(
-                            future: FFAppState()
-                                .cacheStatusRead(
-                              overrideCache: FFAppState().needsLibraryRefresh,
-                              requestFn: () => AppLibraryReadTable().queryRows(
-                                queryFn: (q) => q
-                                    .like(
-                                      'search_combined',
-                                      '%${_model.searchQuery}%',
-                                    )
-                                    .order('canonical_key', ascending: true)
-                                    .order('publisher_name', ascending: true)
-                                    .order('series', ascending: true),
-                              ),
-                            )
-                                .then((result) {
-                              _model.requestCompleted = true;
-                              return result;
-                            }),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return ListItemSkeletonLWidget();
-                              }
-                              List<AppLibraryReadRow>
-                                  titlesListAppLibraryReadRowList =
-                                  snapshot.data!;
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  height: MediaQuery.sizeOf(context).height * 1.0,
+                  decoration: BoxDecoration(),
+                  child: RefreshIndicator(
+                    color: FlutterFlowTheme.of(context).primary,
+                    backgroundColor:
+                        FlutterFlowTheme.of(context).secondaryBackground,
+                    onRefresh: () async {
+                      safeSetState(() {
+                        FFAppState().clearCacheStatusReadCache();
+                        _model.requestCompleted = false;
+                      });
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: FutureBuilder<List<AppLibraryReadRow>>(
+                              future: FFAppState()
+                                  .cacheStatusRead(
+                                overrideCache: FFAppState().needsLibraryRefresh,
+                                requestFn: () =>
+                                    AppLibraryReadTable().queryRows(
+                                  queryFn: (q) => q
+                                      .like(
+                                        'search_combined',
+                                        '%${_model.searchQuery}%',
+                                      )
+                                      .order('canonical_key', ascending: true)
+                                      .order('publisher_name', ascending: true)
+                                      .order('series', ascending: true),
+                                ),
+                              )
+                                  .then((result) {
+                                _model.requestCompleted = true;
+                                return result;
+                              }),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return ListItemSkeletonLWidget();
+                                }
+                                List<AppLibraryReadRow>
+                                    titlesListAppLibraryReadRowList =
+                                    snapshot.data!;
 
-                              if (titlesListAppLibraryReadRowList.isEmpty) {
-                                return ListFeaturedEmptyBWidget(
-                                  textMessage:
-                                      'Itens marcados como \"lido\" aparecerão aqui.',
-                                );
-                              }
+                                if (titlesListAppLibraryReadRowList.isEmpty) {
+                                  return ListFeaturedEmptyBWidget(
+                                    textMessage:
+                                        'Itens marcados como \"lido\" aparecerão aqui.',
+                                  );
+                                }
 
-                              return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount:
-                                    titlesListAppLibraryReadRowList.length,
-                                itemBuilder: (context, titlesListIndex) {
-                                  final titlesListAppLibraryReadRow =
-                                      titlesListAppLibraryReadRowList[
-                                          titlesListIndex];
-                                  return wrapWithModel(
-                                    model: _model.listItemModels.getModel(
-                                      titlesListAppLibraryReadRow.titleId!,
-                                      titlesListIndex,
-                                    ),
-                                    updateCallback: () => safeSetState(() {}),
-                                    child: ListItemWidget(
-                                      key: Key(
-                                        'Keyfqq_${titlesListAppLibraryReadRow.titleId!}',
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      titlesListAppLibraryReadRowList.length,
+                                  itemBuilder: (context, titlesListIndex) {
+                                    final titlesListAppLibraryReadRow =
+                                        titlesListAppLibraryReadRowList[
+                                            titlesListIndex];
+                                    return wrapWithModel(
+                                      model: _model.listItemModels.getModel(
+                                        titlesListAppLibraryReadRow.titleId!,
+                                        titlesListIndex,
                                       ),
-                                      showTitleInfo: true,
-                                      titleName:
-                                          titlesListAppLibraryReadRow.titleName,
-                                      titleSubtitle: titlesListAppLibraryReadRow
-                                          .titleSubtitle,
-                                      publisherName: titlesListAppLibraryReadRow
-                                          .publisherName,
-                                      licensors:
-                                          titlesListAppLibraryReadRow.licensors,
-                                      entityType: 'title',
-                                      entityId:
-                                          titlesListAppLibraryReadRow.titleId,
-                                      series:
-                                          titlesListAppLibraryReadRow.series,
-                                      publicationStatus:
-                                          titlesListAppLibraryReadRow
-                                              .publicationStatus,
-                                      issueCount:
-                                          titlesListAppLibraryReadRow.readCount,
-                                      isSingleIssue:
-                                          (titlesListAppLibraryReadRow
-                                                          .singleIssueId !=
-                                                      null &&
-                                                  titlesListAppLibraryReadRow
-                                                          .singleIssueId !=
-                                                      '') &&
-                                              (titlesListAppLibraryReadRow
-                                                      .issueCount ==
-                                                  1),
-                                      singleIssueId: titlesListAppLibraryReadRow
-                                          .singleIssueId,
-                                      singleIssuePages:
-                                          titlesListAppLibraryReadRow
-                                              .singleIssuePages,
-                                      thumb: titlesListAppLibraryReadRow
-                                                      .readT1 !=
-                                                  null &&
-                                              titlesListAppLibraryReadRow
-                                                      .readT1 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT1}'
-                                          : null,
-                                      thumb2: titlesListAppLibraryReadRow
-                                                      .readT2 !=
-                                                  null &&
-                                              titlesListAppLibraryReadRow
-                                                      .readT2 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT2}'
-                                          : null,
-                                      thumb3: titlesListAppLibraryReadRow
-                                                      .readT3 !=
-                                                  null &&
-                                              titlesListAppLibraryReadRow
-                                                      .readT3 !=
-                                                  ''
-                                          ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT3}'
-                                          : null,
-                                      showDivider: true,
-                                      selectionEnabled: false,
-                                      showStatus: true,
-                                      isAdult:
-                                          titlesListAppLibraryReadRow.isAdult,
-                                      canSeeAdult: functions.canSeeAdultContent(
-                                          FFAppState()
-                                              .currentUserBirthDateString,
-                                          FFAppState().adultContentEnabled),
-                                      showIndex: false,
-                                      onTap: () async {
-                                        if ((titlesListAppLibraryReadRow
-                                                        .singleIssueId !=
+                                      updateCallback: () => safeSetState(() {}),
+                                      child: ListItemWidget(
+                                        key: Key(
+                                          'Keyfqq_${titlesListAppLibraryReadRow.titleId!}',
+                                        ),
+                                        showTitleInfo: true,
+                                        titleName: titlesListAppLibraryReadRow
+                                            .titleName,
+                                        titleSubtitle:
+                                            titlesListAppLibraryReadRow
+                                                .titleSubtitle,
+                                        publisherName:
+                                            titlesListAppLibraryReadRow
+                                                .publisherName,
+                                        licensors: titlesListAppLibraryReadRow
+                                            .licensors,
+                                        entityType: 'title',
+                                        entityId:
+                                            titlesListAppLibraryReadRow.titleId,
+                                        series:
+                                            titlesListAppLibraryReadRow.series,
+                                        publicationStatus:
+                                            titlesListAppLibraryReadRow
+                                                .publicationStatus,
+                                        issueCount: titlesListAppLibraryReadRow
+                                            .readCount,
+                                        isSingleIssue:
+                                            (titlesListAppLibraryReadRow
+                                                            .singleIssueId !=
+                                                        null &&
+                                                    titlesListAppLibraryReadRow
+                                                            .singleIssueId !=
+                                                        '') &&
+                                                (titlesListAppLibraryReadRow
+                                                        .issueCount ==
+                                                    1),
+                                        singleIssueId:
+                                            titlesListAppLibraryReadRow
+                                                .singleIssueId,
+                                        singleIssuePages:
+                                            titlesListAppLibraryReadRow
+                                                .singleIssuePages,
+                                        thumb: titlesListAppLibraryReadRow
+                                                        .readT1 !=
                                                     null &&
                                                 titlesListAppLibraryReadRow
-                                                        .singleIssueId !=
-                                                    '') &&
-                                            (titlesListAppLibraryReadRow
-                                                    .readCount ==
-                                                1)) {
-                                          context.pushNamed(
-                                            IssueDetailPageWidget.routeName,
-                                            queryParameters: {
-                                              'issueId': serializeParam(
+                                                        .readT1 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT1}'
+                                            : null,
+                                        thumb2: titlesListAppLibraryReadRow
+                                                        .readT2 !=
+                                                    null &&
                                                 titlesListAppLibraryReadRow
-                                                    .singleIssueId,
-                                                ParamType.String,
-                                              ),
-                                              'tittleId': serializeParam(
+                                                        .readT2 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT2}'
+                                            : null,
+                                        thumb3: titlesListAppLibraryReadRow
+                                                        .readT3 !=
+                                                    null &&
                                                 titlesListAppLibraryReadRow
-                                                    .titleId,
-                                                ParamType.String,
-                                              ),
-                                              'navOriginTitle': serializeParam(
-                                                false,
-                                                ParamType.bool,
-                                              ),
-                                            }.withoutNulls,
-                                          );
-                                        } else {
+                                                        .readT3 !=
+                                                    ''
+                                            ? 'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titlesListAppLibraryReadRow.readT3}'
+                                            : null,
+                                        showDivider: true,
+                                        selectionEnabled: false,
+                                        showStatus: true,
+                                        isAdult:
+                                            titlesListAppLibraryReadRow.isAdult,
+                                        canSeeAdult:
+                                            functions.canSeeAdultContent(
+                                                FFAppState()
+                                                    .currentUserBirthDateString,
+                                                FFAppState()
+                                                    .adultContentEnabled),
+                                        showIndex: false,
+                                        preTitle: titlesListAppLibraryReadRow
+                                            .preTitle,
+                                        formatLabel: titlesListAppLibraryReadRow
+                                            .formatLabel,
+                                        onTap: () async {
                                           if ((titlesListAppLibraryReadRow
-                                                          .firstStatusIssueId !=
+                                                          .singleIssueId !=
                                                       null &&
                                                   titlesListAppLibraryReadRow
-                                                          .firstStatusIssueId !=
+                                                          .singleIssueId !=
                                                       '') &&
                                               (titlesListAppLibraryReadRow
                                                       .readCount ==
@@ -401,7 +396,7 @@ class _StatusReadPageWidgetState extends State<StatusReadPageWidget> {
                                               queryParameters: {
                                                 'issueId': serializeParam(
                                                   titlesListAppLibraryReadRow
-                                                      .firstStatusIssueId,
+                                                      .singleIssueId,
                                                   ParamType.String,
                                                 ),
                                                 'tittleId': serializeParam(
@@ -417,45 +412,77 @@ class _StatusReadPageWidgetState extends State<StatusReadPageWidget> {
                                               }.withoutNulls,
                                             );
                                           } else {
-                                            context.pushNamed(
-                                              TitleDetailPageWidget.routeName,
-                                              queryParameters: {
-                                                'titleId': serializeParam(
-                                                  titlesListAppLibraryReadRow
-                                                      .titleId,
-                                                  ParamType.String,
-                                                ),
-                                                'fromLibrary': serializeParam(
-                                                  true,
-                                                  ParamType.bool,
-                                                ),
-                                                'readingStatus': serializeParam(
-                                                  'read',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
+                                            if ((titlesListAppLibraryReadRow
+                                                            .firstStatusIssueId !=
+                                                        null &&
+                                                    titlesListAppLibraryReadRow
+                                                            .firstStatusIssueId !=
+                                                        '') &&
+                                                (titlesListAppLibraryReadRow
+                                                        .readCount ==
+                                                    1)) {
+                                              context.pushNamed(
+                                                IssueDetailPageWidget.routeName,
+                                                queryParameters: {
+                                                  'issueId': serializeParam(
+                                                    titlesListAppLibraryReadRow
+                                                        .firstStatusIssueId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'tittleId': serializeParam(
+                                                    titlesListAppLibraryReadRow
+                                                        .titleId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'navOriginTitle':
+                                                      serializeParam(
+                                                    false,
+                                                    ParamType.bool,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            } else {
+                                              context.pushNamed(
+                                                TitleDetailPageWidget.routeName,
+                                                queryParameters: {
+                                                  'titleId': serializeParam(
+                                                    titlesListAppLibraryReadRow
+                                                        .titleId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'fromLibrary': serializeParam(
+                                                    true,
+                                                    ParamType.bool,
+                                                  ),
+                                                  'readingStatus':
+                                                      serializeParam(
+                                                    'read',
+                                                    ParamType.String,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            }
                                           }
-                                        }
-                                      },
-                                      onSaved: () async {
-                                        safeSetState(() {
-                                          FFAppState()
-                                              .clearCacheStatusReadCache();
-                                          _model.requestCompleted = false;
-                                        });
-                                        FFAppState().needsLibraryRefresh =
-                                            false;
-                                        FFAppState().update(() {});
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                                        },
+                                        onSaved: () async {
+                                          safeSetState(() {
+                                            FFAppState()
+                                                .clearCacheStatusReadCache();
+                                            _model.requestCompleted = false;
+                                          });
+                                          FFAppState().needsLibraryRefresh =
+                                              false;
+                                          FFAppState().update(() {});
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

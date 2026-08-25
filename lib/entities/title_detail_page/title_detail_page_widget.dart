@@ -18,7 +18,6 @@ import 'dart:async';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'title_detail_page_model.dart';
@@ -185,20 +184,108 @@ class _TitleDetailPageWidgetState extends State<TitleDetailPageWidget> {
                           },
                         ),
                         actions: [
-                          FlutterFlowIconButton(
-                            borderRadius: 8.0,
-                            buttonSize: 60.0,
-                            icon: Icon(
-                              Icons.share,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 24.0,
-                            ),
-                            onPressed: () async {
-                              await actions.shareContent(
-                                'https://app.gibifolio.com.br/titleDetailPage?titleId=${widget.titleId}',
-                                titleDetailPageAppTitleDetailRow!.titleName!,
-                              );
-                            },
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              if (FFAppState().isAdminUser)
+                                FlutterFlowIconButton(
+                                  borderRadius: 8.0,
+                                  buttonSize: 60.0,
+                                  icon: Icon(
+                                    Icons.edit_note,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 31.0,
+                                  ),
+                                  onPressed: () async {
+                                    _model.queueTitleResult =
+                                        await actions.queueReview(
+                                      'title',
+                                      widget.titleId!,
+                                      '',
+                                    );
+                                    if (_model.queueTitleResult == 'success') {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Enviado para revisão.',
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryText,
+                                        ),
+                                      );
+                                    } else {
+                                      if (_model.queueTitleResult ==
+                                          'already_queued') {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Já está na fila para revisão.',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryBackground,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryText,
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Erro ao adicionar à fila.',
+                                              style: TextStyle(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryBackground,
+                                              ),
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 4000),
+                                            backgroundColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryText,
+                                          ),
+                                        );
+                                      }
+                                    }
+
+                                    safeSetState(() {});
+                                  },
+                                ),
+                              FlutterFlowIconButton(
+                                borderRadius: 8.0,
+                                buttonSize: 60.0,
+                                icon: Icon(
+                                  Icons.share,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  size: 24.0,
+                                ),
+                                onPressed: () async {
+                                  await actions.shareContent(
+                                    'title',
+                                    widget.titleId!,
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                         centerTitle: false,
@@ -209,49 +296,68 @@ class _TitleDetailPageWidgetState extends State<TitleDetailPageWidget> {
                     builder: (context) {
                       return SafeArea(
                         top: false,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (FFAppState().isSelectionMode)
-                              SafeArea(
-                                child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 620),
-                                  curve: Curves.easeInOut,
-                                  width: double.infinity,
-                                  height: 60.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            FlutterFlowIconButton(
-                                              borderRadius: 8.0,
-                                              buttonSize: 60.0,
-                                              icon: Icon(
-                                                Icons.close_rounded,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, -1.0),
+                          child: Container(
+                            width: () {
+                              if (MediaQuery.sizeOf(context).width <
+                                  kBreakpointSmall) {
+                                return double.infinity;
+                              } else if (MediaQuery.sizeOf(context).width <
+                                  kBreakpointMedium) {
+                                return double.infinity;
+                              } else if (MediaQuery.sizeOf(context).width <
+                                  kBreakpointLarge) {
+                                return 640.0;
+                              } else {
+                                return 640.0;
+                              }
+                            }(),
+                            decoration: BoxDecoration(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (FFAppState().isSelectionMode)
+                                  SafeArea(
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 620),
+                                      curve: Curves.easeInOut,
+                                      width: double.infinity,
+                                      height: 60.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                FlutterFlowIconButton(
+                                                  borderRadius: 8.0,
+                                                  buttonSize: 60.0,
+                                                  icon: Icon(
+                                                    Icons.close_rounded,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
                                                         .secondaryText,
-                                                size: 30.0,
-                                              ),
-                                              onPressed: () async {
-                                                await actions.clearSelection();
-                                              },
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                '${FFAppState().selectedIds.length.toString()} sel.',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
+                                                    size: 30.0,
+                                                  ),
+                                                  onPressed: () async {
+                                                    await actions
+                                                        .clearSelection();
+                                                  },
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    '${FFAppState().selectedIds.length.toString()} sel.',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
                                                         .bodyMedium
                                                         .override(
                                                           font:
@@ -274,1346 +380,1287 @@ class _TitleDetailPageWidgetState extends State<TitleDetailPageWidget> {
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                FFButtonWidget(
-                                                  onPressed: () async {
-                                                    await actions
-                                                        .toggleSelectAllIssues(
-                                                      widget.titleId!,
-                                                    );
-                                                  },
-                                                  text: 'Todos',
-                                                  icon: Icon(
-                                                    Icons.check_sharp,
-                                                    size: 30.0,
                                                   ),
-                                                  options: FFButtonOptions(
-                                                    height: 40.0,
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(20.0, 0.0,
-                                                                20.0, 0.0),
-                                                    iconPadding:
-                                                        EdgeInsets.all(0.0),
-                                                    iconColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondaryText,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    textStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .labelLarge
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelLarge
-                                                                  .fontStyle,
-                                                        ),
-                                                    elevation: 0.0,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0),
-                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await actions
+                                                            .toggleSelectAllIssues(
+                                                          widget.titleId!,
+                                                        );
+                                                      },
+                                                      text: 'Todos',
+                                                      icon: Icon(
+                                                        Icons.check_sharp,
+                                                        size: 30.0,
+                                                      ),
+                                                      options: FFButtonOptions(
+                                                        height: 40.0,
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    0.0,
+                                                                    20.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            EdgeInsets.all(0.0),
+                                                        iconColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelLarge
+                                                                .override(
+                                                                  font:
+                                                                      GoogleFonts
+                                                                          .inter(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelLarge
+                                                                      .fontStyle,
+                                                                ),
+                                                        elevation: 0.0,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          Divider(
+                                            height: 0.5,
+                                            thickness: 0.5,
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                          ),
+                                        ],
                                       ),
-                                      Divider(
-                                        height: 0.5,
-                                        thickness: 0.5,
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(),
-                                child: RefreshIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  backgroundColor: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  onRefresh: () async {
-                                    safeSetState(() {
-                                      _model.clearTitleCacheCache();
-                                      _model.requestCompleted2 = false;
-                                    });
-                                    safeSetState(
-                                        () => _model.requestCompleter3 = null);
-                                    safeSetState(
-                                        () => _model.requestCompleter1 = null);
-                                  },
-                                  child: SingleChildScrollView(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        if (!FFAppState().isSelectionMode)
-                                          AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 610),
-                                            curve: Curves.easeInOut,
-                                            decoration: BoxDecoration(),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      0.0, 24.0, 0.0, 0.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(24.0, 0.0,
-                                                                24.0, 0.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16.0),
-                                                      child: Container(
-                                                        width:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .width *
-                                                                1.0,
-                                                        height:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height *
-                                                                0.4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .accent3,
+                                Expanded(
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(),
+                                    child: RefreshIndicator(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                      onRefresh: () async {
+                                        safeSetState(() {
+                                          _model.clearTitleCacheCache();
+                                          _model.requestCompleted2 = false;
+                                        });
+                                        safeSetState(() =>
+                                            _model.requestCompleter3 = null);
+                                        safeSetState(() =>
+                                            _model.requestCompleter1 = null);
+                                      },
+                                      child: SingleChildScrollView(
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            if (!FFAppState().isSelectionMode)
+                                              AnimatedContainer(
+                                                duration:
+                                                    Duration(milliseconds: 610),
+                                                curve: Curves.easeInOut,
+                                                decoration: BoxDecoration(),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 24.0, 0.0, 0.0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    24.0,
+                                                                    0.0,
+                                                                    24.0,
+                                                                    0.0),
+                                                        child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                       16.0),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      32.0,
-                                                                      32.0,
-                                                                      32.0,
-                                                                      0.0),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Text(
-                                                                valueOrDefault<
-                                                                    String>(
-                                                                  titleDetailPageAppTitleDetailRow
-                                                                      ?.titleName,
-                                                                  'Publicação',
-                                                                ),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .headlineSmall
-                                                                    .override(
-                                                                      font: GoogleFonts
-                                                                          .fraunces(
-                                                                        fontWeight: FlutterFlowTheme.of(context)
-                                                                            .headlineSmall
-                                                                            .fontWeight,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .headlineSmall
-                                                                            .fontStyle,
-                                                                      ),
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryText,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .headlineSmall
-                                                                          .fontWeight,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .headlineSmall
-                                                                          .fontStyle,
-                                                                      lineHeight:
-                                                                          1.2,
-                                                                    ),
-                                                              ),
-                                                              if (titleDetailPageAppTitleDetailRow
-                                                                          ?.titleSubtitle !=
-                                                                      null &&
-                                                                  titleDetailPageAppTitleDetailRow
-                                                                          ?.titleSubtitle !=
-                                                                      '')
-                                                                Text(
-                                                                  valueOrDefault<
-                                                                      String>(
-                                                                    titleDetailPageAppTitleDetailRow
-                                                                        ?.titleSubtitle,
-                                                                    'Subtítulo',
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelLarge
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .inter(
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          fontStyle: FlutterFlowTheme.of(context)
-                                                                              .labelLarge
-                                                                              .fontStyle,
-                                                                        ),
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .labelLarge
-                                                                            .fontStyle,
-                                                                        lineHeight:
-                                                                            1.2,
-                                                                      ),
-                                                                ),
-                                                              Row(
+                                                          child: Container(
+                                                            width: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .width *
+                                                                1.0,
+                                                            height: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.4,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .accent3,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          32.0,
+                                                                          32.0,
+                                                                          32.0,
+                                                                          0.0),
+                                                              child: Column(
                                                                 mainAxisSize:
                                                                     MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
+                                                                        .min,
                                                                 children: [
                                                                   if (titleDetailPageAppTitleDetailRow
-                                                                              ?.series !=
+                                                                              ?.preTitle !=
                                                                           null &&
                                                                       titleDetailPageAppTitleDetailRow
-                                                                              ?.series !=
+                                                                              ?.preTitle !=
                                                                           '')
                                                                     Text(
                                                                       valueOrDefault<
                                                                           String>(
                                                                         titleDetailPageAppTitleDetailRow
-                                                                            ?.series,
-                                                                        'Série',
+                                                                            ?.preTitle,
+                                                                        'Pré Título',
                                                                       ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .bodyMedium
+                                                                          .titleSmall
                                                                           .override(
                                                                             font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                GoogleFonts.fraunces(
+                                                                              fontWeight: FontWeight.w500,
+                                                                              fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
                                                                             ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryText,
+                                                                            fontSize:
+                                                                                14.0,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                FontWeight.w500,
                                                                             fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                            lineHeight:
+                                                                                1.2,
                                                                           ),
                                                                     ),
-                                                                  if ((titleDetailPageAppTitleDetailRow?.series !=
-                                                                              null &&
-                                                                          titleDetailPageAppTitleDetailRow?.series !=
-                                                                              '') &&
-                                                                      (titleDetailPageAppTitleDetailRow?.publicationStatus !=
-                                                                              null &&
-                                                                          titleDetailPageAppTitleDetailRow?.publicationStatus !=
-                                                                              ''))
-                                                                    Text(
-                                                                      ' • ',
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryText,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                  if (titleDetailPageAppTitleDetailRow
-                                                                              ?.publicationStatus !=
-                                                                          null &&
-                                                                      titleDetailPageAppTitleDetailRow
-                                                                              ?.publicationStatus !=
-                                                                          '')
-                                                                    Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        titleDetailPageAppTitleDetailRow
-                                                                            ?.publicationStatus,
-                                                                        'Status',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryText,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  if (titleDetailPageAppTitleDetailRow
-                                                                              ?.publisherName !=
-                                                                          null &&
-                                                                      titleDetailPageAppTitleDetailRow
-                                                                              ?.publisherName !=
-                                                                          '')
-                                                                    Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      children: [
-                                                                        InkWell(
-                                                                          splashColor:
-                                                                              Colors.transparent,
-                                                                          focusColor:
-                                                                              Colors.transparent,
-                                                                          hoverColor:
-                                                                              Colors.transparent,
-                                                                          highlightColor:
-                                                                              Colors.transparent,
-                                                                          onTap:
-                                                                              () async {
-                                                                            context.pushNamed(
-                                                                              PublisherTitlesPageWidget.routeName,
-                                                                              queryParameters: {
-                                                                                'publisherId': serializeParam(
-                                                                                  titleDetailPageAppTitleDetailRow?.publisherId,
-                                                                                  ParamType.String,
-                                                                                ),
-                                                                                'publisherName': serializeParam(
-                                                                                  titleDetailPageAppTitleDetailRow?.publisherName,
-                                                                                  ParamType.String,
-                                                                                ),
-                                                                              }.withoutNulls,
-                                                                            );
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(4.0),
-                                                                            ),
-                                                                            child:
-                                                                                Text(
-                                                                              valueOrDefault<String>(
-                                                                                titleDetailPageAppTitleDetailRow?.publisherName,
-                                                                                'Editora',
-                                                                              ),
-                                                                              textAlign: TextAlign.end,
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    font: GoogleFonts.inter(
-                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                    ),
-                                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                  ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  if (titleDetailPageAppTitleDetailRow
-                                                                              ?.licensors !=
-                                                                          null &&
-                                                                      titleDetailPageAppTitleDetailRow
-                                                                              ?.licensors !=
-                                                                          '')
-                                                                    Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(1.0, -1.0),
-                                                                            child:
-                                                                                Builder(
-                                                                              builder: (context) {
-                                                                                final licensorsList = _model.titleLicensors.toList();
-
-                                                                                return Row(
-                                                                                  mainAxisSize: MainAxisSize.max,
-                                                                                  children: List.generate(licensorsList.length, (licensorsListIndex) {
-                                                                                    final licensorsListItem = licensorsList[licensorsListIndex];
-                                                                                    return Row(
-                                                                                      mainAxisSize: MainAxisSize.max,
-                                                                                      children: [
-                                                                                        Text(
-                                                                                          ' • ',
-                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                font: GoogleFonts.inter(
-                                                                                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                ),
-                                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                letterSpacing: 0.0,
-                                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                              ),
-                                                                                        ),
-                                                                                        InkWell(
-                                                                                          splashColor: Colors.transparent,
-                                                                                          focusColor: Colors.transparent,
-                                                                                          hoverColor: Colors.transparent,
-                                                                                          highlightColor: Colors.transparent,
-                                                                                          onTap: () async {
-                                                                                            context.pushNamed(
-                                                                                              LicensorTitlesPageWidget.routeName,
-                                                                                              queryParameters: {
-                                                                                                'licensorId': serializeParam(
-                                                                                                  licensorsListItem.licensorId,
-                                                                                                  ParamType.int,
-                                                                                                ),
-                                                                                                'licensorName': serializeParam(
-                                                                                                  licensorsListItem.licensorName,
-                                                                                                  ParamType.String,
-                                                                                                ),
-                                                                                              }.withoutNulls,
-                                                                                            );
-                                                                                          },
-                                                                                          child: Container(
-                                                                                            decoration: BoxDecoration(
-                                                                                              borderRadius: BorderRadius.circular(4.0),
-                                                                                            ),
-                                                                                            child: Text(
-                                                                                              licensorsListItem.licensorName,
-                                                                                              textAlign: TextAlign.end,
-                                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                    font: GoogleFonts.inter(
-                                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                    ),
-                                                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                                                    letterSpacing: 0.0,
-                                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ],
-                                                                                    );
-                                                                                  }),
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                ],
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            24.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                child: custom_widgets
-                                                                    .ComicCover(
-                                                                  width: 200.0,
-                                                                  height: 300.0,
-                                                                  imageUrl:
-                                                                      'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titleDetailPageAppTitleDetailRow?.titleCover}',
-                                                                  titleName:
+                                                                  Text(
+                                                                    valueOrDefault<
+                                                                        String>(
                                                                       titleDetailPageAppTitleDetailRow
                                                                           ?.titleName,
-                                                                  titleId: widget
-                                                                      .titleId,
-                                                                  spineHeight:
-                                                                      5.0,
-                                                                  alignBottom:
-                                                                      false,
-                                                                  enableLightbox:
-                                                                      true,
-                                                                  isAdult:
-                                                                      titleDetailPageAppTitleDetailRow
-                                                                          ?.isAdult,
-                                                                  canSeeAdult: functions.canSeeAdultContent(
-                                                                      FFAppState()
-                                                                          .currentUserBirthDateString,
-                                                                      FFAppState()
-                                                                          .adultContentEnabled),
-                                                                ),
-                                                              ),
-                                                            ].divide(SizedBox(
-                                                                height: 4.0)),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    20.0),
-                                                            child:
-                                                                wrapWithModel(
-                                                              model: _model
-                                                                  .titleStatusIndicatorModel,
-                                                              updateCallback: () =>
-                                                                  safeSetState(
-                                                                      () {}),
-                                                              child:
-                                                                  TitleStatusIndicatorWidget(
-                                                                issueId: '',
-                                                                isLarge: true,
-                                                                titleId: widget
-                                                                    .titleId,
-                                                                entityType:
-                                                                    'title',
-                                                                onSaved:
-                                                                    () async {
-                                                                  _model.refreshTitle =
-                                                                      await actions
-                                                                          .fetchLibraryTitles(
-                                                                    currentUserUid,
-                                                                  );
-                                                                  FFAppState().libraryTitles = _model
-                                                                      .refreshTitle!
-                                                                      .toList()
-                                                                      .cast<
-                                                                          LibraryTitleItemStruct>();
-                                                                  FFAppState()
-                                                                          .needsLibraryRefresh =
-                                                                      true;
-                                                                  safeSetState(() =>
-                                                                      _model.requestCompleter1 =
-                                                                          null);
-                                                                  await _model
-                                                                      .waitForRequestCompleted1();
-
-                                                                  safeSetState(
-                                                                      () {});
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (false)
-                                                    Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      24.0,
-                                                                      16.0,
-                                                                      24.0,
-                                                                      24.0),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child: Text(
-                                                                      'Fonte',
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                            letterSpacing:
-                                                                                0.0,
+                                                                      'Publicação',
+                                                                    ),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .headlineSmall
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.fraunces(
                                                                             fontWeight:
-                                                                                FontWeight.bold,
+                                                                                FlutterFlowTheme.of(context).headlineSmall.fontWeight,
                                                                             fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                                                                           ),
-                                                                    ),
-                                                                  ),
-                                                                  InkWell(
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    focusColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    hoverColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    highlightColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    onTap:
-                                                                        () async {
-                                                                      await launchURL(
-                                                                          titleDetailPageAppTitleDetailRow!
-                                                                              .urlGdqTitle!);
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(4.0),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(6.0),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.max,
-                                                                          children:
-                                                                              [
-                                                                            RichText(
-                                                                              textScaler: MediaQuery.of(context).textScaler,
-                                                                              text: TextSpan(
-                                                                                children: [
-                                                                                  TextSpan(
-                                                                                    text: 'Guia dos Quadrinhos',
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          font: GoogleFonts.inter(
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                          ),
-                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                          letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.w500,
-                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                        ),
-                                                                                  )
-                                                                                ],
-                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                      font: GoogleFonts.inter(
-                                                                                        fontWeight: FontWeight.w600,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                      ),
-                                                                                      color: FlutterFlowTheme.of(context).primary,
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FontWeight.w600,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                            Icon(
-                                                                              FFIcons.klinkExternalCircle,
-                                                                              color: FlutterFlowTheme.of(context).primary,
-                                                                              size: 16.0,
-                                                                            ),
-                                                                          ].divide(SizedBox(width: 4.0)),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Container(
-                                                                    decoration:
-                                                                        BoxDecoration(),
-                                                                    alignment:
-                                                                        AlignmentDirectional(
-                                                                            1.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        Visibility(
-                                                                      visible: FFAppState()
-                                                                              .isAdminUser &&
-                                                                          (titleDetailPageAppTitleDetailRow?.urlGdqTitle != null &&
-                                                                              titleDetailPageAppTitleDetailRow?.urlGdqTitle != ''),
-                                                                      child:
-                                                                          FlutterFlowIconButton(
-                                                                        borderRadius:
-                                                                            8.0,
-                                                                        buttonSize:
-                                                                            40.0,
-                                                                        icon:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .restore,
                                                                           color:
-                                                                              FlutterFlowTheme.of(context).secondaryText,
-                                                                          size:
-                                                                              24.0,
+                                                                              FlutterFlowTheme.of(context).primaryText,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .headlineSmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .headlineSmall
+                                                                              .fontStyle,
+                                                                          lineHeight:
+                                                                              1.2,
                                                                         ),
-                                                                        onPressed:
-                                                                            () async {
-                                                                          _model.scrapeResult =
-                                                                              await actions.queueScrape(
-                                                                            'title',
-                                                                            widget.titleId!,
-                                                                            titleDetailPageAppTitleDetailRow!.urlGdqTitle!,
-                                                                          );
-                                                                          if (_model.scrapeResult ==
-                                                                              'success') {
-                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                              SnackBar(
-                                                                                content: Text(
-                                                                                  'Adicionado à fila de raspagem.',
-                                                                                  style: TextStyle(
-                                                                                    color: FlutterFlowTheme.of(context).primaryBackground,
-                                                                                  ),
-                                                                                ),
-                                                                                duration: Duration(milliseconds: 4000),
-                                                                                backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                              ),
-                                                                            );
-                                                                          } else {
-                                                                            if (_model.scrapeResult ==
-                                                                                'already_queued') {
-                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                SnackBar(
-                                                                                  content: Text(
-                                                                                    'Já está na fila.',
-                                                                                    style: TextStyle(
-                                                                                      color: FlutterFlowTheme.of(context).primaryBackground,
-                                                                                    ),
-                                                                                  ),
-                                                                                  duration: Duration(milliseconds: 4000),
-                                                                                  backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                ),
-                                                                              );
-                                                                            } else {
-                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                SnackBar(
-                                                                                  content: Text(
-                                                                                    'Erro ao adicionar à fila',
-                                                                                    style: TextStyle(
-                                                                                      color: FlutterFlowTheme.of(context).primaryBackground,
-                                                                                    ),
-                                                                                  ),
-                                                                                  duration: Duration(milliseconds: 4000),
-                                                                                  backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                ),
-                                                                              );
-                                                                            }
-                                                                          }
-
-                                                                          safeSetState(
-                                                                              () {});
-                                                                        },
-                                                                      ),
-                                                                    ),
                                                                   ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        StickyHeader(
-                                          overlapHeaders: false,
-                                          header: Visibility(
-                                            visible:
-                                                titleDetailPageAppTitleDetailRow!
-                                                        .issueCount! >
-                                                    1,
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  -1.0, -1.0),
-                                              child: FutureBuilder<
-                                                  List<AppTitleIssueCountsRow>>(
-                                                future: (_model
-                                                            .requestCompleter1 ??=
-                                                        Completer<
-                                                            List<
-                                                                AppTitleIssueCountsRow>>()
-                                                          ..complete(
-                                                              AppTitleIssueCountsTable()
-                                                                  .querySingleRow(
-                                                            queryFn: (q) =>
-                                                                q.eqOrNull(
-                                                              'title_id',
-                                                              widget.titleId,
-                                                            ),
-                                                          )))
-                                                    .future,
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 12.0,
-                                                        height: 12.0,
-                                                        child:
-                                                            SpinKitThreeBounce(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryText,
-                                                          size: 12.0,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  List<AppTitleIssueCountsRow>
-                                                      issuesHeaderAppTitleIssueCountsRowList =
-                                                      snapshot.data!;
-
-                                                  final issuesHeaderAppTitleIssueCountsRow =
-                                                      issuesHeaderAppTitleIssueCountsRowList
-                                                              .isNotEmpty
-                                                          ? issuesHeaderAppTitleIssueCountsRowList
-                                                              .first
-                                                          : null;
-
-                                                  return Container(
-                                                    height: 64.0,
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryBackground,
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryBackgroundTransparent
-                                                        ],
-                                                        stops: [0.9, 1.0],
-                                                        begin:
-                                                            AlignmentDirectional(
-                                                                0.0, -1.0),
-                                                        end:
-                                                            AlignmentDirectional(
-                                                                0, 1.0),
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Divider(
-                                                          height: 0.5,
-                                                          thickness: 0.5,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .alternate,
-                                                        ),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        12.0,
-                                                                        0.0,
-                                                                        12.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Expanded(
-                                                                  child: Align(
-                                                                    alignment:
-                                                                        AlignmentDirectional(
-                                                                            -1.0,
-                                                                            0.0),
-                                                                    child: Text(
-                                                                      '${titleDetailPageAppTitleDetailRow.issueCount?.toString()} edições',
+                                                                  if (titleDetailPageAppTitleDetailRow
+                                                                              ?.titleSubtitle !=
+                                                                          null &&
+                                                                      titleDetailPageAppTitleDetailRow
+                                                                              ?.titleSubtitle !=
+                                                                          '')
+                                                                    Text(
+                                                                      valueOrDefault<
+                                                                          String>(
+                                                                        titleDetailPageAppTitleDetailRow
+                                                                            ?.titleSubtitle,
+                                                                        'Subtítulo',
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .labelLarge
                                                                           .override(
                                                                             font:
                                                                                 GoogleFonts.inter(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                            ),
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
-                                                                          ),
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                if (widget
-                                                                    .fromLibrary)
-                                                                  FFButtonWidget(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      if (_model
-                                                                          .isFiltered!) {
-                                                                        _model.isFiltered =
-                                                                            false;
-                                                                        _model.filterReading =
-                                                                            null;
-                                                                        _model.filterOwnership =
-                                                                            null;
-                                                                      } else {
-                                                                        _model.isFiltered =
-                                                                            true;
-                                                                        _model.filterReading =
-                                                                            widget.readingStatus;
-                                                                        _model.filterOwnership =
-                                                                            widget.ownershipStatus;
-                                                                      }
-
-                                                                      safeSetState(
-                                                                          () {
-                                                                        _model
-                                                                            .clearTitleCacheCache();
-                                                                        _model.requestCompleted2 =
-                                                                            false;
-                                                                      });
-                                                                      await _model
-                                                                          .waitForRequestCompleted2();
-                                                                      safeSetState(() =>
-                                                                          _model.requestCompleter1 =
-                                                                              null);
-                                                                      await _model
-                                                                          .waitForRequestCompleted1();
-                                                                    },
-                                                                    text:
-                                                                        '${() {
-                                                                      if (widget
-                                                                              .readingStatus ==
-                                                                          'read') {
-                                                                        return 'Lido';
-                                                                      } else if (widget
-                                                                              .readingStatus ==
-                                                                          'reading') {
-                                                                        return 'Lendo';
-                                                                      } else if (widget
-                                                                              .readingStatus ==
-                                                                          'unread') {
-                                                                        return 'Não lido';
-                                                                      } else if (widget
-                                                                              .ownershipStatus ==
-                                                                          'owned') {
-                                                                        return 'Tenho';
-                                                                      } else if (widget
-                                                                              .ownershipStatus ==
-                                                                          'wanted') {
-                                                                        return 'Quero';
-                                                                      } else {
-                                                                        return '';
-                                                                      }
-                                                                    }()}: ${() {
-                                                                      if (widget
-                                                                              .readingStatus ==
-                                                                          'read') {
-                                                                        return issuesHeaderAppTitleIssueCountsRow
-                                                                            ?.readCount
-                                                                            ?.toString();
-                                                                      } else if (widget
-                                                                              .readingStatus ==
-                                                                          'reading') {
-                                                                        return issuesHeaderAppTitleIssueCountsRow
-                                                                            ?.readingCount
-                                                                            ?.toString();
-                                                                      } else if (widget
-                                                                              .readingStatus ==
-                                                                          'unread') {
-                                                                        return issuesHeaderAppTitleIssueCountsRow
-                                                                            ?.unreadCount
-                                                                            ?.toString();
-                                                                      } else if (widget
-                                                                              .ownershipStatus ==
-                                                                          'owned') {
-                                                                        return issuesHeaderAppTitleIssueCountsRow
-                                                                            ?.ownedCount
-                                                                            ?.toString();
-                                                                      } else if (widget
-                                                                              .ownershipStatus ==
-                                                                          'wanted') {
-                                                                        return issuesHeaderAppTitleIssueCountsRow
-                                                                            ?.wantedCount
-                                                                            ?.toString();
-                                                                      } else {
-                                                                        return '';
-                                                                      }
-                                                                    }()}  ',
-                                                                    icon: Icon(
-                                                                      FFIcons
-                                                                          .kfilter,
-                                                                      size:
-                                                                          20.0,
-                                                                    ),
-                                                                    options:
-                                                                        FFButtonOptions(
-                                                                      height:
-                                                                          40.0,
-                                                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          12.0,
-                                                                          0.0),
-                                                                      iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                          12.0,
-                                                                          2.0,
-                                                                          0.0,
-                                                                          2.0),
-                                                                      iconColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                      color: valueOrDefault<
-                                                                          Color>(
-                                                                        _model.isFiltered ==
-                                                                                true
-                                                                            ? FlutterFlowTheme.of(context).alternate
-                                                                            : FlutterFlowTheme.of(context).primaryBackground,
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .primaryBackground,
-                                                                      ),
-                                                                      textStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
                                                                               fontWeight: FontWeight.w600,
-                                                                              fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                              fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
                                                                             ),
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
                                                                                 FontWeight.w600,
                                                                             fontStyle:
-                                                                                FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                                FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                            lineHeight:
+                                                                                1.2,
                                                                           ),
-                                                                      elevation:
-                                                                          0.0,
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .alternate,
-                                                                        width:
-                                                                            1.0,
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
                                                                     ),
-                                                                    showLoadingIndicator:
-                                                                        false,
+                                                                  if (titleDetailPageAppTitleDetailRow
+                                                                              ?.formatLabel !=
+                                                                          null &&
+                                                                      titleDetailPageAppTitleDetailRow
+                                                                              ?.formatLabel !=
+                                                                          '')
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          4.0),
+                                                                      child:
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).accent3,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(4.0),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              7.0,
+                                                                              3.0,
+                                                                              6.0,
+                                                                              5.0),
+                                                                          child:
+                                                                              Text(
+                                                                            valueOrDefault<String>(
+                                                                              titleDetailPageAppTitleDetailRow?.formatLabel,
+                                                                              'Etiqueta de formato',
+                                                                            ),
+                                                                            maxLines:
+                                                                                2,
+                                                                            style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                                  ),
+                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                  fontSize: 12.0,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                                  lineHeight: 1.2,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      if (titleDetailPageAppTitleDetailRow?.series !=
+                                                                              null &&
+                                                                          titleDetailPageAppTitleDetailRow?.series !=
+                                                                              '')
+                                                                        Text(
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                            titleDetailPageAppTitleDetailRow?.series,
+                                                                            'Série',
+                                                                          ),
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      if ((titleDetailPageAppTitleDetailRow?.series != null &&
+                                                                              titleDetailPageAppTitleDetailRow?.series !=
+                                                                                  '') &&
+                                                                          (titleDetailPageAppTitleDetailRow?.publicationStatus != null &&
+                                                                              titleDetailPageAppTitleDetailRow?.publicationStatus != ''))
+                                                                        Text(
+                                                                          ' • ',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      if (titleDetailPageAppTitleDetailRow?.publicationStatus !=
+                                                                              null &&
+                                                                          titleDetailPageAppTitleDetailRow?.publicationStatus !=
+                                                                              '')
+                                                                        Text(
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                            titleDetailPageAppTitleDetailRow?.publicationStatus,
+                                                                            'Status',
+                                                                          ),
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                    ],
                                                                   ),
-                                                              ]
-                                                                  .divide(SizedBox(
+                                                                  Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      if (titleDetailPageAppTitleDetailRow?.publisherName !=
+                                                                              null &&
+                                                                          titleDetailPageAppTitleDetailRow?.publisherName !=
+                                                                              '')
+                                                                        Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.max,
+                                                                          children: [
+                                                                            InkWell(
+                                                                              splashColor: Colors.transparent,
+                                                                              focusColor: Colors.transparent,
+                                                                              hoverColor: Colors.transparent,
+                                                                              highlightColor: Colors.transparent,
+                                                                              onTap: () async {
+                                                                                context.pushNamed(
+                                                                                  PublisherTitlesPageWidget.routeName,
+                                                                                  queryParameters: {
+                                                                                    'publisherId': serializeParam(
+                                                                                      titleDetailPageAppTitleDetailRow?.publisherId,
+                                                                                      ParamType.String,
+                                                                                    ),
+                                                                                    'publisherName': serializeParam(
+                                                                                      titleDetailPageAppTitleDetailRow?.publisherName,
+                                                                                      ParamType.String,
+                                                                                    ),
+                                                                                  }.withoutNulls,
+                                                                                );
+                                                                              },
+                                                                              child: Container(
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(4.0),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  valueOrDefault<String>(
+                                                                                    titleDetailPageAppTitleDetailRow?.publisherName,
+                                                                                    'Editora',
+                                                                                  ),
+                                                                                  textAlign: TextAlign.end,
+                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                        font: GoogleFonts.inter(
+                                                                                          fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                        color: FlutterFlowTheme.of(context).primary,
+                                                                                        letterSpacing: 0.0,
+                                                                                        fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      if (titleDetailPageAppTitleDetailRow?.licensors !=
+                                                                              null &&
+                                                                          titleDetailPageAppTitleDetailRow?.licensors !=
+                                                                              '')
+                                                                        Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.max,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: Align(
+                                                                                alignment: AlignmentDirectional(1.0, -1.0),
+                                                                                child: Builder(
+                                                                                  builder: (context) {
+                                                                                    final licensorsList = _model.titleLicensors.toList();
+
+                                                                                    return Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: List.generate(licensorsList.length, (licensorsListIndex) {
+                                                                                        final licensorsListItem = licensorsList[licensorsListIndex];
+                                                                                        return Row(
+                                                                                          mainAxisSize: MainAxisSize.max,
+                                                                                          children: [
+                                                                                            Text(
+                                                                                              ' • ',
+                                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                    font: GoogleFonts.inter(
+                                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                    ),
+                                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                    letterSpacing: 0.0,
+                                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  ),
+                                                                                            ),
+                                                                                            InkWell(
+                                                                                              splashColor: Colors.transparent,
+                                                                                              focusColor: Colors.transparent,
+                                                                                              hoverColor: Colors.transparent,
+                                                                                              highlightColor: Colors.transparent,
+                                                                                              onTap: () async {
+                                                                                                context.pushNamed(
+                                                                                                  LicensorTitlesPageWidget.routeName,
+                                                                                                  queryParameters: {
+                                                                                                    'licensorId': serializeParam(
+                                                                                                      licensorsListItem.licensorId,
+                                                                                                      ParamType.int,
+                                                                                                    ),
+                                                                                                    'licensorName': serializeParam(
+                                                                                                      licensorsListItem.licensorName,
+                                                                                                      ParamType.String,
+                                                                                                    ),
+                                                                                                  }.withoutNulls,
+                                                                                                );
+                                                                                              },
+                                                                                              child: Container(
+                                                                                                decoration: BoxDecoration(
+                                                                                                  borderRadius: BorderRadius.circular(4.0),
+                                                                                                ),
+                                                                                                child: Text(
+                                                                                                  licensorsListItem.licensorName,
+                                                                                                  textAlign: TextAlign.end,
+                                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                        font: GoogleFonts.inter(
+                                                                                                          fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                        ),
+                                                                                                        color: FlutterFlowTheme.of(context).primary,
+                                                                                                        letterSpacing: 0.0,
+                                                                                                        fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                      ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        );
+                                                                                      }),
+                                                                                    );
+                                                                                  },
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                    ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            24.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child: custom_widgets
+                                                                        .ComicCover(
                                                                       width:
-                                                                          24.0))
-                                                                  .addToStart(
-                                                                      SizedBox(
-                                                                          width:
-                                                                              16.0))
-                                                                  .addToEnd(
-                                                                      SizedBox(
-                                                                          width:
-                                                                              16.0)),
+                                                                          200.0,
+                                                                      height:
+                                                                          300.0,
+                                                                      imageUrl:
+                                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${titleDetailPageAppTitleDetailRow?.titleCover}',
+                                                                      titleName:
+                                                                          titleDetailPageAppTitleDetailRow
+                                                                              ?.titleName,
+                                                                      titleId:
+                                                                          widget
+                                                                              .titleId,
+                                                                      spineHeight:
+                                                                          5.0,
+                                                                      alignBottom:
+                                                                          false,
+                                                                      enableLightbox:
+                                                                          true,
+                                                                      isAdult:
+                                                                          titleDetailPageAppTitleDetailRow
+                                                                              ?.isAdult,
+                                                                      canSeeAdult: functions.canSeeAdultContent(
+                                                                          FFAppState()
+                                                                              .currentUserBirthDateString,
+                                                                          FFAppState()
+                                                                              .adultContentEnabled),
+                                                                    ),
+                                                                  ),
+                                                                ].divide(SizedBox(
+                                                                    height:
+                                                                        4.0)),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            20.0),
+                                                                child:
+                                                                    wrapWithModel(
+                                                                  model: _model
+                                                                      .titleStatusIndicatorModel,
+                                                                  updateCallback: () =>
+                                                                      safeSetState(
+                                                                          () {}),
+                                                                  child:
+                                                                      TitleStatusIndicatorWidget(
+                                                                    issueId: '',
+                                                                    isLarge:
+                                                                        true,
+                                                                    titleId: widget
+                                                                        .titleId,
+                                                                    entityType:
+                                                                        'title',
+                                                                    onSaved:
+                                                                        () async {
+                                                                      _model.refreshTitle =
+                                                                          await actions
+                                                                              .fetchLibraryTitles(
+                                                                        currentUserUid,
+                                                                      );
+                                                                      FFAppState().libraryTitles = _model
+                                                                          .refreshTitle!
+                                                                          .toList()
+                                                                          .cast<
+                                                                              LibraryTitleItemStruct>();
+                                                                      FFAppState()
+                                                                              .needsLibraryRefresh =
+                                                                          true;
+                                                                      safeSetState(() =>
+                                                                          _model.requestCompleter1 =
+                                                                              null);
+                                                                      await _model
+                                                                          .waitForRequestCompleted1();
+
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (false)
+                                                        Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          24.0,
+                                                                          16.0,
+                                                                          24.0,
+                                                                          24.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child:
+                                                                            Text(
+                                                                          'Fonte',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                      InkWell(
+                                                                        splashColor:
+                                                                            Colors.transparent,
+                                                                        focusColor:
+                                                                            Colors.transparent,
+                                                                        hoverColor:
+                                                                            Colors.transparent,
+                                                                        highlightColor:
+                                                                            Colors.transparent,
+                                                                        onTap:
+                                                                            () async {
+                                                                          await launchURL(
+                                                                              titleDetailPageAppTitleDetailRow!.urlGdqTitle!);
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(4.0),
+                                                                          ),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.all(6.0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              children: [
+                                                                                RichText(
+                                                                                  textScaler: MediaQuery.of(context).textScaler,
+                                                                                  text: TextSpan(
+                                                                                    children: [
+                                                                                      TextSpan(
+                                                                                        text: 'Guia dos Quadrinhos',
+                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              font: GoogleFonts.inter(
+                                                                                                fontWeight: FontWeight.w500,
+                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                              ),
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              letterSpacing: 0.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            ),
+                                                                                      )
+                                                                                    ],
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.inter(
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                ),
+                                                                                Icon(
+                                                                                  FFIcons.klinkExternalCircle,
+                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                  size: 16.0,
+                                                                                ),
+                                                                              ].divide(SizedBox(width: 4.0)),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            StickyHeader(
+                                              overlapHeaders: false,
+                                              header: Visibility(
+                                                visible:
+                                                    titleDetailPageAppTitleDetailRow!
+                                                            .issueCount! >
+                                                        1,
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -1.0, -1.0),
+                                                  child: FutureBuilder<
+                                                      List<
+                                                          AppTitleIssueCountsRow>>(
+                                                    future: (_model
+                                                                .requestCompleter1 ??=
+                                                            Completer<
+                                                                List<
+                                                                    AppTitleIssueCountsRow>>()
+                                                              ..complete(
+                                                                  AppTitleIssueCountsTable()
+                                                                      .querySingleRow(
+                                                                queryFn: (q) =>
+                                                                    q.eqOrNull(
+                                                                  'title_id',
+                                                                  widget
+                                                                      .titleId,
+                                                                ),
+                                                              )))
+                                                        .future,
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 12.0,
+                                                            height: 12.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondaryText,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      List<AppTitleIssueCountsRow>
+                                                          issuesHeaderAppTitleIssueCountsRowList =
+                                                          snapshot.data!;
+
+                                                      final issuesHeaderAppTitleIssueCountsRow =
+                                                          issuesHeaderAppTitleIssueCountsRowList
+                                                                  .isNotEmpty
+                                                              ? issuesHeaderAppTitleIssueCountsRowList
+                                                                  .first
+                                                              : null;
+
+                                                      return Container(
+                                                        height: 64.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: [
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primaryBackground,
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primaryBackgroundTransparent
+                                                            ],
+                                                            stops: [0.9, 1.0],
+                                                            begin:
+                                                                AlignmentDirectional(
+                                                                    0.0, -1.0),
+                                                            end:
+                                                                AlignmentDirectional(
+                                                                    0, 1.0),
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Divider(
+                                                              height: 0.5,
+                                                              thickness: 0.5,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .alternate,
+                                                            ),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        12.0,
+                                                                        0.0,
+                                                                        12.0),
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            -1.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Text(
+                                                                          '${titleDetailPageAppTitleDetailRow.issueCount?.toString()} edições',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .labelLarge
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                                ),
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontStyle: FlutterFlowTheme.of(context).labelLarge.fontStyle,
+                                                                              ),
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    if (widget
+                                                                        .fromLibrary)
+                                                                      FFButtonWidget(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          if (_model
+                                                                              .isFiltered!) {
+                                                                            _model.isFiltered =
+                                                                                false;
+                                                                            _model.filterReading =
+                                                                                null;
+                                                                            _model.filterOwnership =
+                                                                                null;
+                                                                          } else {
+                                                                            _model.isFiltered =
+                                                                                true;
+                                                                            _model.filterReading =
+                                                                                widget.readingStatus;
+                                                                            _model.filterOwnership =
+                                                                                widget.ownershipStatus;
+                                                                          }
+
+                                                                          safeSetState(
+                                                                              () {
+                                                                            _model.clearTitleCacheCache();
+                                                                            _model.requestCompleted2 =
+                                                                                false;
+                                                                          });
+                                                                          await _model
+                                                                              .waitForRequestCompleted2();
+                                                                          safeSetState(() =>
+                                                                              _model.requestCompleter1 = null);
+                                                                          await _model
+                                                                              .waitForRequestCompleted1();
+                                                                        },
+                                                                        text:
+                                                                            '${() {
+                                                                          if (widget.readingStatus ==
+                                                                              'read') {
+                                                                            return 'Lido';
+                                                                          } else if (widget.readingStatus ==
+                                                                              'reading') {
+                                                                            return 'Lendo';
+                                                                          } else if (widget.readingStatus ==
+                                                                              'unread') {
+                                                                            return 'Não lido';
+                                                                          } else if (widget.ownershipStatus ==
+                                                                              'owned') {
+                                                                            return 'Tenho';
+                                                                          } else if (widget.ownershipStatus ==
+                                                                              'wanted') {
+                                                                            return 'Quero';
+                                                                          } else {
+                                                                            return '';
+                                                                          }
+                                                                        }()}: ${() {
+                                                                          if (widget.readingStatus ==
+                                                                              'read') {
+                                                                            return issuesHeaderAppTitleIssueCountsRow?.readCount?.toString();
+                                                                          } else if (widget.readingStatus ==
+                                                                              'reading') {
+                                                                            return issuesHeaderAppTitleIssueCountsRow?.readingCount?.toString();
+                                                                          } else if (widget.readingStatus ==
+                                                                              'unread') {
+                                                                            return issuesHeaderAppTitleIssueCountsRow?.unreadCount?.toString();
+                                                                          } else if (widget.ownershipStatus ==
+                                                                              'owned') {
+                                                                            return issuesHeaderAppTitleIssueCountsRow?.ownedCount?.toString();
+                                                                          } else if (widget.ownershipStatus ==
+                                                                              'wanted') {
+                                                                            return issuesHeaderAppTitleIssueCountsRow?.wantedCount?.toString();
+                                                                          } else {
+                                                                            return '';
+                                                                          }
+                                                                        }()}  ',
+                                                                        icon:
+                                                                            Icon(
+                                                                          FFIcons
+                                                                              .kfilter,
+                                                                          size:
+                                                                              20.0,
+                                                                        ),
+                                                                        options:
+                                                                            FFButtonOptions(
+                                                                          height:
+                                                                              40.0,
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              12.0,
+                                                                              0.0),
+                                                                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                              12.0,
+                                                                              2.0,
+                                                                              0.0,
+                                                                              2.0),
+                                                                          iconColor:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          color:
+                                                                              valueOrDefault<Color>(
+                                                                            _model.isFiltered == true
+                                                                                ? FlutterFlowTheme.of(context).alternate
+                                                                                : FlutterFlowTheme.of(context).primaryBackground,
+                                                                            FlutterFlowTheme.of(context).primaryBackground,
+                                                                          ),
+                                                                          textStyle: FlutterFlowTheme.of(context)
+                                                                              .labelMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                                ),
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
+                                                                              ),
+                                                                          elevation:
+                                                                              0.0,
+                                                                          borderSide:
+                                                                              BorderSide(
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).alternate,
+                                                                            width:
+                                                                                1.0,
+                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                        ),
+                                                                        showLoadingIndicator:
+                                                                            false,
+                                                                      ),
+                                                                  ]
+                                                                      .divide(SizedBox(
+                                                                          width:
+                                                                              24.0))
+                                                                      .addToStart(SizedBox(
+                                                                          width:
+                                                                              16.0))
+                                                                      .addToEnd(SizedBox(
+                                                                          width:
+                                                                              16.0)),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              content: FutureBuilder<
+                                                  List<AppIssueWithCoverRow>>(
+                                                future: _model
+                                                    .titleCache(
+                                                  overrideCache:
+                                                      !_model.isFiltered!,
+                                                  requestFn: () =>
+                                                      AppIssueWithCoverTable()
+                                                          .queryRows(
+                                                    queryFn: (q) => q
+                                                        .eqOrNull(
+                                                          'title_id',
+                                                          widget.titleId,
+                                                        )
+                                                        .eqOrNull(
+                                                          'status_ownership',
+                                                          _model
+                                                              .filterOwnership,
+                                                        )
+                                                        .eqOrNull(
+                                                          'status_reading',
+                                                          _model.filterReading,
+                                                        )
+                                                        .order('sort_order',
+                                                            ascending: true)
+                                                        .order('date',
+                                                            ascending: true)
+                                                        .order('issue_name_key',
+                                                            ascending: true)
+                                                        .order(
+                                                            'issue_subtitle_key',
+                                                            ascending: true),
+                                                  ),
+                                                )
+                                                    .then((result) {
+                                                  _model.requestCompleted2 =
+                                                      true;
+                                                  return result;
+                                                }),
+                                                builder: (context, snapshot) {
+                                                  // Customize what your widget looks like when it's loading.
+                                                  if (!snapshot.hasData) {
+                                                    return ListItemSkeletonLWidget();
+                                                  }
+                                                  List<AppIssueWithCoverRow>
+                                                      listViewBAppIssueWithCoverRowList =
+                                                      snapshot.data!;
+
+                                                  return ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    primary: false,
+                                                    shrinkWrap: true,
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    itemCount:
+                                                        listViewBAppIssueWithCoverRowList
+                                                            .length,
+                                                    itemBuilder: (context,
+                                                        listViewBIndex) {
+                                                      final listViewBAppIssueWithCoverRow =
+                                                          listViewBAppIssueWithCoverRowList[
+                                                              listViewBIndex];
+                                                      return wrapWithModel(
+                                                        model: _model
+                                                            .listItemModels
+                                                            .getModel(
+                                                          listViewBAppIssueWithCoverRow
+                                                              .issueId!,
+                                                          listViewBIndex,
+                                                        ),
+                                                        updateCallback: () =>
+                                                            safeSetState(() {}),
+                                                        child: ListItemWidget(
+                                                          key: Key(
+                                                            'Key6ah_${listViewBAppIssueWithCoverRow.issueId!}',
+                                                          ),
+                                                          issueId:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .issueId,
+                                                          showTitleInfo: false,
+                                                          thumb:
+                                                              'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
+                                                          issueNumber:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .issueNumber,
+                                                          issueName:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .issueName,
+                                                          issueSubtitle:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .issueSubtitle,
+                                                          issuePages:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .pages,
+                                                          issueDate:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .date,
+                                                          entityType: 'issue',
+                                                          entityId:
+                                                              widget.titleId,
+                                                          issueCount: 0,
+                                                          isSingleIssue: false,
+                                                          singleIssuePages:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .pages,
+                                                          indexPosition:
+                                                              listViewBIndex,
+                                                          thumb2:
+                                                              'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
+                                                          thumb3:
+                                                              'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
+                                                          showDivider: true,
+                                                          selectionEnabled:
+                                                              true,
+                                                          showStatus: true,
+                                                          isAdult:
+                                                              listViewBAppIssueWithCoverRow
+                                                                  .isAdult,
+                                                          canSeeAdult: functions
+                                                              .canSeeAdultContent(
+                                                                  FFAppState()
+                                                                      .currentUserBirthDateString,
+                                                                  FFAppState()
+                                                                      .adultContentEnabled),
+                                                          showIndex: false,
+                                                          onTap: () async {
+                                                            context.pushNamed(
+                                                              IssueDetailPageWidget
+                                                                  .routeName,
+                                                              queryParameters: {
+                                                                'issueId':
+                                                                    serializeParam(
+                                                                  listViewBAppIssueWithCoverRow
+                                                                      .issueId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                                'tittleId':
+                                                                    serializeParam(
+                                                                  widget
+                                                                      .titleId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                                'navOriginTitle':
+                                                                    serializeParam(
+                                                                  true,
+                                                                  ParamType
+                                                                      .bool,
+                                                                ),
+                                                              }.withoutNulls,
+                                                            );
+                                                          },
+                                                          onSaved: () async {
+                                                            _model.refreshTitle3 =
+                                                                await actions
+                                                                    .fetchLibraryTitles(
+                                                              currentUserUid,
+                                                            );
+                                                            FFAppState()
+                                                                    .libraryTitles =
+                                                                _model
+                                                                    .refreshTitle3!
+                                                                    .toList()
+                                                                    .cast<
+                                                                        LibraryTitleItemStruct>();
+                                                            FFAppState()
+                                                                    .needsLibraryRefresh =
+                                                                true;
+                                                            FFAppState()
+                                                                .update(() {});
+                                                            safeSetState(() =>
+                                                                _model.requestCompleter1 =
+                                                                    null);
+                                                            await _model
+                                                                .waitForRequestCompleted1();
+
+                                                            safeSetState(() {});
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 },
                                               ),
                                             ),
-                                          ),
-                                          content: FutureBuilder<
-                                              List<AppIssueWithCoverRow>>(
-                                            future: _model
-                                                .titleCache(
-                                              overrideCache:
-                                                  !_model.isFiltered!,
-                                              requestFn: () =>
-                                                  AppIssueWithCoverTable()
-                                                      .queryRows(
-                                                queryFn: (q) => q
-                                                    .eqOrNull(
-                                                      'title_id',
-                                                      widget.titleId,
-                                                    )
-                                                    .eqOrNull(
-                                                      'status_ownership',
-                                                      _model.filterOwnership,
-                                                    )
-                                                    .eqOrNull(
-                                                      'status_reading',
-                                                      _model.filterReading,
-                                                    )
-                                                    .order('sort_order',
-                                                        ascending: true)
-                                                    .order('issue_name_key',
-                                                        ascending: true)
-                                                    .order('issue_subtitle_key',
-                                                        ascending: true)
-                                                    .order('date',
-                                                        ascending: true),
-                                              ),
-                                            )
-                                                .then((result) {
-                                              _model.requestCompleted2 = true;
-                                              return result;
-                                            }),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return ListItemSkeletonLWidget();
-                                              }
-                                              List<AppIssueWithCoverRow>
-                                                  listViewBAppIssueWithCoverRowList =
-                                                  snapshot.data!;
-
-                                              return ListView.builder(
-                                                padding: EdgeInsets.zero,
-                                                primary: false,
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                itemCount:
-                                                    listViewBAppIssueWithCoverRowList
-                                                        .length,
-                                                itemBuilder:
-                                                    (context, listViewBIndex) {
-                                                  final listViewBAppIssueWithCoverRow =
-                                                      listViewBAppIssueWithCoverRowList[
-                                                          listViewBIndex];
-                                                  return wrapWithModel(
-                                                    model: _model.listItemModels
-                                                        .getModel(
-                                                      listViewBAppIssueWithCoverRow
-                                                          .issueId!,
-                                                      listViewBIndex,
-                                                    ),
-                                                    updateCallback: () =>
-                                                        safeSetState(() {}),
-                                                    child: ListItemWidget(
-                                                      key: Key(
-                                                        'Key6ah_${listViewBAppIssueWithCoverRow.issueId!}',
-                                                      ),
-                                                      issueId:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .issueId,
-                                                      showTitleInfo: false,
-                                                      thumb:
-                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
-                                                      issueNumber:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .issueNumber,
-                                                      issueName:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .issueName,
-                                                      issueSubtitle:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .issueSubtitle,
-                                                      issuePages:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .pages,
-                                                      issueDate:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .date,
-                                                      entityType: 'issue',
-                                                      entityId: widget.titleId,
-                                                      issueCount: 0,
-                                                      isSingleIssue: false,
-                                                      singleIssuePages:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .pages,
-                                                      indexPosition:
-                                                          listViewBIndex,
-                                                      thumb2:
-                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
-                                                      thumb3:
-                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewBAppIssueWithCoverRow.thumbLocalPath}',
-                                                      showDivider: true,
-                                                      selectionEnabled: true,
-                                                      showStatus: true,
-                                                      isAdult:
-                                                          listViewBAppIssueWithCoverRow
-                                                              .isAdult,
-                                                      canSeeAdult:
-                                                          functions.canSeeAdultContent(
-                                                              FFAppState()
-                                                                  .currentUserBirthDateString,
-                                                              FFAppState()
-                                                                  .adultContentEnabled),
-                                                      showIndex: false,
-                                                      onTap: () async {
-                                                        context.pushNamed(
-                                                          IssueDetailPageWidget
-                                                              .routeName,
-                                                          queryParameters: {
-                                                            'issueId':
-                                                                serializeParam(
-                                                              listViewBAppIssueWithCoverRow
-                                                                  .issueId,
-                                                              ParamType.String,
-                                                            ),
-                                                            'tittleId':
-                                                                serializeParam(
-                                                              widget.titleId,
-                                                              ParamType.String,
-                                                            ),
-                                                            'navOriginTitle':
-                                                                serializeParam(
-                                                              true,
-                                                              ParamType.bool,
-                                                            ),
-                                                          }.withoutNulls,
-                                                        );
-                                                      },
-                                                      onSaved: () async {
-                                                        _model.refreshTitle3 =
-                                                            await actions
-                                                                .fetchLibraryTitles(
-                                                          currentUserUid,
-                                                        );
-                                                        FFAppState()
-                                                                .libraryTitles =
-                                                            _model
-                                                                .refreshTitle3!
-                                                                .toList()
-                                                                .cast<
-                                                                    LibraryTitleItemStruct>();
-                                                        FFAppState()
-                                                                .needsLibraryRefresh =
-                                                            true;
-                                                        FFAppState()
-                                                            .update(() {});
-                                                        safeSetState(() => _model
-                                                                .requestCompleter1 =
-                                                            null);
-                                                        await _model
-                                                            .waitForRequestCompleted1();
-
-                                                        safeSetState(() {});
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       );
                     },

@@ -15,6 +15,9 @@ class ListFeaturedWidget extends StatefulWidget {
     this.thumbUrl2,
     this.thumbUrl3,
     this.colorBg,
+    this.listAuthor,
+    this.isAuthorVerified,
+    this.isPublic,
   })  : this.listTitle = listTitle ?? 'Título da Lista',
         this.listDescription = listDescription ?? 'Descrição da lista';
 
@@ -28,6 +31,9 @@ class ListFeaturedWidget extends StatefulWidget {
   final String? thumbUrl2;
   final String? thumbUrl3;
   final String? colorBg;
+  final String? listAuthor;
+  final bool? isAuthorVerified;
+  final bool? isPublic;
 
   @override
   State<ListFeaturedWidget> createState() => _ListFeaturedWidgetState();
@@ -86,15 +92,14 @@ class _ListFeaturedWidgetState extends State<ListFeaturedWidget> {
                   ),
                   decoration: BoxDecoration(),
                   alignment: AlignmentDirectional(-1.0, 0.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
-                        child: Text(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           valueOrDefault<String>(
                             widget.listTitle,
                             'Lista de HQs',
@@ -117,77 +122,129 @@ class _ListFeaturedWidgetState extends State<ListFeaturedWidget> {
                                   ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      if (false)
-                        Text(
-                          valueOrDefault<String>(
-                            widget.listDescription,
-                            'Descrição',
+                        if (widget.isPublic ?? true)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                valueOrDefault<String>(
+                                  '@${widget.listAuthor}',
+                                  'criador',
+                                ),
+                                textAlign: TextAlign.start,
+                                style: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FontWeight.normal,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .fontStyle,
+                                      ),
+                                      fontSize: 10.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontStyle,
+                                      lineHeight: 1.2,
+                                    ),
+                              ),
+                              if (false)
+                                Icon(
+                                  Icons.verified_rounded,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 12.0,
+                                ),
+                            ].divide(SizedBox(width: 4.0)),
                           ),
-                          maxLines: 2,
-                          style:
-                              FlutterFlowTheme.of(context).bodySmall.override(
-                                    font: GoogleFonts.inter(
+                        if (false)
+                          Text(
+                            valueOrDefault<String>(
+                              widget.listDescription,
+                              'Descrição',
+                            ),
+                            maxLines: 2,
+                            style:
+                                FlutterFlowTheme.of(context).bodySmall.override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .fontStyle,
+                                      ),
+                                      letterSpacing: 0.0,
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .fontWeight,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodySmall
                                           .fontStyle,
+                                      lineHeight: 1.2,
                                     ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodySmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodySmall
-                                        .fontStyle,
-                                    lineHeight: 1.2,
-                                  ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    ].divide(SizedBox(height: 4.0)),
-                  ),
-                ),
-                if (!((widget.thumbUrl1 == null || widget.thumbUrl1 == '') &&
-                    (widget.thumbUrl2 == null || widget.thumbUrl2 == '') &&
-                    (widget.thumbUrl3 == null || widget.thumbUrl3 == '')))
-                  Expanded(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        if (widget.thumbUrl1 != null &&
-                            widget.thumbUrl1 != '')
-                          custom_widgets.ComicCover(
-                            width: 64.0,
-                            height: 80.0,
-                            imageUrl: widget.thumbUrl1,
-                            spineHeight: 3.0,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        if ((widget.thumbUrl2 != null &&
-                                widget.thumbUrl2 != '') &&
-                            (widget.thumbUrl2 != 'null'))
-                          custom_widgets.ComicCover(
-                            width: 64.0,
-                            height: 80.0,
-                            imageUrl: widget.thumbUrl2,
-                            spineHeight: 3.0,
-                          ),
-                        if ((widget.thumbUrl3 != null &&
-                                widget.thumbUrl3 != '') &&
-                            (widget.thumbUrl3 != 'null'))
-                          custom_widgets.ComicCover(
-                            width: 64.0,
-                            height: 80.0,
-                            imageUrl: widget.thumbUrl3,
-                            spineHeight: 3.0,
-                          ),
-                      ]
-                          .divide(SizedBox(width: 8.0))
-                          .addToEnd(SizedBox(width: 16.0)),
+                      ].divide(SizedBox(height: 4.0)),
                     ),
                   ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(1.0, 0.0),
+                    child: Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(
+                        maxWidth: 250.0,
+                      ),
+                      decoration: BoxDecoration(),
+                      child: Visibility(
+                        visible: !((widget.thumbUrl1 == null ||
+                                widget.thumbUrl1 == '') &&
+                            (widget.thumbUrl2 == null ||
+                                widget.thumbUrl2 == '') &&
+                            (widget.thumbUrl3 == null ||
+                                widget.thumbUrl3 == '')),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (widget.thumbUrl1 != null &&
+                                widget.thumbUrl1 != '')
+                              custom_widgets.ComicCover(
+                                width: 64.0,
+                                height: 80.0,
+                                imageUrl: widget.thumbUrl1,
+                                spineHeight: 3.0,
+                              ),
+                            if ((widget.thumbUrl2 != null &&
+                                    widget.thumbUrl2 != '') &&
+                                (widget.thumbUrl2 != 'null'))
+                              custom_widgets.ComicCover(
+                                width: 64.0,
+                                height: 80.0,
+                                imageUrl: widget.thumbUrl2,
+                                spineHeight: 3.0,
+                              ),
+                            if ((widget.thumbUrl3 != null &&
+                                    widget.thumbUrl3 != '') &&
+                                (widget.thumbUrl3 != 'null'))
+                              custom_widgets.ComicCover(
+                                width: 64.0,
+                                height: 80.0,
+                                imageUrl: widget.thumbUrl3,
+                                spineHeight: 3.0,
+                              ),
+                          ]
+                              .divide(SizedBox(width: 8.0))
+                              .addToEnd(SizedBox(width: 16.0)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 if ((widget.thumbUrl1 == null || widget.thumbUrl1 == '') &&
                     (widget.thumbUrl2 == null || widget.thumbUrl2 == '') &&
                     (widget.thumbUrl3 == null || widget.thumbUrl3 == ''))

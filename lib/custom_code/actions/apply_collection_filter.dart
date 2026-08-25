@@ -3,7 +3,7 @@ import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -37,9 +37,15 @@ Future<List<LibraryTitleItemStruct>> applyCollectionFilter(
 
   return filtered.where((t) {
     final name = (t.titleName ?? '').toLowerCase();
+    final preTitle = (t.preTitle ?? '').toLowerCase();
+    final formatLabel = (t.formatLabel ?? '').toLowerCase();
     final subtitle = (t.titleSubtitle ?? '').toLowerCase();
     final series = (t.series ?? '').toLowerCase();
-    return name.contains(q) || subtitle.contains(q) || series.contains(q);
+    return name.contains(q) ||
+        preTitle.contains(q) ||
+        formatLabel.contains(q) ||
+        subtitle.contains(q) ||
+        series.contains(q);
   }).toList();
 }
 // Set your action name, define your arguments and return parameter,

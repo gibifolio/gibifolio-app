@@ -25,6 +25,8 @@ class SearchResultItemStruct extends BaseStruct {
     String? readingAggregate,
     String? ownershipAggregate,
     bool? isAdult,
+    String? preTitle,
+    String? formatLabel,
   })  : _titleId = titleId,
         _titleName = titleName,
         _titleSubtitle = titleSubtitle,
@@ -42,7 +44,9 @@ class SearchResultItemStruct extends BaseStruct {
         _thirdIssueThumb = thirdIssueThumb,
         _readingAggregate = readingAggregate,
         _ownershipAggregate = ownershipAggregate,
-        _isAdult = isAdult;
+        _isAdult = isAdult,
+        _preTitle = preTitle,
+        _formatLabel = formatLabel;
 
   // "titleId" field.
   String? _titleId;
@@ -175,6 +179,20 @@ class SearchResultItemStruct extends BaseStruct {
 
   bool hasIsAdult() => _isAdult != null;
 
+  // "preTitle" field.
+  String? _preTitle;
+  String get preTitle => _preTitle ?? '';
+  set preTitle(String? val) => _preTitle = val;
+
+  bool hasPreTitle() => _preTitle != null;
+
+  // "formatLabel" field.
+  String? _formatLabel;
+  String get formatLabel => _formatLabel ?? '';
+  set formatLabel(String? val) => _formatLabel = val;
+
+  bool hasFormatLabel() => _formatLabel != null;
+
   static SearchResultItemStruct fromMap(Map<String, dynamic> data) =>
       SearchResultItemStruct(
         titleId: data['titleId'] as String?,
@@ -195,6 +213,8 @@ class SearchResultItemStruct extends BaseStruct {
         readingAggregate: data['readingAggregate'] as String?,
         ownershipAggregate: data['ownershipAggregate'] as String?,
         isAdult: data['isAdult'] as bool?,
+        preTitle: data['preTitle'] as String?,
+        formatLabel: data['formatLabel'] as String?,
       );
 
   static SearchResultItemStruct? maybeFromMap(dynamic data) => data is Map
@@ -220,6 +240,8 @@ class SearchResultItemStruct extends BaseStruct {
         'readingAggregate': _readingAggregate,
         'ownershipAggregate': _ownershipAggregate,
         'isAdult': _isAdult,
+        'preTitle': _preTitle,
+        'formatLabel': _formatLabel,
       }.withoutNulls;
 
   @override
@@ -295,6 +317,14 @@ class SearchResultItemStruct extends BaseStruct {
         'isAdult': serializeParam(
           _isAdult,
           ParamType.bool,
+        ),
+        'preTitle': serializeParam(
+          _preTitle,
+          ParamType.String,
+        ),
+        'formatLabel': serializeParam(
+          _formatLabel,
+          ParamType.String,
         ),
       }.withoutNulls;
 
@@ -391,6 +421,16 @@ class SearchResultItemStruct extends BaseStruct {
           ParamType.bool,
           false,
         ),
+        preTitle: deserializeParam(
+          data['preTitle'],
+          ParamType.String,
+          false,
+        ),
+        formatLabel: deserializeParam(
+          data['formatLabel'],
+          ParamType.String,
+          false,
+        ),
       );
 
   @override
@@ -416,7 +456,9 @@ class SearchResultItemStruct extends BaseStruct {
         thirdIssueThumb == other.thirdIssueThumb &&
         readingAggregate == other.readingAggregate &&
         ownershipAggregate == other.ownershipAggregate &&
-        isAdult == other.isAdult;
+        isAdult == other.isAdult &&
+        preTitle == other.preTitle &&
+        formatLabel == other.formatLabel;
   }
 
   @override
@@ -438,7 +480,9 @@ class SearchResultItemStruct extends BaseStruct {
         thirdIssueThumb,
         readingAggregate,
         ownershipAggregate,
-        isAdult
+        isAdult,
+        preTitle,
+        formatLabel
       ]);
 }
 
@@ -461,6 +505,8 @@ SearchResultItemStruct createSearchResultItemStruct({
   String? readingAggregate,
   String? ownershipAggregate,
   bool? isAdult,
+  String? preTitle,
+  String? formatLabel,
 }) =>
     SearchResultItemStruct(
       titleId: titleId,
@@ -481,4 +527,6 @@ SearchResultItemStruct createSearchResultItemStruct({
       readingAggregate: readingAggregate,
       ownershipAggregate: ownershipAggregate,
       isAdult: isAdult,
+      preTitle: preTitle,
+      formatLabel: formatLabel,
     );

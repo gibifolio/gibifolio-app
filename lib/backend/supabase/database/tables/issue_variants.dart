@@ -76,4 +76,20 @@ class IssueVariantsRow extends SupabaseDataRow {
 
   DateTime? get updatedAt => getField<DateTime>('updated_at');
   set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
+
+  String? get urlPublisherIssueVariant =>
+      getField<String>('url_publisher_issue_variant');
+  set urlPublisherIssueVariant(String? value) =>
+      setField<String>('url_publisher_issue_variant', value);
+
+  double? get price => getField<double>('price');
+  set price(double? value) => setField<double>('price', value);
+
+  DateTime? get priceObservedAt => getField<DateTime>('price_observed_at');
+  set priceObservedAt(DateTime? value) =>
+      setField<DateTime>('price_observed_at', value);
+
+  bool? get coverIsProvisional => getField<bool>('cover_is_provisional');
+  set coverIsProvisional(bool? value) =>
+      setField<bool>('cover_is_provisional', value);
 }

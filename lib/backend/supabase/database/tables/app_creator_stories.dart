@@ -63,4 +63,10 @@ class AppCreatorStoriesRow extends SupabaseDataRow {
   String? get thumbLocalPath => getField<String>('thumb_local_path');
   set thumbLocalPath(String? value) =>
       setField<String>('thumb_local_path', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

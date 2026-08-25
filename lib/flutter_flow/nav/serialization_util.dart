@@ -250,20 +250,12 @@ dynamic deserializeParam<T>(
       case ParamType.SupabaseRow:
         final data = json.decode(param) as Map<String, dynamic>;
         switch (T) {
-          case BackupMarvelEssenciaisIssuesRow:
-            return BackupMarvelEssenciaisIssuesRow(data);
-          case BackupMarvelEssenciaisListItemsRow:
-            return BackupMarvelEssenciaisListItemsRow(data);
-          case BackupMarvelEssenciaisStoryInIssueRow:
-            return BackupMarvelEssenciaisStoryInIssueRow(data);
-          case BackupMarvelEssenciaisTitleClustersRow:
-            return BackupMarvelEssenciaisTitleClustersRow(data);
-          case BackupMarvelEssenciaisTitlesRow:
-            return BackupMarvelEssenciaisTitlesRow(data);
-          case BackupMarvelEssenciaisUserStatusRow:
-            return BackupMarvelEssenciaisUserStatusRow(data);
-          case BackupMarvelEssenciaisVariantsRow:
-            return BackupMarvelEssenciaisVariantsRow(data);
+          case BkpXmenIssueRow:
+            return BkpXmenIssueRow(data);
+          case BkpXmenUisRow:
+            return BkpXmenUisRow(data);
+          case BkpXmenVariantRow:
+            return BkpXmenVariantRow(data);
           case AppCreatorStoriesRow:
             return AppCreatorStoriesRow(data);
           case AppDiscoverFeedRow:
@@ -312,10 +304,16 @@ dynamic deserializeParam<T>(
             return AppReadingSuggestionsCountRow(data);
           case AppRecentReleasesRow:
             return AppRecentReleasesRow(data);
+          case AppReleasesAllRow:
+            return AppReleasesAllRow(data);
           case AppReleasesFullRow:
             return AppReleasesFullRow(data);
           case AppReleasesPublishersRow:
             return AppReleasesPublishersRow(data);
+          case AppReleasesPublishersUpcomingRow:
+            return AppReleasesPublishersUpcomingRow(data);
+          case AppReleasesUpcomingRow:
+            return AppReleasesUpcomingRow(data);
           case AppStoryCreditsRow:
             return AppStoryCreditsRow(data);
           case AppTitleCardRow:
@@ -326,6 +324,66 @@ dynamic deserializeParam<T>(
             return AppTitleIssueCountsRow(data);
           case AppUserCustomListsRow:
             return AppUserCustomListsRow(data);
+          case AppUserListsUnifiedRow:
+            return AppUserListsUnifiedRow(data);
+          case BkpAcompIssuesRow:
+            return BkpAcompIssuesRow(data);
+          case BkpAcompVariantsRow:
+            return BkpAcompVariantsRow(data);
+          case BkpBrasinhaIssuesRow:
+            return BkpBrasinhaIssuesRow(data);
+          case BkpBrasinhaStoriesRow:
+            return BkpBrasinhaStoriesRow(data);
+          case BkpBrasinhaVariantsRow:
+            return BkpBrasinhaVariantsRow(data);
+          case BkpDorohedoroIssuesRow:
+            return BkpDorohedoroIssuesRow(data);
+          case BkpDupIssues20260727Row:
+            return BkpDupIssues20260727Row(data);
+          case BkpDupTitles20260727Row:
+            return BkpDupTitles20260727Row(data);
+          case BkpDupVariants20260727Row:
+            return BkpDupVariants20260727Row(data);
+          case BkpG1DeletedvarsRow:
+            return BkpG1DeletedvarsRow(data);
+          case BkpG1IssuesRow:
+            return BkpG1IssuesRow(data);
+          case BkpG1StoriesRow:
+            return BkpG1StoriesRow(data);
+          case BkpG1VariantsRow:
+            return BkpG1VariantsRow(data);
+          case BkpG1cDeletedvarsRow:
+            return BkpG1cDeletedvarsRow(data);
+          case BkpG1cIssuesRow:
+            return BkpG1cIssuesRow(data);
+          case BkpG1cStoriesRow:
+            return BkpG1cStoriesRow(data);
+          case BkpG1cUisRow:
+            return BkpG1cUisRow(data);
+          case BkpG1cVariantsRow:
+            return BkpG1cVariantsRow(data);
+          case BkpG2IssuesRow:
+            return BkpG2IssuesRow(data);
+          case BkpG2VariantsRow:
+            return BkpG2VariantsRow(data);
+          case BkpG2cIssuesRow:
+            return BkpG2cIssuesRow(data);
+          case BkpG2cVariantsRow:
+            return BkpG2cVariantsRow(data);
+          case BkpGurilandiaIssuesRow:
+            return BkpGurilandiaIssuesRow(data);
+          case BkpGurilandiaStoriesRow:
+            return BkpGurilandiaStoriesRow(data);
+          case BkpGurilandiaVariantsRow:
+            return BkpGurilandiaVariantsRow(data);
+          case BkpMag6IssuesRow:
+            return BkpMag6IssuesRow(data);
+          case BkpMag6StoriesRow:
+            return BkpMag6StoriesRow(data);
+          case BkpMag6VariantsRow:
+            return BkpMag6VariantsRow(data);
+          case BkpOguriStoriesRow:
+            return BkpOguriStoriesRow(data);
           case ClustersRow:
             return ClustersRow(data);
           case CreatorsRow:
@@ -334,16 +392,34 @@ dynamic deserializeParam<T>(
             return EditLogsRow(data);
           case EmptyTitlesRow:
             return EmptyTitlesRow(data);
+          case FeatureEventsRow:
+            return FeatureEventsRow(data);
           case GenresRow:
             return GenresRow(data);
+          case ImageProcessQueueRow:
+            return ImageProcessQueueRow(data);
           case IssueVariantsRow:
             return IssueVariantsRow(data);
+          case IssueVariantsBkp98a70ff720260726Row:
+            return IssueVariantsBkp98a70ff720260726Row(data);
           case IssuesRow:
             return IssuesRow(data);
+          case IssuesBackupAsterix20260726Row:
+            return IssuesBackupAsterix20260726Row(data);
+          case IssuesEngagedWithoutCoverRow:
+            return IssuesEngagedWithoutCoverRow(data);
+          case IssuesEngagedWithoutCoverVRow:
+            return IssuesEngagedWithoutCoverVRow(data);
           case IssuesUnparsedRow:
             return IssuesUnparsedRow(data);
           case IssuesWithoutCoverRow:
             return IssuesWithoutCoverRow(data);
+          case IssuesWithoutPrimaryVariantRow:
+            return IssuesWithoutPrimaryVariantRow(data);
+          case LancamentosQueueRow:
+            return LancamentosQueueRow(data);
+          case LancamentosQueueBackup20260726Row:
+            return LancamentosQueueBackup20260726Row(data);
           case LicensorsRow:
             return LicensorsRow(data);
           case LicensorsDismissedRow:
@@ -358,8 +434,14 @@ dynamic deserializeParam<T>(
             return ListLabelsRow(data);
           case ListsRow:
             return ListsRow(data);
+          case ManualReviewQueueRow:
+            return ManualReviewQueueRow(data);
           case MergeCandidatesRow:
             return MergeCandidatesRow(data);
+          case MergeJournalRow:
+            return MergeJournalRow(data);
+          case MergeJournalSummaryRow:
+            return MergeJournalSummaryRow(data);
           case MultiIssueMismatchesRow:
             return MultiIssueMismatchesRow(data);
           case OrphanIssuesRow:
@@ -368,10 +450,20 @@ dynamic deserializeParam<T>(
             return OrphanVariantsRow(data);
           case PublicProfilesRow:
             return PublicProfilesRow(data);
+          case PublisherCollectionsRow:
+            return PublisherCollectionsRow(data);
+          case PublisherDupDismissedRow:
+            return PublisherDupDismissedRow(data);
+          case PublisherImportQueueRow:
+            return PublisherImportQueueRow(data);
+          case PublisherImportQueueBackup20260726Row:
+            return PublisherImportQueueBackup20260726Row(data);
           case PublishersRow:
             return PublishersRow(data);
           case RecentReleasesCacheRow:
             return RecentReleasesCacheRow(data);
+          case RescrapeWorkListRow:
+            return RescrapeWorkListRow(data);
           case RolesRow:
             return RolesRow(data);
           case ScrapeQueueRow:
@@ -408,12 +500,16 @@ dynamic deserializeParam<T>(
             return UniversesRow(data);
           case UserIssueStatusRow:
             return UserIssueStatusRow(data);
+          case UserListOrderRow:
+            return UserListOrderRow(data);
           case UserTitleStatusRow:
             return UserTitleStatusRow(data);
           case UsersRow:
             return UsersRow(data);
           case VLatestScrapeRow:
             return VLatestScrapeRow(data);
+          case VariantCreditsRow:
+            return VariantCreditsRow(data);
           default:
             return null;
         }

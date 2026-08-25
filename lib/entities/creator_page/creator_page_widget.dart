@@ -119,117 +119,142 @@ class _CreatorPageWidgetState extends State<CreatorPageWidget> {
             ),
             body: SafeArea(
               top: true,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FutureBuilder<List<AppCreatorStoriesRow>>(
-                        future: AppCreatorStoriesTable().queryRows(
-                          queryFn: (q) => q.eqOrNull(
-                            'creator_id',
-                            widget.creatorId,
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  height: double.infinity,
+                  decoration: BoxDecoration(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FutureBuilder<List<AppCreatorStoriesRow>>(
+                          future: AppCreatorStoriesTable().queryRows(
+                            queryFn: (q) => q.eqOrNull(
+                              'creator_id',
+                              widget.creatorId,
+                            ),
                           ),
-                        ),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return Container(
-                              width: double.infinity,
-                              child: ListItemSkeletonLWidget(),
-                            );
-                          }
-                          List<AppCreatorStoriesRow>
-                              listViewAppCreatorStoriesRowList = snapshot.data!;
-
-                          return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            primary: false,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: listViewAppCreatorStoriesRowList.length,
-                            itemBuilder: (context, listViewIndex) {
-                              final listViewAppCreatorStoriesRow =
-                                  listViewAppCreatorStoriesRowList[
-                                      listViewIndex];
-                              return wrapWithModel(
-                                model: _model.listItemModels.getModel(
-                                  listViewAppCreatorStoriesRow.issueId!,
-                                  listViewIndex,
-                                ),
-                                updateCallback: () => safeSetState(() {}),
-                                child: ListItemWidget(
-                                  key: Key(
-                                    'Keyxzq_${listViewAppCreatorStoriesRow.issueId!}',
-                                  ),
-                                  issueId: listViewAppCreatorStoriesRow.issueId,
-                                  showTitleInfo: true,
-                                  issueNumber:
-                                      listViewAppCreatorStoriesRow.issueNumber,
-                                  issueName:
-                                      listViewAppCreatorStoriesRow.issueName,
-                                  issueSubtitle: listViewAppCreatorStoriesRow
-                                      .issueSubtitle,
-                                  titleName:
-                                      listViewAppCreatorStoriesRow.titleName,
-                                  titleSubtitle: listViewAppCreatorStoriesRow
-                                      .titleSubtitle,
-                                  publisherName: listViewAppCreatorStoriesRow
-                                      .publisherName,
-                                  licensors:
-                                      listViewAppCreatorStoriesRow.licensors,
-                                  entityType: 'issue',
-                                  entityId:
-                                      listViewAppCreatorStoriesRow.issueId,
-                                  series: listViewAppCreatorStoriesRow.series,
-                                  issueCount: 0,
-                                  isSingleIssue: false,
-                                  singleIssuePages:
-                                      listViewAppCreatorStoriesRow.issuePages,
-                                  indexPosition: null,
-                                  thumb:
-                                      'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewAppCreatorStoriesRow.thumbLocalPath}',
-                                  issueDate:
-                                      listViewAppCreatorStoriesRow.issueDate,
-                                  thumb2: '',
-                                  thumb3: '',
-                                  showDivider: true,
-                                  selectionEnabled: false,
-                                  showStatus: true,
-                                  isAdult: listViewAppCreatorStoriesRow.isAdult,
-                                  canSeeAdult: functions.canSeeAdultContent(
-                                      FFAppState().currentUserBirthDateString,
-                                      FFAppState().adultContentEnabled),
-                                  showIndex: false,
-                                  onTap: () async {
-                                    context.pushNamed(
-                                      IssueDetailPageWidget.routeName,
-                                      queryParameters: {
-                                        'issueId': serializeParam(
-                                          listViewAppCreatorStoriesRow.issueId,
-                                          ParamType.String,
-                                        ),
-                                        'tittleId': serializeParam(
-                                          listViewAppCreatorStoriesRow.titleId,
-                                          ParamType.String,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  },
-                                  onSaved: () async {
-                                    FFAppState().needsLibraryRefresh = false;
-                                    safeSetState(() {});
-                                  },
-                                ),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Container(
+                                width: double.infinity,
+                                child: ListItemSkeletonLWidget(),
                               );
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                            }
+                            List<AppCreatorStoriesRow>
+                                listViewAppCreatorStoriesRowList =
+                                snapshot.data!;
+
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount:
+                                  listViewAppCreatorStoriesRowList.length,
+                              itemBuilder: (context, listViewIndex) {
+                                final listViewAppCreatorStoriesRow =
+                                    listViewAppCreatorStoriesRowList[
+                                        listViewIndex];
+                                return wrapWithModel(
+                                  model: _model.listItemModels.getModel(
+                                    listViewAppCreatorStoriesRow.issueId!,
+                                    listViewIndex,
+                                  ),
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: ListItemWidget(
+                                    key: Key(
+                                      'Keyxzq_${listViewAppCreatorStoriesRow.issueId!}',
+                                    ),
+                                    issueId:
+                                        listViewAppCreatorStoriesRow.issueId,
+                                    showTitleInfo: true,
+                                    issueNumber: listViewAppCreatorStoriesRow
+                                        .issueNumber,
+                                    issueName:
+                                        listViewAppCreatorStoriesRow.issueName,
+                                    issueSubtitle: listViewAppCreatorStoriesRow
+                                        .issueSubtitle,
+                                    titleName:
+                                        listViewAppCreatorStoriesRow.titleName,
+                                    titleSubtitle: listViewAppCreatorStoriesRow
+                                        .titleSubtitle,
+                                    publisherName: listViewAppCreatorStoriesRow
+                                        .publisherName,
+                                    licensors:
+                                        listViewAppCreatorStoriesRow.licensors,
+                                    entityType: 'issue',
+                                    entityId:
+                                        listViewAppCreatorStoriesRow.issueId,
+                                    series: listViewAppCreatorStoriesRow.series,
+                                    issueCount: 0,
+                                    isSingleIssue: false,
+                                    singleIssuePages:
+                                        listViewAppCreatorStoriesRow.issuePages,
+                                    indexPosition: null,
+                                    thumb:
+                                        'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewAppCreatorStoriesRow.thumbLocalPath}',
+                                    issueDate:
+                                        listViewAppCreatorStoriesRow.issueDate,
+                                    thumb2: '',
+                                    thumb3: '',
+                                    showDivider: true,
+                                    selectionEnabled: false,
+                                    showStatus: true,
+                                    isAdult:
+                                        listViewAppCreatorStoriesRow.isAdult,
+                                    canSeeAdult: functions.canSeeAdultContent(
+                                        FFAppState().currentUserBirthDateString,
+                                        FFAppState().adultContentEnabled),
+                                    showIndex: false,
+                                    preTitle:
+                                        listViewAppCreatorStoriesRow.preTitle,
+                                    formatLabel: listViewAppCreatorStoriesRow
+                                        .formatLabel,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        IssueDetailPageWidget.routeName,
+                                        queryParameters: {
+                                          'issueId': serializeParam(
+                                            listViewAppCreatorStoriesRow
+                                                .issueId,
+                                            ParamType.String,
+                                          ),
+                                          'tittleId': serializeParam(
+                                            listViewAppCreatorStoriesRow
+                                                .titleId,
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    },
+                                    onSaved: () async {
+                                      FFAppState().needsLibraryRefresh = false;
+                                      safeSetState(() {});
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

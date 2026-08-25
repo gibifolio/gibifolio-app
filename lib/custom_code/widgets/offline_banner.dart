@@ -3,18 +3,20 @@ import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom widgets
+import '/custom_code/widgets/index.dart'; // Imports other custom widgets
 import '/custom_code/actions/index.dart'; // Imports custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import '/custom_code/actions/connectivity_state.dart';
+import '/custom_code/actions/ensure_connectivity_state.dart';
 
-/// Banner discreto de estado offline. Auto-oculta quando online (ocupa zero
-/// espaço), então pode ficar fixo no topo de qualquer tela sem quebrar layout.
-/// Escuta `isOfflineNotifier` (custom_code) — não depende de App State gerado.
+/// Banner discreto de estado offline.
+///
+/// Auto-oculta quando online (ocupa zero espaço), então pode ficar fixo no
+/// topo de qualquer tela sem quebrar layout. Escuta `isOfflineNotifier`
+/// (custom_code) — não depende de App State gerado.
 class OfflineBanner extends StatefulWidget {
   const OfflineBanner({
     super.key,
@@ -33,6 +35,12 @@ class OfflineBanner extends StatefulWidget {
 
 class _OfflineBannerState extends State<OfflineBanner> {
   @override
+  void initState() {
+    super.initState();
+    startConnectivityMonitoring();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: isOfflineNotifier,
@@ -43,7 +51,8 @@ class _OfflineBannerState extends State<OfflineBanner> {
         return Material(
           color: bg,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 7.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 7.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

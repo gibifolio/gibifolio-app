@@ -1,5 +1,5 @@
+import '/components/items_and_thumbs/grid_item_list/grid_item_list_widget.dart';
 import '/components/items_and_thumbs/list_featured/list_featured_widget.dart';
-import '/components/items_and_thumbs/list_thumb/list_thumb_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'lists_page_widget.dart' show ListsPageWidget;
@@ -10,18 +10,18 @@ class ListsPageModel extends FlutterFlowModel<ListsPageWidget> {
 
   // Models for ListFeatured dynamic component.
   late FlutterFlowDynamicModels<ListFeaturedModel> listFeaturedModels;
-  // Models for ListThumb dynamic component.
-  late FlutterFlowDynamicModels<ListThumbModel> listThumbModels;
+  // Models for GridItemList dynamic component.
+  late FlutterFlowDynamicModels<GridItemListModel> gridItemListModels;
 
   @override
   void initState(BuildContext context) {
     listFeaturedModels = FlutterFlowDynamicModels(() => ListFeaturedModel());
-    listThumbModels = FlutterFlowDynamicModels(() => ListThumbModel());
+    gridItemListModels = FlutterFlowDynamicModels(() => GridItemListModel());
   }
 
   @override
   void dispose() {
     listFeaturedModels.dispose();
-    listThumbModels.dispose();
+    gridItemListModels.dispose();
   }
 }

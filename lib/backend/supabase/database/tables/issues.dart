@@ -68,4 +68,28 @@ class IssuesRow extends SupabaseDataRow {
   DateTime? get contentParsedAt => getField<DateTime>('content_parsed_at');
   set contentParsedAt(DateTime? value) =>
       setField<DateTime>('content_parsed_at', value);
+
+  String? get urlPublisherIssue => getField<String>('url_publisher_issue');
+  set urlPublisherIssue(String? value) =>
+      setField<String>('url_publisher_issue', value);
+
+  String? get ageRating => getField<String>('age_rating');
+  set ageRating(String? value) => setField<String>('age_rating', value);
+
+  String? get legacyNumber => getField<String>('legacy_number');
+  set legacyNumber(String? value) => setField<String>('legacy_number', value);
+
+  String? get publisherSyncStatus => getField<String>('publisher_sync_status');
+  set publisherSyncStatus(String? value) =>
+      setField<String>('publisher_sync_status', value);
+
+  DateTime? get publisherSyncedAt => getField<DateTime>('publisher_synced_at');
+  set publisherSyncedAt(DateTime? value) =>
+      setField<DateTime>('publisher_synced_at', value);
+
+  String? get gdqIssueId => getField<String>('gdq_issue_id');
+  set gdqIssueId(String? value) => setField<String>('gdq_issue_id', value);
+
+  bool? get coverDismissed => getField<bool>('cover_dismissed');
+  set coverDismissed(bool? value) => setField<bool>('cover_dismissed', value);
 }

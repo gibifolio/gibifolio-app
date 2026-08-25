@@ -242,752 +242,734 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                     color: FlutterFlowTheme.of(context).alternate,
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          if (FFAppState().autocompleteVisible)
-                            Builder(
-                              builder: (context) {
-                                final autoComplete = FFAppState()
-                                    .autocompleteResults
-                                    .take(8)
-                                    .toList();
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, -1.0),
+                      child: Container(
+                        width: () {
+                          if (MediaQuery.sizeOf(context).width <
+                              kBreakpointSmall) {
+                            return double.infinity;
+                          } else if (MediaQuery.sizeOf(context).width <
+                              kBreakpointMedium) {
+                            return double.infinity;
+                          } else if (MediaQuery.sizeOf(context).width <
+                              kBreakpointLarge) {
+                            return 640.0;
+                          } else {
+                            return 640.0;
+                          }
+                        }(),
+                        decoration: BoxDecoration(),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              if (FFAppState().autocompleteVisible)
+                                Builder(
+                                  builder: (context) {
+                                    final autoComplete = FFAppState()
+                                        .autocompleteResults
+                                        .take(8)
+                                        .toList();
 
-                                return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: autoComplete.length,
-                                  itemBuilder: (context, autoCompleteIndex) {
-                                    final autoCompleteItem =
-                                        autoComplete[autoCompleteIndex];
-                                    return Container(
-                                      width: double.infinity,
-                                      constraints: BoxConstraints(
-                                        minHeight: 56.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                      ),
-                                      alignment:
-                                          AlignmentDirectional(-1.0, 0.0),
-                                      child: InkWell(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        onTap: () async {
-                                          FFAppState().addToSearchHistory(
-                                              FFAppState()
-                                                  .autocompleteResults
-                                                  .elementAtOrNull(
-                                                      autoCompleteIndex)!
-                                                  .titleName);
-                                          safeSetState(() {});
-                                          if ((FFAppState()
+                                    return ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: autoComplete.length,
+                                      itemBuilder:
+                                          (context, autoCompleteIndex) {
+                                        final autoCompleteItem =
+                                            autoComplete[autoCompleteIndex];
+                                        return Container(
+                                          width: double.infinity,
+                                          constraints: BoxConstraints(
+                                            minHeight: 56.0,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                          ),
+                                          alignment:
+                                              AlignmentDirectional(-1.0, 0.0),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              FFAppState().addToSearchHistory(
+                                                  FFAppState()
+                                                      .autocompleteResults
+                                                      .elementAtOrNull(
+                                                          autoCompleteIndex)!
+                                                      .titleName);
+                                              safeSetState(() {});
+                                              if ((FFAppState()
+                                                              .autocompleteResults
+                                                              .elementAtOrNull(
+                                                                  autoCompleteIndex)
+                                                              ?.singleIssueId !=
+                                                          null &&
+                                                      FFAppState()
+                                                              .autocompleteResults
+                                                              .elementAtOrNull(
+                                                                  autoCompleteIndex)
+                                                              ?.singleIssueId !=
+                                                          '') &&
+                                                  (FFAppState()
                                                           .autocompleteResults
                                                           .elementAtOrNull(
                                                               autoCompleteIndex)
-                                                          ?.singleIssueId !=
-                                                      null &&
-                                                  FFAppState()
+                                                          ?.issueCount ==
+                                                      1)) {
+                                                context.pushNamed(
+                                                  IssueDetailPageWidget
+                                                      .routeName,
+                                                  queryParameters: {
+                                                    'issueId': serializeParam(
+                                                      FFAppState()
                                                           .autocompleteResults
                                                           .elementAtOrNull(
                                                               autoCompleteIndex)
-                                                          ?.singleIssueId !=
-                                                      '') &&
-                                              (FFAppState()
-                                                      .autocompleteResults
-                                                      .elementAtOrNull(
-                                                          autoCompleteIndex)
-                                                      ?.issueCount ==
-                                                  1)) {
-                                            context.pushNamed(
-                                              IssueDetailPageWidget.routeName,
-                                              queryParameters: {
-                                                'issueId': serializeParam(
-                                                  FFAppState()
-                                                      .autocompleteResults
-                                                      .elementAtOrNull(
-                                                          autoCompleteIndex)
-                                                      ?.singleIssueId,
-                                                  ParamType.String,
-                                                ),
-                                                'tittleId': serializeParam(
-                                                  FFAppState()
-                                                      .autocompleteResults
-                                                      .elementAtOrNull(
-                                                          autoCompleteIndex)
-                                                      ?.titleId,
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          } else {
-                                            context.pushNamed(
-                                              TitleDetailPageWidget.routeName,
-                                              queryParameters: {
-                                                'titleId': serializeParam(
-                                                  FFAppState()
-                                                      .autocompleteResults
-                                                      .elementAtOrNull(
-                                                          autoCompleteIndex)
-                                                      ?.titleId,
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          }
-                                        },
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(16.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    key: ValueKey(
-                                                        valueOrDefault<String>(
+                                                          ?.singleIssueId,
+                                                      ParamType.String,
+                                                    ),
+                                                    'tittleId': serializeParam(
                                                       FFAppState()
                                                           .autocompleteResults
                                                           .elementAtOrNull(
                                                               autoCompleteIndex)
                                                           ?.titleId,
-                                                      'Item sugerido',
-                                                    )),
-                                                    child: custom_widgets
-                                                        .ComicCover(
-                                                      width: 40.0,
-                                                      height: 56.0,
-                                                      imageUrl:
-                                                          'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.titleThumb}',
-                                                      titleName: valueOrDefault<
-                                                          String>(
-                                                        FFAppState()
-                                                            .autocompleteResults
-                                                            .elementAtOrNull(
-                                                                autoCompleteIndex)
-                                                            ?.titleName,
-                                                        'Item sugerido',
-                                                      ),
-                                                      issueNumber: null,
-                                                      titleId: valueOrDefault<
-                                                          String>(
-                                                        FFAppState()
-                                                            .autocompleteResults
-                                                            .elementAtOrNull(
-                                                                autoCompleteIndex)
-                                                            ?.titleId,
-                                                        'Item sugerido',
-                                                      ),
-                                                      spineHeight: 3.0,
-                                                      cornersRight: 2.0,
-                                                      cornersLeft: 0.0,
-                                                      alignBottom: false,
-                                                      enableLightbox: false,
-                                                      isAdult: false,
-                                                      canSeeAdult: false,
+                                                      ParamType.String,
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, -1.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .stretch,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
+                                                  }.withoutNulls,
+                                                );
+                                              } else {
+                                                context.pushNamed(
+                                                  TitleDetailPageWidget
+                                                      .routeName,
+                                                  queryParameters: {
+                                                    'titleId': serializeParam(
+                                                      FFAppState()
+                                                          .autocompleteResults
+                                                          .elementAtOrNull(
+                                                              autoCompleteIndex)
+                                                          ?.titleId,
+                                                      ParamType.String,
+                                                    ),
+                                                  }.withoutNulls,
+                                                );
+                                              }
+                                            },
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.all(16.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        key: ValueKey(
+                                                            valueOrDefault<
+                                                                String>(
+                                                          FFAppState()
+                                                              .autocompleteResults
+                                                              .elementAtOrNull(
+                                                                  autoCompleteIndex)
+                                                              ?.titleId,
+                                                          'Item sugerido',
+                                                        )),
+                                                        child: custom_widgets
+                                                            .ComicCover(
+                                                          width: 40.0,
+                                                          height: 56.0,
+                                                          imageUrl:
+                                                              'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.titleThumb}',
+                                                          titleName:
+                                                              valueOrDefault<
+                                                                  String>(
+                                                            FFAppState()
+                                                                .autocompleteResults
+                                                                .elementAtOrNull(
+                                                                    autoCompleteIndex)
+                                                                ?.titleName,
+                                                            'Item sugerido',
+                                                          ),
+                                                          issueNumber: null,
+                                                          titleId:
+                                                              valueOrDefault<
+                                                                  String>(
+                                                            FFAppState()
+                                                                .autocompleteResults
+                                                                .elementAtOrNull(
+                                                                    autoCompleteIndex)
+                                                                ?.titleId,
+                                                            'Item sugerido',
+                                                          ),
+                                                          spineHeight: 3.0,
+                                                          cornersRight: 2.0,
+                                                          cornersLeft: 0.0,
+                                                          alignBottom: false,
+                                                          enableLightbox: false,
+                                                          isAdult: false,
+                                                          canSeeAdult: false,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  -1.0, -1.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .stretch,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
                                                                           0.0,
                                                                           2.0,
                                                                           0.0,
                                                                           0.0),
-                                                              child: Text(
-                                                                valueOrDefault<
-                                                                    String>(
-                                                                  FFAppState()
-                                                                      .autocompleteResults
-                                                                      .elementAtOrNull(
-                                                                          autoCompleteIndex)
-                                                                      ?.titleName,
-                                                                  'Item sugerido',
-                                                                ),
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      font: GoogleFonts
-                                                                          .inter(
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontStyle,
-                                                                      ),
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .fontStyle,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          if ((String value) {
-                                                            return (value ?? '')
-                                                                .isNotEmpty;
-                                                          }(FFAppState()
-                                                              .autocompleteResults
-                                                              .elementAtOrNull(
-                                                                  autoCompleteIndex)!
-                                                              .titleSubtitle))
-                                                            Text(
-                                                              valueOrDefault<
-                                                                  String>(
-                                                                FFAppState()
-                                                                    .autocompleteResults
-                                                                    .elementAtOrNull(
-                                                                        autoCompleteIndex)
-                                                                    ?.titleSubtitle,
-                                                                'Subtítulo',
-                                                              ),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodySmall
-                                                                  .override(
-                                                                    font: GoogleFonts
-                                                                        .inter(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmall
-                                                                          .fontStyle,
-                                                                    ),
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodySmall
-                                                                        .fontStyle,
-                                                                  ),
-                                                            ),
-                                                          Expanded(
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                if ((String
-                                                                    value) {
-                                                                  return (value ??
-                                                                          '')
-                                                                      .isNotEmpty;
-                                                                }(FFAppState()
-                                                                    .autocompleteResults
-                                                                    .elementAtOrNull(
-                                                                        autoCompleteIndex)!
-                                                                    .publisherName))
-                                                                  Text(
+                                                                  child: Text(
                                                                     valueOrDefault<
                                                                         String>(
                                                                       FFAppState()
                                                                           .autocompleteResults
                                                                           .elementAtOrNull(
                                                                               autoCompleteIndex)
-                                                                          ?.publisherName,
-                                                                      'Editora',
+                                                                          ?.titleName,
+                                                                      'Item sugerido',
                                                                     ),
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .bodySmall
+                                                                        .bodyMedium
                                                                         .override(
                                                                           font:
                                                                               GoogleFonts.inter(
                                                                             fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                                FontWeight.w600,
                                                                             fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                           ),
                                                                           letterSpacing:
                                                                               0.0,
-                                                                          fontWeight: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
-                                                                              .fontWeight,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
                                                                           fontStyle: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
+                                                                              .bodyMedium
                                                                               .fontStyle,
                                                                         ),
-                                                                  ),
-                                                                if (((String
-                                                                        value) {
-                                                                      return (value ??
-                                                                              '')
-                                                                          .isNotEmpty;
-                                                                    }(FFAppState()
-                                                                        .autocompleteResults
-                                                                        .elementAtOrNull(
-                                                                            autoCompleteIndex)!
-                                                                        .publisherName)) &&
-                                                                    ((String
-                                                                        value) {
-                                                                      return (value ??
-                                                                              '')
-                                                                          .isNotEmpty;
-                                                                    }(FFAppState()
-                                                                        .autocompleteResults
-                                                                        .elementAtOrNull(
-                                                                            autoCompleteIndex)!
-                                                                        .series)))
-                                                                  Text(
-                                                                    ' • ',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodySmall
-                                                                        .override(
-                                                                          font:
-                                                                              GoogleFonts.inter(
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                          ),
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          fontWeight: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
-                                                                              .fontWeight,
-                                                                          fontStyle: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
-                                                                              .fontStyle,
-                                                                        ),
-                                                                  ),
-                                                                if ((String
-                                                                    value) {
-                                                                  return (value ??
-                                                                          '')
-                                                                      .isNotEmpty;
-                                                                }(FFAppState()
-                                                                    .autocompleteResults
-                                                                    .elementAtOrNull(
-                                                                        autoCompleteIndex)!
-                                                                    .series))
-                                                                  Expanded(
-                                                                    child: Text(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        FFAppState()
-                                                                            .autocompleteResults
-                                                                            .elementAtOrNull(autoCompleteIndex)
-                                                                            ?.series,
-                                                                        'Série',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmall
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.inter(
-                                                                              fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                            ),
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          if ((String value) {
-                                                            return (int.tryParse(
-                                                                        value ??
-                                                                            '0') ??
-                                                                    0) >
-                                                                1;
-                                                          }(FFAppState()
-                                                              .autocompleteResults
-                                                              .elementAtOrNull(
-                                                                  autoCompleteIndex)!
-                                                              .issueCount
-                                                              .toString()))
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          8.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                              child: Container(
-                                                                decoration:
-                                                                    BoxDecoration(),
-                                                                alignment:
-                                                                    AlignmentDirectional(
-                                                                        1.0,
-                                                                        -1.0),
-                                                                child: Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          -1.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .secondaryBackground,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              4.0),
-                                                                    ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                                                          8.0,
-                                                                          4.0,
-                                                                          8.0,
-                                                                          4.0),
-                                                                      child:
-                                                                          Text(
-                                                                        '${valueOrDefault<String>(
-                                                                          FFAppState()
-                                                                              .autocompleteResults
-                                                                              .elementAtOrNull(autoCompleteIndex)
-                                                                              ?.issueCount
-                                                                              .toString(),
-                                                                          'Edições',
-                                                                        )} edições',
-                                                                        maxLines:
-                                                                            1,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodySmall
-                                                                            .override(
-                                                                              font: GoogleFonts.inter(
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                              ),
-                                                                              fontSize: 10.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w600,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                            ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            1.0, 0.0),
-                                                    child: Container(
-                                                      width: 80.0,
-                                                      decoration:
-                                                          BoxDecoration(),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              1.0, -1.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          if (valueOrDefault<
-                                                                      String>(
-                                                                    FFAppState()
-                                                                        .autocompleteResults
-                                                                        .elementAtOrNull(
-                                                                            autoCompleteIndex)
-                                                                        ?.singleIssueId,
-                                                                    'Item sugerido',
-                                                                  ) !=
-                                                                  '')
-                                                            Align(
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      1.0,
-                                                                      -1.0),
-                                                              child:
-                                                                  wrapWithModel(
-                                                                model: _model
-                                                                    .issueStatusIndicatorModels
-                                                                    .getModel(
+                                                              if ((String
+                                                                  value) {
+                                                                return (value ??
+                                                                        '')
+                                                                    .isNotEmpty;
+                                                              }(FFAppState()
+                                                                  .autocompleteResults
+                                                                  .elementAtOrNull(
+                                                                      autoCompleteIndex)!
+                                                                  .titleSubtitle))
+                                                                Text(
                                                                   valueOrDefault<
                                                                       String>(
                                                                     FFAppState()
                                                                         .autocompleteResults
                                                                         .elementAtOrNull(
                                                                             autoCompleteIndex)
-                                                                        ?.singleIssueId,
-                                                                    'Item sugerido',
+                                                                        ?.titleSubtitle,
+                                                                    'Subtítulo',
                                                                   ),
-                                                                  autoCompleteIndex,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .inter(
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .fontStyle,
+                                                                      ),
                                                                 ),
-                                                                updateCallback: () =>
-                                                                    safeSetState(
-                                                                        () {}),
-                                                                child:
-                                                                    IssueStatusIndicatorWidget(
-                                                                  key: Key(
-                                                                    'Keyjnp_${valueOrDefault<String>(
-                                                                      FFAppState()
-                                                                          .autocompleteResults
-                                                                          .elementAtOrNull(
-                                                                              autoCompleteIndex)
-                                                                          ?.singleIssueId,
-                                                                      'Item sugerido',
-                                                                    )}',
-                                                                  ),
-                                                                  issueId:
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                    FFAppState()
+                                                              Expanded(
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    if ((String
+                                                                        value) {
+                                                                      return (value ??
+                                                                              '')
+                                                                          .isNotEmpty;
+                                                                    }(FFAppState()
                                                                         .autocompleteResults
                                                                         .elementAtOrNull(
-                                                                            autoCompleteIndex)
-                                                                        ?.singleIssueId,
-                                                                    'Item sugerido',
-                                                                  ),
-                                                                  isLarge:
-                                                                      false,
-                                                                  titleId:
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                    FFAppState()
+                                                                            autoCompleteIndex)!
+                                                                        .publisherName))
+                                                                      Text(
+                                                                        valueOrDefault<
+                                                                            String>(
+                                                                          FFAppState()
+                                                                              .autocompleteResults
+                                                                              .elementAtOrNull(autoCompleteIndex)
+                                                                              ?.publisherName,
+                                                                          'Editora',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .override(
+                                                                              font: GoogleFonts.inter(
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                              ),
+                                                                              letterSpacing: 0.0,
+                                                                              fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                              fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                            ),
+                                                                      ),
+                                                                    if (((String
+                                                                            value) {
+                                                                          return (value ?? '')
+                                                                              .isNotEmpty;
+                                                                        }(FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(
+                                                                                autoCompleteIndex)!
+                                                                            .publisherName)) &&
+                                                                        ((String
+                                                                            value) {
+                                                                          return (value ?? '')
+                                                                              .isNotEmpty;
+                                                                        }(FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)!
+                                                                            .series)))
+                                                                      Text(
+                                                                        ' • ',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodySmall
+                                                                            .override(
+                                                                              font: GoogleFonts.inter(
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                              ),
+                                                                              letterSpacing: 0.0,
+                                                                              fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                              fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                            ),
+                                                                      ),
+                                                                    if ((String
+                                                                        value) {
+                                                                      return (value ??
+                                                                              '')
+                                                                          .isNotEmpty;
+                                                                    }(FFAppState()
                                                                         .autocompleteResults
                                                                         .elementAtOrNull(
-                                                                            autoCompleteIndex)
-                                                                        ?.titleId,
-                                                                    'Item sugerido',
-                                                                  ),
-                                                                  entityType: valueOrDefault<String>(
-                                                                                FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.singleIssueId,
-                                                                                'Item sugerido',
-                                                                              ) !=
-                                                                              ''
-                                                                      ? 'issue'
-                                                                      : 'title',
-                                                                  onSaved:
-                                                                      () async {
-                                                                    FFAppState()
-                                                                            .needsLibraryRefresh =
-                                                                        true;
-                                                                    safeSetState(
-                                                                        () {});
-
-                                                                    safeSetState(
-                                                                        () {});
-                                                                  },
+                                                                            autoCompleteIndex)!
+                                                                        .series))
+                                                                      Expanded(
+                                                                        child:
+                                                                            Text(
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                            FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.series,
+                                                                            'Série',
+                                                                          ),
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                font: GoogleFonts.inter(
+                                                                                  fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                ),
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FlutterFlowTheme.of(context).bodySmall.fontWeight,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                            ),
-                                                          if ((valueOrDefault<
-                                                                      String>(
-                                                                    FFAppState()
-                                                                        .autocompleteResults
-                                                                        .elementAtOrNull(
-                                                                            autoCompleteIndex)
-                                                                        ?.issueCount
-                                                                        .toString(),
-                                                                    'Item sugerido',
-                                                                  ) !=
-                                                                  '1') &&
-                                                              (valueOrDefault<
+                                                              if ((String
+                                                                  value) {
+                                                                return (int.tryParse(value ??
+                                                                            '0') ??
+                                                                        0) >
+                                                                    1;
+                                                              }(FFAppState()
+                                                                  .autocompleteResults
+                                                                  .elementAtOrNull(
+                                                                      autoCompleteIndex)!
+                                                                  .issueCount
+                                                                  .toString()))
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          8.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(),
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            -1.0),
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(4.0),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              8.0,
+                                                                              4.0,
+                                                                              8.0,
+                                                                              4.0),
+                                                                          child:
+                                                                              Text(
+                                                                            '${valueOrDefault<String>(
+                                                                              FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.issueCount.toString(),
+                                                                              'Edições',
+                                                                            )} edições',
+                                                                            maxLines:
+                                                                                1,
+                                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                  font: GoogleFonts.inter(
+                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                  ),
+                                                                                  fontSize: 10.0,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                ),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                1.0, 0.0),
+                                                        child: Container(
+                                                          width: 80.0,
+                                                          decoration:
+                                                              BoxDecoration(),
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  1.0, -1.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              if (valueOrDefault<
                                                                           String>(
                                                                         FFAppState()
                                                                             .autocompleteResults
                                                                             .elementAtOrNull(autoCompleteIndex)
                                                                             ?.singleIssueId,
                                                                         'Item sugerido',
-                                                                      ) ==
-                                                                      ''))
-                                                            wrapWithModel(
-                                                              model: _model
-                                                                  .titleStatusIndicatorModels
-                                                                  .getModel(
-                                                                valueOrDefault<
-                                                                    String>(
-                                                                  FFAppState()
-                                                                      .autocompleteResults
-                                                                      .elementAtOrNull(
-                                                                          autoCompleteIndex)
-                                                                      ?.titleId,
-                                                                  'Item sugerido',
+                                                                      ) !=
+                                                                      '')
+                                                                Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          1.0,
+                                                                          -1.0),
+                                                                  child:
+                                                                      wrapWithModel(
+                                                                    model: _model
+                                                                        .issueStatusIndicatorModels
+                                                                        .getModel(
+                                                                      valueOrDefault<
+                                                                          String>(
+                                                                        FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)
+                                                                            ?.singleIssueId,
+                                                                        'Item sugerido',
+                                                                      ),
+                                                                      autoCompleteIndex,
+                                                                    ),
+                                                                    updateCallback: () =>
+                                                                        safeSetState(
+                                                                            () {}),
+                                                                    child:
+                                                                        IssueStatusIndicatorWidget(
+                                                                      key: Key(
+                                                                        'Keyjnp_${valueOrDefault<String>(
+                                                                          FFAppState()
+                                                                              .autocompleteResults
+                                                                              .elementAtOrNull(autoCompleteIndex)
+                                                                              ?.singleIssueId,
+                                                                          'Item sugerido',
+                                                                        )}',
+                                                                      ),
+                                                                      issueId:
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                        FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)
+                                                                            ?.singleIssueId,
+                                                                        'Item sugerido',
+                                                                      ),
+                                                                      isLarge:
+                                                                          false,
+                                                                      titleId:
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                        FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)
+                                                                            ?.titleId,
+                                                                        'Item sugerido',
+                                                                      ),
+                                                                      entityType: valueOrDefault<String>(
+                                                                                    FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.singleIssueId,
+                                                                                    'Item sugerido',
+                                                                                  ) !=
+                                                                                  ''
+                                                                          ? 'issue'
+                                                                          : 'title',
+                                                                      onSaved:
+                                                                          () async {
+                                                                        FFAppState().needsLibraryRefresh =
+                                                                            true;
+                                                                        safeSetState(
+                                                                            () {});
+
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      },
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                                autoCompleteIndex,
-                                                              ),
-                                                              updateCallback: () =>
-                                                                  safeSetState(
-                                                                      () {}),
-                                                              child:
-                                                                  TitleStatusIndicatorWidget(
-                                                                key: Key(
-                                                                  'Keyqyv_${valueOrDefault<String>(
-                                                                    FFAppState()
-                                                                        .autocompleteResults
-                                                                        .elementAtOrNull(
-                                                                            autoCompleteIndex)
-                                                                        ?.titleId,
-                                                                    'Item sugerido',
-                                                                  )}',
-                                                                ),
-                                                                isLarge: false,
-                                                                titleId:
+                                                              if ((valueOrDefault<
+                                                                          String>(
+                                                                        FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)
+                                                                            ?.issueCount
+                                                                            .toString(),
+                                                                        'Item sugerido',
+                                                                      ) !=
+                                                                      '1') &&
+                                                                  (valueOrDefault<
+                                                                              String>(
+                                                                            FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.singleIssueId,
+                                                                            'Item sugerido',
+                                                                          ) ==
+                                                                          ''))
+                                                                wrapWithModel(
+                                                                  model: _model
+                                                                      .titleStatusIndicatorModels
+                                                                      .getModel(
                                                                     valueOrDefault<
                                                                         String>(
-                                                                  FFAppState()
-                                                                      .autocompleteResults
-                                                                      .elementAtOrNull(
-                                                                          autoCompleteIndex)
-                                                                      ?.titleId,
-                                                                  'Item sugerido',
-                                                                ),
-                                                                entityType: valueOrDefault<String>(
-                                                                              FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.singleIssueId,
-                                                                              'Item sugerido',
-                                                                            ) !=
-                                                                            ''
-                                                                    ? 'issue'
-                                                                    : 'title',
-                                                                onSaved:
-                                                                    () async {
-                                                                  FFAppState()
-                                                                          .needsLibraryRefresh =
-                                                                      true;
-                                                                  safeSetState(
-                                                                      () {});
+                                                                      FFAppState()
+                                                                          .autocompleteResults
+                                                                          .elementAtOrNull(
+                                                                              autoCompleteIndex)
+                                                                          ?.titleId,
+                                                                      'Item sugerido',
+                                                                    ),
+                                                                    autoCompleteIndex,
+                                                                  ),
+                                                                  updateCallback: () =>
+                                                                      safeSetState(
+                                                                          () {}),
+                                                                  child:
+                                                                      TitleStatusIndicatorWidget(
+                                                                    key: Key(
+                                                                      'Keyqyv_${valueOrDefault<String>(
+                                                                        FFAppState()
+                                                                            .autocompleteResults
+                                                                            .elementAtOrNull(autoCompleteIndex)
+                                                                            ?.titleId,
+                                                                        'Item sugerido',
+                                                                      )}',
+                                                                    ),
+                                                                    isLarge:
+                                                                        false,
+                                                                    titleId:
+                                                                        valueOrDefault<
+                                                                            String>(
+                                                                      FFAppState()
+                                                                          .autocompleteResults
+                                                                          .elementAtOrNull(
+                                                                              autoCompleteIndex)
+                                                                          ?.titleId,
+                                                                      'Item sugerido',
+                                                                    ),
+                                                                    entityType: valueOrDefault<String>(
+                                                                                  FFAppState().autocompleteResults.elementAtOrNull(autoCompleteIndex)?.singleIssueId,
+                                                                                  'Item sugerido',
+                                                                                ) !=
+                                                                                ''
+                                                                        ? 'issue'
+                                                                        : 'title',
+                                                                    onSaved:
+                                                                        () async {
+                                                                      FFAppState()
+                                                                              .needsLibraryRefresh =
+                                                                          true;
+                                                                      safeSetState(
+                                                                          () {});
 
-                                                                  safeSetState(
-                                                                      () {});
-                                                                },
-                                                              ),
-                                                            ),
-                                                        ],
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                                    ].divide(
+                                                        SizedBox(width: 12.0)),
                                                   ),
-                                                ].divide(SizedBox(width: 12.0)),
-                                              ),
-                                            ),
-                                            Divider(
-                                              height: 1.0,
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                                ),
+                                                Divider(
+                                                  height: 1.0,
+                                                  thickness: 1.0,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .alternate,
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
-                            ),
-                          if (!FFAppState().autocompleteVisible)
-                            Builder(
-                              builder: (context) {
-                                final searchHistory =
-                                    FFAppState().searchHistory.take(8).toList();
+                                ),
+                              if (!FFAppState().autocompleteVisible)
+                                Builder(
+                                  builder: (context) {
+                                    final searchHistory = FFAppState()
+                                        .searchHistory
+                                        .take(8)
+                                        .toList();
 
-                                return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: searchHistory.length,
-                                  itemBuilder: (context, searchHistoryIndex) {
-                                    final searchHistoryItem =
-                                        searchHistory[searchHistoryIndex];
-                                    return Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(),
-                                      child: InkWell(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        onTap: () async {
-                                          context.pushNamed(
-                                            SearchResultsPageWidget.routeName,
-                                            queryParameters: {
-                                              'searchQuery': serializeParam(
-                                                valueOrDefault<String>(
-                                                  FFAppState()
-                                                      .searchHistory
-                                                      .elementAtOrNull(
-                                                          searchHistoryIndex),
-                                                  'Palestina',
-                                                ),
-                                                ParamType.String,
-                                              ),
-                                            }.withoutNulls,
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 8.0, 16.0, 8.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        FFAppState()
-                                                            .searchHistory
-                                                            .elementAtOrNull(
-                                                                searchHistoryIndex),
-                                                        'Termo buscado',
-                                                      ),
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                    return ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      primary: false,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: searchHistory.length,
+                                      itemBuilder:
+                                          (context, searchHistoryIndex) {
+                                        final searchHistoryItem =
+                                            searchHistory[searchHistoryIndex];
+                                        return Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              context.pushNamed(
+                                                SearchResultsPageWidget
+                                                    .routeName,
+                                                queryParameters: {
+                                                  'searchQuery': serializeParam(
+                                                    valueOrDefault<String>(
+                                                      FFAppState()
+                                                          .searchHistory
+                                                          .elementAtOrNull(
+                                                              searchHistoryIndex),
+                                                      'Palestina',
+                                                    ),
+                                                    ParamType.String,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            },
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          16.0, 8.0, 16.0, 8.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          valueOrDefault<
+                                                              String>(
+                                                            FFAppState()
+                                                                .searchHistory
+                                                                .elementAtOrNull(
+                                                                    searchHistoryIndex),
+                                                            'Termo buscado',
+                                                          ),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
                                                               .bodyLarge
                                                               .override(
                                                                 font:
@@ -1013,46 +995,47 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                                                                     .bodyLarge
                                                                     .fontStyle,
                                                               ),
-                                                    ),
-                                                  ),
-                                                  FlutterFlowIconButton(
-                                                    borderRadius: 8.0,
-                                                    buttonSize: 40.0,
-                                                    icon: Icon(
-                                                      Icons
-                                                          .remove_circle_outline,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                                        ),
+                                                      ),
+                                                      FlutterFlowIconButton(
+                                                        borderRadius: 8.0,
+                                                        buttonSize: 40.0,
+                                                        icon: Icon(
+                                                          Icons
+                                                              .remove_circle_outline,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
                                                               .primaryText,
-                                                      size: 24.0,
-                                                    ),
-                                                    onPressed: () async {
-                                                      FFAppState()
-                                                          .removeAtIndexFromSearchHistory(
-                                                              searchHistoryIndex);
-                                                      safeSetState(() {});
-                                                    },
+                                                          size: 24.0,
+                                                        ),
+                                                        onPressed: () async {
+                                                          FFAppState()
+                                                              .removeAtIndexFromSearchHistory(
+                                                                  searchHistoryIndex);
+                                                          safeSetState(() {});
+                                                        },
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              height: 1.0,
-                                              thickness: 1.0,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                                                ),
+                                                Divider(
+                                                  height: 1.0,
+                                                  thickness: 1.0,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .alternate,
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
-                            ),
-                        ],
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

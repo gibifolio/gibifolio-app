@@ -37,6 +37,8 @@ class TitleDetailPageModel extends FlutterFlowModel<TitleDetailPageWidget> {
 
   // Stores action output result for [Custom Action - fetchTitleLicensors] action in TitleDetailPage widget.
   List<LicensorItemStruct>? titleLicensorsList;
+  // Stores action output result for [Custom Action - queueReview] action in scrape widget.
+  String? queueTitleResult;
   bool requestCompleted2 = false;
   String? requestLastUniqueKey2;
   Completer<List<AppTitleDetailRow>>? requestCompleter3;
@@ -45,8 +47,6 @@ class TitleDetailPageModel extends FlutterFlowModel<TitleDetailPageWidget> {
   late TitleStatusIndicatorModel titleStatusIndicatorModel;
   // Stores action output result for [Custom Action - fetchLibraryTitles] action in TitleStatusIndicator widget.
   List<LibraryTitleItemStruct>? refreshTitle;
-  // Stores action output result for [Custom Action - queueScrape] action in scrape widget.
-  String? scrapeResult;
   // Models for ListItem dynamic component.
   late FlutterFlowDynamicModels<ListItemModel> listItemModels;
   // Stores action output result for [Custom Action - fetchLibraryTitles] action in ListItem widget.

@@ -84,4 +84,10 @@ class AppIssueWithCoverRow extends SupabaseDataRow {
   String? get issueSubtitleKey => getField<String>('issue_subtitle_key');
   set issueSubtitleKey(String? value) =>
       setField<String>('issue_subtitle_key', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

@@ -3,7 +3,7 @@ import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -11,15 +11,15 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
-import 'local_cache_service.dart';
-import 'connectivity_state.dart';
+import '/custom_code/actions/ensure_local_cache.dart';
+import '/custom_code/actions/ensure_connectivity_state.dart';
 
 /// Releases recentes com stale-while-revalidate (Padrão B — FutureBuilder).
 ///
-/// - Cache fresco (< 30 min): serve sem bater na rede.
-/// - Cache stale: serve na hora e revalida em background (persiste p/ a próxima).
-/// - Sem cache: busca fresco e grava.
-/// - Offline/erro: retorna o cache disponível (mesmo expirado) ou lista vazia.
+/// - Cache fresco (< 30 min): serve sem bater na rede. - Cache stale: serve
+/// na hora e revalida em background (persiste p/ a próxima). - Sem cache:
+/// busca fresco e grava. - Offline/erro: retorna o cache disponível (mesmo
+/// expirado) ou lista vazia.
 Future<List<RecentReleasesCacheRow>> getCachedReleases() async {
   const key = 'releases:recent';
   const ttl = Duration(minutes: 30);

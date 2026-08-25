@@ -89,4 +89,10 @@ class AppLibraryUnreadRow extends SupabaseDataRow {
 
   String? get fT3 => getField<String>('f_t3');
   set fT3(String? value) => setField<String>('f_t3', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

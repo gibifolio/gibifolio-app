@@ -37,4 +37,10 @@ class PublishersRow extends SupabaseDataRow {
 
   String? get canonicalKey => getField<String>('canonical_key');
   set canonicalKey(String? value) => setField<String>('canonical_key', value);
+
+  String? get sourceSlug => getField<String>('source_slug');
+  set sourceSlug(String? value) => setField<String>('source_slug', value);
+
+  bool? get needsReview => getField<bool>('needs_review');
+  set needsReview(bool? value) => setField<bool>('needs_review', value);
 }

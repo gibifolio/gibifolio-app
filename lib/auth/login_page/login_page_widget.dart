@@ -97,161 +97,184 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               ),
               body: SafeArea(
                 top: true,
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Column(
+                child: Align(
+                  alignment: AlignmentDirectional(0.0, -1.0),
+                  child: Container(
+                    width: () {
+                      if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                        return double.infinity;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointMedium) {
+                        return double.infinity;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointLarge) {
+                        return 640.0;
+                      } else {
+                        return 640.0;
+                      }
+                    }(),
+                    decoration: BoxDecoration(),
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Icon(
-                            FFIcons.kmail,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 120.0,
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                FFIcons.kmail,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 120.0,
+                              ),
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(),
+                                child: Padding(
+                                  padding: EdgeInsets.all(24.0),
+                                  child: Text(
+                                    'Insira seu e-mail para receber um link seguro de acesso ao app. ',
+                                    textAlign: TextAlign.center,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           Container(
                             width: double.infinity,
-                            decoration: BoxDecoration(),
-                            child: Padding(
-                              padding: EdgeInsets.all(24.0),
-                              child: Text(
-                                'Insira seu e-mail para receber um link seguro de acesso ao app. ',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
+                            child: TextFormField(
+                              controller: _model.textController,
+                              focusNode: _model.textFieldFocusNode,
+                              onFieldSubmitted: (_) async {
+                                if (_model.textController.text != '') {
+                                  await actions.signInWithMagicLink(
+                                    _model.textController.text,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Link enviado. Verifique seu e-mail.',
+                                        style: TextStyle(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                }
+                              },
+                              autofocus: true,
+                              enabled: true,
+                              autofillHints: [AutofillHints.email],
+                              textInputAction: TextInputAction.done,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                isDense: false,
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .labelLarge
                                     .override(
                                       font: GoogleFonts.inter(
                                         fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
+                                            .labelLarge
                                             .fontWeight,
                                         fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
+                                            .labelLarge
                                             .fontStyle,
                                       ),
                                       letterSpacing: 0.0,
                                       fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
+                                          .labelLarge
                                           .fontWeight,
                                       fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
+                                          .labelLarge
                                           .fontStyle,
                                     ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: TextFormField(
-                          controller: _model.textController,
-                          focusNode: _model.textFieldFocusNode,
-                          onFieldSubmitted: (_) async {
-                            if (_model.textController.text != '') {
-                              await actions.signInWithMagicLink(
-                                _model.textController.text,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Link enviado. Verifique seu e-mail.',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
+                                hintText: 'E-mail',
+                                hintStyle: FlutterFlowTheme.of(context)
+                                    .labelMedium
+                                    .override(
+                                      font: GoogleFonts.inter(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .fontStyle,
+                                      ),
                                       fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontStyle,
                                     ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1.0,
                                   ),
-                                  duration: Duration(milliseconds: 4000),
-                                  backgroundColor: FlutterFlowTheme.of(context)
-                                      .secondaryText,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                              );
-                              Navigator.pop(context);
-                            }
-                          },
-                          autofocus: true,
-                          enabled: true,
-                          autofillHints: [AutofillHints.email],
-                          textInputAction: TextInputAction.done,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            isDense: false,
-                            labelStyle: FlutterFlowTheme.of(context)
-                                .labelLarge
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelLarge
-                                        .fontStyle,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1.0,
                                   ),
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .labelLarge
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .labelLarge
-                                      .fontStyle,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                            hintText: 'E-mail',
-                            hintStyle: FlutterFlowTheme.of(context)
-                                .labelMedium
-                                .override(
-                                  font: GoogleFonts.inter(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 1.0,
                                   ),
-                                  fontSize: 16.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .fontStyle,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                filled: true,
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                contentPadding: EdgeInsets.all(16.0),
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).error,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            filled: true,
-                            fillColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            contentPadding: EdgeInsets.all(16.0),
-                          ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyLarge.override(
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyLarge
+                                  .override(
                                     font: GoogleFonts.inter(
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodyLarge
@@ -268,48 +291,50 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         .bodyLarge
                                         .fontStyle,
                                   ),
-                          keyboardType: TextInputType.emailAddress,
-                          cursorColor: FlutterFlowTheme.of(context).primary,
-                          enableInteractiveSelection: true,
-                          validator: _model.textControllerValidator
-                              .asValidator(context),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.textController.text != '') {
-                            await actions.signInWithMagicLink(
-                              _model.textController.text,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Link enviado. Verifique seu e-mail.',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    fontSize: 16.0,
+                              keyboardType: TextInputType.emailAddress,
+                              cursorColor: FlutterFlowTheme.of(context).primary,
+                              enableInteractiveSelection: true,
+                              validator: _model.textControllerValidator
+                                  .asValidator(context),
+                            ),
+                          ),
+                          FFButtonWidget(
+                            onPressed: () async {
+                              if (_model.textController.text != '') {
+                                await actions.signInWithMagicLink(
+                                  _model.textController.text,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Link enviado. Verifique seu e-mail.',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context)
+                                            .secondaryText,
                                   ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                              ),
-                            );
-                            Navigator.pop(context);
-                          }
-                        },
-                        text: 'Receber link seguro',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 48.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 20.0, 0.0),
-                          iconAlignment: IconAlignment.end,
-                          iconPadding: EdgeInsets.all(0.0),
-                          color: FlutterFlowTheme.of(context).primaryText,
-                          textStyle:
-                              FlutterFlowTheme.of(context).labelLarge.override(
+                                );
+                                Navigator.pop(context);
+                              }
+                            },
+                            text: 'Receber link seguro',
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 48.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  20.0, 0.0, 20.0, 0.0),
+                              iconAlignment: IconAlignment.end,
+                              iconPadding: EdgeInsets.all(0.0),
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .labelLarge
+                                  .override(
                                     font: GoogleFonts.inter(
                                       fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -324,11 +349,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         .labelLarge
                                         .fontStyle,
                                   ),
-                          elevation: 0.0,
-                          borderRadius: BorderRadius.circular(1000.0),
-                        ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(1000.0),
+                            ),
+                          ),
+                        ].divide(SizedBox(height: 24.0)),
                       ),
-                    ].divide(SizedBox(height: 24.0)),
+                    ),
                   ),
                 ),
               ),

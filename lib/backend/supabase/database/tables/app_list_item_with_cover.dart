@@ -112,4 +112,10 @@ class AppListItemWithCoverRow extends SupabaseDataRow {
 
   bool? get isAdult => getField<bool>('is_adult');
   set isAdult(bool? value) => setField<bool>('is_adult', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
 }

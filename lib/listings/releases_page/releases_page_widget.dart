@@ -23,7 +23,8 @@ class ReleasesPageWidget extends StatefulWidget {
   State<ReleasesPageWidget> createState() => _ReleasesPageWidgetState();
 }
 
-class _ReleasesPageWidgetState extends State<ReleasesPageWidget> {
+class _ReleasesPageWidgetState extends State<ReleasesPageWidget>
+    with TickerProviderStateMixin {
   late ReleasesPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,6 +33,12 @@ class _ReleasesPageWidgetState extends State<ReleasesPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ReleasesPageModel());
+
+    _model.tabBarController = TabController(
+      vsync: this,
+      length: 2,
+      initialIndex: 0,
+    )..addListener(() => safeSetState(() {}));
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -106,281 +113,753 @@ class _ReleasesPageWidgetState extends State<ReleasesPageWidget> {
             ),
             body: SafeArea(
               top: true,
-              child: FutureBuilder<List<AppReleasesPublishersRow>>(
-                future: FFAppState().releasesPublishers(
-                  requestFn: () => AppReleasesPublishersTable().queryRows(
-                    queryFn: (q) => q.order('issue_count'),
-                  ),
-                ),
-                builder: (context, snapshot) {
-                  // Customize what your widget looks like when it's loading.
-                  if (!snapshot.hasData) {
-                    return PublisherReleaseSkeletonWidget();
-                  }
-                  List<AppReleasesPublishersRow>
-                      listViewAppReleasesPublishersRowList = snapshot.data!;
-
-                  return ListView.builder(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.vertical,
-                    itemCount: listViewAppReleasesPublishersRowList.length,
-                    itemBuilder: (context, listViewIndex) {
-                      final listViewAppReleasesPublishersRow =
-                          listViewAppReleasesPublishersRowList[listViewIndex];
-                      return Container(
-                        width: double.infinity,
-                        height: 248.0,
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                context.pushNamed(
-                                  PublisherReleasesPageWidget.routeName,
-                                  queryParameters: {
-                                    'publisherName': serializeParam(
-                                      listViewAppReleasesPublishersRow
-                                          .publisherName,
-                                      ParamType.String,
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  height: double.infinity,
+                  decoration: BoxDecoration(),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment(0.0, 0),
+                        child: TabBar(
+                          labelColor: FlutterFlowTheme.of(context).primaryText,
+                          unselectedLabelColor:
+                              FlutterFlowTheme.of(context).secondaryText,
+                          labelStyle:
+                              FlutterFlowTheme.of(context).labelLarge.override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelLarge
+                                          .fontStyle,
                                     ),
-                                    'publisherId': serializeParam(
-                                      listViewAppReleasesPublishersRow
-                                          .publisherId,
-                                      ParamType.String,
-                                    ),
-                                  }.withoutNulls,
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Text(
-                                        valueOrDefault<String>(
-                                          listViewAppReleasesPublishersRow
-                                              .publisherName,
-                                          'Editora',
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyLarge
-                                            .override(
-                                              font: GoogleFonts.inter(
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyLarge
-                                                        .fontStyle,
-                                              ),
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyLarge
-                                                      .fontStyle,
-                                            ),
-                                      ),
-                                      if (listViewAppReleasesPublishersRow
-                                              .issueCount >
-                                          5)
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Text(
-                                              valueOrDefault<String>(
-                                                listViewAppReleasesPublishersRow
-                                                    .issueCount
-                                                    .toString(),
-                                                '#',
-                                              ),
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryText,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontWeight,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 2.0, 0.0, 0.0),
-                                              child: Icon(
-                                                Icons.chevron_right,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                size: 20.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                    ].divide(SizedBox(width: 12.0)),
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelLarge
+                                        .fontStyle,
                                   ),
+                          unselectedLabelStyle:
+                              FlutterFlowTheme.of(context).labelLarge.override(
+                                    font: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w500,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelLarge
+                                          .fontStyle,
+                                    ),
+                                    fontSize: 14.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelLarge
+                                        .fontStyle,
+                                  ),
+                          indicatorColor: FlutterFlowTheme.of(context).primary,
+                          tabs: [
+                            Tab(
+                              text: 'Recentes',
+                            ),
+                            Tab(
+                              text: 'Em breve',
+                            ),
+                          ],
+                          controller: _model.tabBarController,
+                          onTap: (i) async {
+                            [() async {}, () async {}][i]();
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _model.tabBarController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            FutureBuilder<List<AppReleasesPublishersRow>>(
+                              future: FFAppState().releasesPublishers(
+                                requestFn: () =>
+                                    AppReleasesPublishersTable().queryRows(
+                                  queryFn: (q) => q.order('issue_count'),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: FutureBuilder<List<AppReleasesFullRow>>(
-                                future: AppReleasesFullTable().queryRows(
-                                  queryFn: (q) => q
-                                      .eqOrNull(
-                                        'publisher_id',
-                                        listViewAppReleasesPublishersRow
-                                            .publisherId,
-                                      )
-                                      .order('primary_thumb')
-                                      .order('canonical_key', ascending: true),
-                                  limit: 5,
-                                ),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: GridItemSkeletonWidget(),
-                                    );
-                                  }
-                                  List<AppReleasesFullRow>
-                                      listViewAppReleasesFullRowList =
-                                      snapshot.data!;
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return PublisherReleaseSkeletonWidget();
+                                }
+                                List<AppReleasesPublishersRow>
+                                    listViewAppReleasesPublishersRowList =
+                                    snapshot.data!;
 
-                                  return ListView.separated(
-                                    padding: EdgeInsets.fromLTRB(
-                                      16.0,
-                                      0,
-                                      16.0,
-                                      0,
-                                    ),
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
-                                        listViewAppReleasesFullRowList.length,
-                                    separatorBuilder: (_, __) =>
-                                        SizedBox(width: 16.0),
-                                    itemBuilder: (context, listViewIndex) {
-                                      final listViewAppReleasesFullRow =
-                                          listViewAppReleasesFullRowList[
-                                              listViewIndex];
-                                      return Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 24.0, 0.0, 8.0),
-                                        child: Container(
-                                          width: 88.0,
-                                          decoration: BoxDecoration(),
-                                          child: InkWell(
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      listViewAppReleasesPublishersRowList
+                                          .length,
+                                  itemBuilder: (context, listViewIndex) {
+                                    final listViewAppReleasesPublishersRow =
+                                        listViewAppReleasesPublishersRowList[
+                                            listViewIndex];
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 248.0,
+                                      decoration: BoxDecoration(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
                                             splashColor: Colors.transparent,
                                             focusColor: Colors.transparent,
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
                                               context.pushNamed(
-                                                IssueDetailPageWidget.routeName,
+                                                PublisherReleasesPageWidget
+                                                    .routeName,
                                                 queryParameters: {
-                                                  'issueId': serializeParam(
-                                                    listViewAppReleasesFullRow
-                                                        .issueId,
+                                                  'publisherName':
+                                                      serializeParam(
+                                                    listViewAppReleasesPublishersRow
+                                                        .publisherName,
                                                     ParamType.String,
                                                   ),
-                                                  'tittleId': serializeParam(
-                                                    listViewAppReleasesFullRow
-                                                        .titleId,
+                                                  'publisherId': serializeParam(
+                                                    listViewAppReleasesPublishersRow
+                                                        .publisherId,
                                                     ParamType.String,
+                                                  ),
+                                                  'isUpcoming': serializeParam(
+                                                    false,
+                                                    ParamType.bool,
                                                   ),
                                                 }.withoutNulls,
                                               );
                                             },
-                                            child: wrapWithModel(
-                                              model: _model.gridItemIssueModels
-                                                  .getModel(
-                                                listViewAppReleasesFullRow
-                                                    .issueId!,
-                                                listViewIndex,
-                                              ),
-                                              updateCallback: () =>
-                                                  safeSetState(() {}),
-                                              child: GridItemIssueWidget(
-                                                key: Key(
-                                                  'Key89i_${listViewAppReleasesFullRow.issueId!}',
+                                            child: Container(
+                                              decoration: BoxDecoration(),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(16.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Text(
+                                                      valueOrDefault<String>(
+                                                        listViewAppReleasesPublishersRow
+                                                            .publisherName,
+                                                        'Editora',
+                                                      ),
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyLarge
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .inter(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyLarge
+                                                                      .fontStyle,
+                                                            ),
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                    if (listViewAppReleasesPublishersRow
+                                                            .issueCount >
+                                                        5)
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Text(
+                                                            valueOrDefault<
+                                                                String>(
+                                                              listViewAppReleasesPublishersRow
+                                                                  .issueCount
+                                                                  .toString(),
+                                                              '#',
+                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font:
+                                                                      GoogleFonts
+                                                                          .inter(
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        2.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .chevron_right,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                              size: 20.0,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ].divide(
+                                                      SizedBox(width: 12.0)),
                                                 ),
-                                                issueId:
-                                                    listViewAppReleasesFullRow
-                                                        .issueId,
-                                                showTitleInfo: true,
-                                                issueNumber:
-                                                    listViewAppReleasesFullRow
-                                                        .issueNumber,
-                                                titleName:
-                                                    listViewAppReleasesFullRow
-                                                        .titleName,
-                                                titleId:
-                                                    listViewAppReleasesFullRow
-                                                        .titleId,
-                                                thumb:
-                                                    'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewAppReleasesFullRow.primaryThumb}',
-                                                isAdult:
-                                                    listViewAppReleasesFullRow
-                                                        .isAdult,
-                                                canSeeAdult: functions
-                                                    .canSeeAdultContent(
-                                                        FFAppState()
-                                                            .currentUserBirthDateString,
-                                                        FFAppState()
-                                                            .adultContentEnabled),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                                          Expanded(
+                                            child: FutureBuilder<
+                                                List<AppReleasesFullRow>>(
+                                              future: AppReleasesFullTable()
+                                                  .queryRows(
+                                                queryFn: (q) => q
+                                                    .eqOrNull(
+                                                      'publisher_id',
+                                                      listViewAppReleasesPublishersRow
+                                                          .publisherId,
+                                                    )
+                                                    .order('date')
+                                                    .order('canonical_key',
+                                                        ascending: true),
+                                                limit: 5,
+                                              ),
+                                              builder: (context, snapshot) {
+                                                // Customize what your widget looks like when it's loading.
+                                                if (!snapshot.hasData) {
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsets.all(16.0),
+                                                    child:
+                                                        GridItemSkeletonWidget(),
+                                                  );
+                                                }
+                                                List<AppReleasesFullRow>
+                                                    listViewAppReleasesFullRowList =
+                                                    snapshot.data!;
+
+                                                return ListView.separated(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                    16.0,
+                                                    0,
+                                                    16.0,
+                                                    0,
+                                                  ),
+                                                  primary: false,
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
+                                                      listViewAppReleasesFullRowList
+                                                          .length,
+                                                  separatorBuilder: (_, __) =>
+                                                      SizedBox(width: 16.0),
+                                                  itemBuilder:
+                                                      (context, listViewIndex) {
+                                                    final listViewAppReleasesFullRow =
+                                                        listViewAppReleasesFullRowList[
+                                                            listViewIndex];
+                                                    return Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  24.0,
+                                                                  0.0,
+                                                                  8.0),
+                                                      child: Container(
+                                                        width: 88.0,
+                                                        decoration:
+                                                            BoxDecoration(),
+                                                        child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            context.pushNamed(
+                                                              IssueDetailPageWidget
+                                                                  .routeName,
+                                                              queryParameters: {
+                                                                'issueId':
+                                                                    serializeParam(
+                                                                  listViewAppReleasesFullRow
+                                                                      .issueId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                                'tittleId':
+                                                                    serializeParam(
+                                                                  listViewAppReleasesFullRow
+                                                                      .titleId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                              }.withoutNulls,
+                                                            );
+                                                          },
+                                                          child: wrapWithModel(
+                                                            model: _model
+                                                                .gridItemIssueModels1
+                                                                .getModel(
+                                                              listViewAppReleasesFullRow
+                                                                  .issueId!,
+                                                              listViewIndex,
+                                                            ),
+                                                            updateCallback: () =>
+                                                                safeSetState(
+                                                                    () {}),
+                                                            child:
+                                                                GridItemIssueWidget(
+                                                              key: Key(
+                                                                'Key89i_${listViewAppReleasesFullRow.issueId!}',
+                                                              ),
+                                                              issueId:
+                                                                  listViewAppReleasesFullRow
+                                                                      .issueId,
+                                                              showTitleInfo:
+                                                                  true,
+                                                              issueNumber:
+                                                                  listViewAppReleasesFullRow
+                                                                      .issueNumber,
+                                                              titleName:
+                                                                  listViewAppReleasesFullRow
+                                                                      .titleName,
+                                                              titleId:
+                                                                  listViewAppReleasesFullRow
+                                                                      .titleId,
+                                                              thumb:
+                                                                  'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewAppReleasesFullRow.primaryThumb}',
+                                                              isAdult:
+                                                                  listViewAppReleasesFullRow
+                                                                      .isAdult,
+                                                              canSeeAdult: functions
+                                                                  .canSeeAdultContent(
+                                                                      FFAppState()
+                                                                          .currentUserBirthDateString,
+                                                                      FFAppState()
+                                                                          .adultContentEnabled),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Divider(
+                                            height: 1.0,
+                                            thickness: 1.0,
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                            Divider(
-                              height: 1.0,
-                              thickness: 1.0,
-                              color: FlutterFlowTheme.of(context).alternate,
+                            FutureBuilder<
+                                List<AppReleasesPublishersUpcomingRow>>(
+                              future: FFAppState().releasesPublishersUpcoming(
+                                requestFn: () =>
+                                    AppReleasesPublishersUpcomingTable()
+                                        .queryRows(
+                                  queryFn: (q) => q.order('issue_count'),
+                                ),
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return PublisherReleaseSkeletonWidget();
+                                }
+                                List<AppReleasesPublishersUpcomingRow>
+                                    listViewAppReleasesPublishersUpcomingRowList =
+                                    snapshot.data!;
+
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      listViewAppReleasesPublishersUpcomingRowList
+                                          .length,
+                                  itemBuilder: (context, listViewIndex) {
+                                    final listViewAppReleasesPublishersUpcomingRow =
+                                        listViewAppReleasesPublishersUpcomingRowList[
+                                            listViewIndex];
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 248.0,
+                                      decoration: BoxDecoration(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              context.pushNamed(
+                                                PublisherReleasesPageWidget
+                                                    .routeName,
+                                                queryParameters: {
+                                                  'publisherName':
+                                                      serializeParam(
+                                                    listViewAppReleasesPublishersUpcomingRow
+                                                        .publisherName,
+                                                    ParamType.String,
+                                                  ),
+                                                  'publisherId': serializeParam(
+                                                    listViewAppReleasesPublishersUpcomingRow
+                                                        .publisherId,
+                                                    ParamType.String,
+                                                  ),
+                                                  'isUpcoming': serializeParam(
+                                                    true,
+                                                    ParamType.bool,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(16.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Text(
+                                                      valueOrDefault<String>(
+                                                        listViewAppReleasesPublishersUpcomingRow
+                                                            .publisherName,
+                                                        'Editora',
+                                                      ),
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyLarge
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .inter(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyLarge
+                                                                      .fontStyle,
+                                                            ),
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                    if (listViewAppReleasesPublishersUpcomingRow
+                                                            .issueCount! >
+                                                        5)
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Text(
+                                                            valueOrDefault<
+                                                                String>(
+                                                              listViewAppReleasesPublishersUpcomingRow
+                                                                  .issueCount
+                                                                  ?.toString(),
+                                                              '#',
+                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font:
+                                                                      GoogleFonts
+                                                                          .inter(
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        2.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .chevron_right,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                              size: 20.0,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ].divide(
+                                                      SizedBox(width: 12.0)),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: FutureBuilder<
+                                                List<AppReleasesUpcomingRow>>(
+                                              future: AppReleasesUpcomingTable()
+                                                  .queryRows(
+                                                queryFn: (q) => q
+                                                    .eqOrNull(
+                                                      'publisher_id',
+                                                      listViewAppReleasesPublishersUpcomingRow
+                                                          .publisherId,
+                                                    )
+                                                    .order('primary_thumb')
+                                                    .order('date'),
+                                                limit: 5,
+                                              ),
+                                              builder: (context, snapshot) {
+                                                // Customize what your widget looks like when it's loading.
+                                                if (!snapshot.hasData) {
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsets.all(16.0),
+                                                    child:
+                                                        GridItemSkeletonWidget(),
+                                                  );
+                                                }
+                                                List<AppReleasesUpcomingRow>
+                                                    listViewAppReleasesUpcomingRowList =
+                                                    snapshot.data!;
+
+                                                return ListView.separated(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                    16.0,
+                                                    0,
+                                                    16.0,
+                                                    0,
+                                                  ),
+                                                  primary: false,
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
+                                                      listViewAppReleasesUpcomingRowList
+                                                          .length,
+                                                  separatorBuilder: (_, __) =>
+                                                      SizedBox(width: 16.0),
+                                                  itemBuilder:
+                                                      (context, listViewIndex) {
+                                                    final listViewAppReleasesUpcomingRow =
+                                                        listViewAppReleasesUpcomingRowList[
+                                                            listViewIndex];
+                                                    return Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  24.0,
+                                                                  0.0,
+                                                                  8.0),
+                                                      child: Container(
+                                                        width: 88.0,
+                                                        decoration:
+                                                            BoxDecoration(),
+                                                        child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            context.pushNamed(
+                                                              IssueDetailPageWidget
+                                                                  .routeName,
+                                                              queryParameters: {
+                                                                'issueId':
+                                                                    serializeParam(
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .issueId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                                'tittleId':
+                                                                    serializeParam(
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .titleId,
+                                                                  ParamType
+                                                                      .String,
+                                                                ),
+                                                              }.withoutNulls,
+                                                            );
+                                                          },
+                                                          child: wrapWithModel(
+                                                            model: _model
+                                                                .gridItemIssueModels2
+                                                                .getModel(
+                                                              listViewAppReleasesUpcomingRow
+                                                                  .issueId!,
+                                                              listViewIndex,
+                                                            ),
+                                                            updateCallback: () =>
+                                                                safeSetState(
+                                                                    () {}),
+                                                            child:
+                                                                GridItemIssueWidget(
+                                                              key: Key(
+                                                                'Keypqb_${listViewAppReleasesUpcomingRow.issueId!}',
+                                                              ),
+                                                              issueId:
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .issueId,
+                                                              showTitleInfo:
+                                                                  true,
+                                                              issueNumber:
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .issueNumber,
+                                                              titleName:
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .titleName,
+                                                              titleId:
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .titleId,
+                                                              thumb:
+                                                                  'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/${listViewAppReleasesUpcomingRow.primaryThumb}',
+                                                              isAdult:
+                                                                  listViewAppReleasesUpcomingRow
+                                                                      .isAdult,
+                                                              canSeeAdult: functions
+                                                                  .canSeeAdultContent(
+                                                                      FFAppState()
+                                                                          .currentUserBirthDateString,
+                                                                      FFAppState()
+                                                                          .adultContentEnabled),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Divider(
+                                            height: 1.0,
+                                            thickness: 1.0,
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),
-                      );
-                    },
-                  );
-                },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

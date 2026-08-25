@@ -227,144 +227,148 @@ class _AllBrandsPageWidgetState extends State<AllBrandsPageWidget> {
             ),
             body: SafeArea(
               top: true,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Builder(
-                        builder: (context) {
-                          final allBrands = FFAppState().allBrands.toList();
+              child: Align(
+                alignment: AlignmentDirectional(0.0, -1.0),
+                child: Container(
+                  width: () {
+                    if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointMedium) {
+                      return double.infinity;
+                    } else if (MediaQuery.sizeOf(context).width <
+                        kBreakpointLarge) {
+                      return 640.0;
+                    } else {
+                      return 640.0;
+                    }
+                  }(),
+                  height: double.infinity,
+                  decoration: BoxDecoration(),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Builder(
+                          builder: (context) {
+                            final allBrands = FFAppState().allBrands.toList();
 
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: List.generate(allBrands.length,
-                                (allBrandsIndex) {
-                              final allBrandsItem = allBrands[allBrandsIndex];
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  if (functions.getBrandType(getJsonField(
-                                        allBrandsItem,
-                                        r'''$''',
-                                      )) ==
-                                      'publisher') {
-                                    context.pushNamed(
-                                      PublisherTitlesPageWidget.routeName,
-                                      queryParameters: {
-                                        'publisherId': serializeParam(
-                                          getJsonField(
-                                            allBrandsItem,
-                                            r'''$.id''',
-                                          ).toString(),
-                                          ParamType.String,
-                                        ),
-                                        'publisherName': serializeParam(
-                                          getJsonField(
-                                            allBrandsItem,
-                                            r'''$.name''',
-                                          ).toString(),
-                                          ParamType.String,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  } else {
-                                    context.pushNamed(
-                                      LicensorTitlesPageWidget.routeName,
-                                      queryParameters: {
-                                        'licensorId': serializeParam(
-                                          getJsonField(
-                                            allBrandsItem,
-                                            r'''$.id''',
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(allBrands.length,
+                                  (allBrandsIndex) {
+                                final allBrandsItem = allBrands[allBrandsIndex];
+                                return InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    if (functions.getBrandType(getJsonField(
+                                          allBrandsItem,
+                                          r'''$''',
+                                        )) ==
+                                        'publisher') {
+                                      context.pushNamed(
+                                        PublisherTitlesPageWidget.routeName,
+                                        queryParameters: {
+                                          'publisherId': serializeParam(
+                                            getJsonField(
+                                              allBrandsItem,
+                                              r'''$.id''',
+                                            ).toString(),
+                                            ParamType.String,
                                           ),
-                                          ParamType.int,
-                                        ),
-                                        'licensorName': serializeParam(
-                                          getJsonField(
-                                            allBrandsItem,
-                                            r'''$.name''',
-                                          ).toString(),
-                                          ParamType.String,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            ClipOval(
-                                              child: Container(
-                                                width: 56.0,
-                                                height: 56.0,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .alternate,
-                                                    width: 1.0,
+                                          'publisherName': serializeParam(
+                                            getJsonField(
+                                              allBrandsItem,
+                                              r'''$.name''',
+                                            ).toString(),
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    } else {
+                                      context.pushNamed(
+                                        LicensorTitlesPageWidget.routeName,
+                                        queryParameters: {
+                                          'licensorId': serializeParam(
+                                            getJsonField(
+                                              allBrandsItem,
+                                              r'''$.id''',
+                                            ),
+                                            ParamType.int,
+                                          ),
+                                          'licensorName': serializeParam(
+                                            getJsonField(
+                                              allBrandsItem,
+                                              r'''$.name''',
+                                            ).toString(),
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              ClipOval(
+                                                child: Container(
+                                                  width: 56.0,
+                                                  height: 56.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .alternate,
+                                                      width: 1.0,
+                                                    ),
                                                   ),
-                                                ),
-                                                child: Visibility(
-                                                  visible: getJsonField(
-                                                        allBrandsItem,
-                                                        r'''$.logo_path''',
-                                                      ) !=
-                                                      null,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    child: Image.network(
-                                                      'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
-                                                        allBrandsItem,
-                                                        r'''$.logo_path''',
-                                                      ).toString()}',
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      fit: BoxFit.contain,
+                                                  child: Visibility(
+                                                    visible: getJsonField(
+                                                          allBrandsItem,
+                                                          r'''$.logo_path''',
+                                                        ) !=
+                                                        null,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100.0),
+                                                      child: Image.network(
+                                                        'https://dlxinhmwtgrsqhwhmepg.supabase.co/storage/v1/object/public/logos/${getJsonField(
+                                                          allBrandsItem,
+                                                          r'''$.logo_path''',
+                                                        ).toString()}',
+                                                        width: double.infinity,
+                                                        height: double.infinity,
+                                                        fit: BoxFit.fill,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                getJsonField(
-                                                  allBrandsItem,
-                                                  r'''$.name''',
-                                                ).toString(),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyLarge
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyLarge
-                                                                    .fontStyle,
-                                                          ),
-                                                          fontSize: 14.0,
-                                                          letterSpacing: 0.0,
+                                              Expanded(
+                                                child: Text(
+                                                  getJsonField(
+                                                    allBrandsItem,
+                                                    r'''$.name''',
+                                                  ).toString(),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge
+                                                      .override(
+                                                        font: GoogleFonts.inter(
                                                           fontWeight:
                                                               FontWeight.w500,
                                                           fontStyle:
@@ -373,35 +377,28 @@ class _AllBrandsPageWidgetState extends State<AllBrandsPageWidget> {
                                                                   .bodyLarge
                                                                   .fontStyle,
                                                         ),
-                                              ),
-                                            ),
-                                            Text(
-                                              getJsonField(
-                                                allBrandsItem,
-                                                r'''$.title_count''',
-                                              ).toString(),
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyLarge
-                                                      .override(
-                                                        font: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyLarge
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyLarge
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
+                                                        fontSize: 14.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .secondaryText,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
+                                                                .bodyLarge
+                                                                .fontStyle,
+                                                      ),
+                                                ),
+                                              ),
+                                              Text(
+                                                getJsonField(
+                                                  allBrandsItem,
+                                                  r'''$.title_count''',
+                                                ).toString(),
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyLarge
+                                                    .override(
+                                                      font: GoogleFonts.inter(
                                                         fontWeight:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -413,79 +410,99 @@ class _AllBrandsPageWidgetState extends State<AllBrandsPageWidget> {
                                                                 .bodyLarge
                                                                 .fontStyle,
                                                       ),
-                                            ),
-                                          ].divide(SizedBox(width: 18.0)),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondaryText,
+                                                      fontSize: 12.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontWeight,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyLarge
+                                                              .fontStyle,
+                                                    ),
+                                              ),
+                                            ].divide(SizedBox(width: 18.0)),
+                                          ),
                                         ),
-                                      ),
-                                      Divider(
-                                        height: 1.0,
-                                        thickness: 1.0,
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                      ),
-                                    ],
+                                        Divider(
+                                          height: 1.0,
+                                          thickness: 1.0,
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
-                          );
-                        },
-                      ),
-                      if (FFAppState().allBrandsHasMore)
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(),
-                          child: Padding(
-                            padding: EdgeInsets.all(24.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                await actions.fetchAllBrands(
-                                  _model.searchQuery,
-                                  FFAppState().allBrandsOffset,
                                 );
+                              }),
+                            );
+                          },
+                        ),
+                        if (FFAppState().allBrandsHasMore)
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(),
+                            child: Padding(
+                              padding: EdgeInsets.all(24.0),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await actions.fetchAllBrands(
+                                    _model.searchQuery,
+                                    FFAppState().allBrandsOffset,
+                                  );
 
-                                safeSetState(() {});
-                              },
-                              text: 'Carregar mais resultados',
-                              icon: Icon(
-                                Icons.arrow_downward_sharp,
-                                size: 20.0,
-                              ),
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 8.0, 12.0, 8.0),
-                                iconPadding: EdgeInsets.all(0.0),
-                                iconColor:
-                                    FlutterFlowTheme.of(context).primaryText,
-                                color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .labelMedium
-                                    .override(
-                                      font: GoogleFonts.inter(
+                                  safeSetState(() {});
+                                },
+                                text: 'Carregar mais resultados',
+                                icon: Icon(
+                                  Icons.arrow_downward_sharp,
+                                  size: 20.0,
+                                ),
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      12.0, 8.0, 12.0, 8.0),
+                                  iconPadding: EdgeInsets.all(0.0),
+                                  iconColor:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .override(
+                                        font: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontStyle,
+                                        ),
+                                        letterSpacing: 0.0,
                                         fontWeight: FontWeight.w500,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .labelMedium
                                             .fontStyle,
                                       ),
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                elevation: 0.0,
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).alternate,
-                                  width: 0.0,
+                                  elevation: 0.0,
+                                  borderSide: BorderSide(
+                                    color:
+                                        FlutterFlowTheme.of(context).alternate,
+                                    width: 0.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

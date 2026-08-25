@@ -45,4 +45,17 @@ class AppFeaturedListThumbsRow extends SupabaseDataRow {
 
   String? get thumb3 => getField<String>('thumb3');
   set thumb3(String? value) => setField<String>('thumb3', value);
+
+  String? get authorSlug => getField<String>('author_slug');
+  set authorSlug(String? value) => setField<String>('author_slug', value);
+
+  String? get authorName => getField<String>('author_name');
+  set authorName(String? value) => setField<String>('author_name', value);
+
+  String? get authorAvatar => getField<String>('author_avatar');
+  set authorAvatar(String? value) => setField<String>('author_avatar', value);
+
+  bool? get authorIsVerified => getField<bool>('author_is_verified');
+  set authorIsVerified(bool? value) =>
+      setField<bool>('author_is_verified', value);
 }

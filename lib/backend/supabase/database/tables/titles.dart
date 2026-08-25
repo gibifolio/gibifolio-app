@@ -86,4 +86,33 @@ class TitlesRow extends SupabaseDataRow {
 
   String? get notes => getField<String>('notes');
   set notes(String? value) => setField<String>('notes', value);
+
+  String? get typeRaw => getField<String>('type_raw');
+  set typeRaw(String? value) => setField<String>('type_raw', value);
+
+  String? get formatLabel => getField<String>('format_label');
+  set formatLabel(String? value) => setField<String>('format_label', value);
+
+  String? get titleNamePublisherRaw =>
+      getField<String>('title_name_publisher_raw');
+  set titleNamePublisherRaw(String? value) =>
+      setField<String>('title_name_publisher_raw', value);
+
+  String? get imprint => getField<String>('imprint');
+  set imprint(String? value) => setField<String>('imprint', value);
+
+  String? get collectionRaw => getField<String>('collection_raw');
+  set collectionRaw(String? value) => setField<String>('collection_raw', value);
+
+  String? get collectionId => getField<String>('collection_id');
+  set collectionId(String? value) => setField<String>('collection_id', value);
+
+  String? get preTitle => getField<String>('pre_title');
+  set preTitle(String? value) => setField<String>('pre_title', value);
+
+  String? get gdqTitleCode => getField<String>('gdq_title_code');
+  set gdqTitleCode(String? value) => setField<String>('gdq_title_code', value);
+
+  String? get genreRaw => getField<String>('genre_raw');
+  set genreRaw(String? value) => setField<String>('genre_raw', value);
 }
